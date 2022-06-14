@@ -1,3 +1,4 @@
 .env
 virt
 .DS_Store
+db.sqlite3
