@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block title %}
+<title> User Update | WM</title>
+{% endblock %}
+
+{% block body %}
+
+{% if form.errors %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>There is an error in your form. Please try again later.</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
+
+    {% if user.is_authenticated %}
+
+    <h1>Update Profile</h1>
+    <br>
+    <form method = "POST" enctype = "multipart/form-data">
+        {% csrf_token %}
+        <h2>Profile Settings</h2>
+        <hr style="border-top: 2px solid rgb(0, 0, 0)">
+        <p>Your avatar will be automatically scaled down to 200x200 pixels. You agree that you have copyright rights to the image uploaded.</p>
+        {{ p_form.as_p }}
+        <br>
+        <h2>User Settings</h2>
+        <hr style="border-top: 2px solid rgb(0, 0, 0)">
+        <p>Your permanent username is: <b>{{user.username}}</b>. This serves as our unique identifier for search. Only in extreme circumstances may we perform a username change by emailing <a href = "mailto:support@walnutmind.org">support@walnutmind.org</a>.</p>
+        {{ u_form.as_p }}
+        <p style = "color:red">Your password is encrypted and unreadable by us. To update your password follow this <a href = "{% url 'update_password' %}">link</a>. In the case that you have forgotten your old password, to reset your password this <a href = "{% url 'reset_password' %}">link</a>.</p>
+        <button type="submit" class="btn btn-primary">UPDATE PROFILE</button>
+    </form>
+    {% endif %}
+    <br>
+    <!--<a class = "btn btn-danger" href = "/users/{{user.username}}/edit">DEACTIVATE ACCOUNT</a>-->
+
+<br><br>
+{% endblock %}

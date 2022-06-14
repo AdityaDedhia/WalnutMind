@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}
+<title>Update Post | WM</title>
+{% endblock %}
+
+{% block body %}
+
+<!--FURTHER AUTH FOR EDIT PRIVILEGES-->
+
+{% if user.is_authenticated %}
+
+{% if user.id == post.author.id %}
+
+<div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
+
+<div style = "form-group">
+<form method = "POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form.media}}
+    {{form.as_p}}
+    <button>Update</button>
+</div>
+
+</div>
+
+{% else %}
+
+Access denied
+
+{% endif %}
+
+{% endif %}
+
+{% endblock %}

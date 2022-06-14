@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+
+{% block title %}
+     <title> Articles | WM</title>
+{% endblock %}
+
+{% block body%}
+
+<div class="container"
+    x-data="{tag: 'All', posts: []}"
+    x-init="posts = await (await fetch('/article-list')).json()">
+
+    <ol class="breadcrumb" style = "background-color:white">
+        <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="">Articles</a></li>
+        <li class="breadcrumb-item active" aria-current="page" x-text="tag">
+        </li>
+    </ol>
+
+    
+    <button type = "button"
+    class="btn btn-light"
+    @click = "tag = $el.textContent
+    ">All</button>
+
+    {% for tag in tags %}
+    <button type = "button"
+            class="btn btn-light"
+            @click = "tag = $el.textContent
+            ">{{tag}}</button>
+    {% endfor %}
+
+    <br><br>
+
+<ul class="list-group list-group-flush">
+
+<template x-for="post in posts.filter(f => tag === 'All' || f.tags.includes(tag))">
+<div class = "row">
+
+    <div class="col-2">
+        <img :src = "post.cover" class = "img-thumbnail float-start" style = "margin-bottom:10px">
+    </div>
+
+    <div class = "col-10">
+    <li class = "list-group-item">
+    <a :href ="'/articles/'+post.slug"><b x-text="post.title"></b></a>
+    <br>
+    <i x-text="post.abstract"></i>
+    <br>
+    <small>Related Tags: </small>
+    <small x-text = "post.tags.join(', ')"></small>
+    <br>
+    </div>
+    </li>
+    <br>
+
+</div>
+<br>
+
+</template>
+</ul>
+
+</div>
+
+<script>
+var id = document.GetElementById("idvalue").innerHTML;
+document.write(id);
+</script>
+
+{% endblock %}

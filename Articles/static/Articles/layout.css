@@ -1,0 +1,31 @@
+.navbar.scrolled {
+  background-color: rgba(255, 225, 205, 0.9);
+  transition: background-color 350ms linear;
+}
+
+.body{ 
+  margin:0;
+  min-height: 100%;
+}
+
+.overlay{
+  opacity:0.8;
+  background-color:rgb(0, 0, 0);
+  position:fixed;
+  width:100%;
+  height:100%;
+  top:0px;
+  left:0px;
+  z-index:1000;
+}
+
+.zoom{
+  transition: 0.3s;
+}
+
+
+
+.zoom:hover {
+  transform: scale(1.05); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+

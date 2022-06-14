@@ -1,0 +1,76 @@
+from django.shortcuts import render
+from .models import Term
+from django.views.generic import ListView, DetailView
+from django.http import HttpResponseRedirect, Http404
+from django.contrib.auth.decorators import login_required
+from .forms import NewTermForm
+from django.contrib import messages
+from django.shortcuts import get_object_or_404, render, redirect
+
+class wikiView(ListView):
+    model = Term
+    template_name = 'Wiki/index.html'
+
+def searchView(request):
+    if request.method == "POST":
+        searchedterm = request.POST['searchedterm'] 
+        #query database
+        if searchedterm:
+            results = Term.objects.filter(term__search= searchedterm)
+        else:
+            results = None
+
+        return render(request, 'Wiki/search.html', {
+            'term': searchedterm, 'results': results
+        })
+    else:
+        return render(request, 'Wiki/search.html')
+
+
+class definitionView(DetailView):
+    model = Term
+    slug_url_kwarg = 'pk_slug'
+    template_name = 'Wiki/definition.html'
+
+    def get_object(self, queryset = None):
+        if queryset is None:
+            queryset = self.get_queryset()
+
+        pk_slug = self.kwargs.get(self.slug_url_kwarg)
+
+        if pk_slug is not None and pk_slug.isdigit():
+            queryset = queryset.filter(pk=pk_slug)
+        
+        elif pk_slug is not None:
+            slug_field = self.get_slug_field()
+            queryset = queryset.filter(**{slug_field: pk_slug})
+
+        
+        if pk_slug is None:
+            raise AttributeError(
+                "Generic detail view %s must be called with an object "
+                "pk_slug in the URLconf." % self.__class__.__name__
+            )
+
+        try:
+            obj = queryset.get()
+        except queryset.model.DoesNotExist:
+            raise Http404(("No %(verbose_name)s found matching the query") %
+                          {'verbose_name': queryset.model._meta.verbose_name})
+        return obj
+
+
+@login_required(login_url='/users/login')
+def newTermView(request):
+        if request.method == 'POST':
+            form = NewTermForm(request.POST, request.FILES) #Requires both request.Files, else will be left blank.
+            if form.is_valid():
+                form.save()
+                messages.success(request, ("Term was successfully published!"))
+                latest_id = Term.objects.latest('pk').pk #Essentially gets latest entry object based on last pk added, and then gets the pk of that entry object.
+                return redirect(f"/wiki/define-{latest_id}")
+        else:
+            form = NewTermForm()
+        return render(request, 'Wiki/newterm.html', {
+                'form': form
+            })

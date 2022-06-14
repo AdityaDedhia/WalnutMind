@@ -1,0 +1,112 @@
+{% extends "layout.html" %}
+
+{% block title %}
+     <title> {{post.title}} | WM</title>
+{% endblock %}
+
+{% block body%}
+
+
+<ol class="breadcrumb" style = "background-color:white">
+    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'articleindex' %}">Articles</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{post.title}}</li>
+</ol>
+
+<!--COVER-->
+<figure>
+    <img style = "height: 300px; display: block; margin-left: auto; margin-right: auto;" src = "{{post.cover.url}}">
+    <figcaption>Source: <a href = "{{post.coverURL}}">{{post.coverSrc}}</a></figcaption>
+</figure> 
+
+<style>
+    figcaption {
+        color: grey;
+        font-style: italic;
+        padding: 2px;
+        text-align: center;
+      }
+</style>  
+
+<section class="article-clean">
+     <div class="container">
+         <div class="row">
+             <div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
+                 <div class="intro">
+                     <h1 class="text-center">{{post.title}}</h1>
+                     <h6 class="fw-light text-center">{{post.abstract}}</h6>
+                     <p class="text-center">
+                        <span class="by">by 
+
+                            {% load static %}
+                            {% if post.author.profile.avatar %}
+                            <img style = "position: relative; top:-12px; width: 40px; height: 40px; border-radius: 50%;" src = "{{post.author.profile.avatar.url}}">
+                            {% else %}
+                            <img style = "position: relative; top:-12px; width: 40px; height: 40px; border-radius: 50%;" src = "{% static 'Users/def_avatar.png' %}">
+                            {% endif %}
+                             
+
+                        </span> <a href="/users/{{post.author}}">{{post.author.first_name}} {{post.author.last_name}}</a>
+                        <span class="date">
+                         Published {{post.dateCreated}}
+                        </span></p>
+                        {% for tag in post.tags.all %}
+                        <span class="badge rounded-pill text-bg-info">#{{tag}}</span>
+                        {% endfor %}
+                 </div>
+                 <div class="text">
+                    {{post.content|safe }}
+                    <hr style="border-top: 4px solid rgb(0, 0, 0)">
+                    {{post.resources|safe }}
+                 </div>
+
+                 <br>
+
+                 <h3>Comments</h3>
+                 <hr style="border-top: 2px solid rgb(0, 0, 0)">
+                 <!--RATE-->
+                <div style = "float:right">
+                <form action = {% url 'article_downvote' post.pk %} method = "POST">
+                    {% csrf_token %}
+                    <button type = "submit", class = "btn btn-danger", name = "post_id", value = "{{post.pk}}"><i class="bi bi-hand-thumbs-down-fill"></i></button>
+                </form>
+                </div>
+                <div style = "float:right; margin-right:8px">
+                    <form action = {% url 'article_upvote' post.pk %} method = "POST">
+                       {% csrf_token %}
+                       <button type = "submit", class = "btn btn-primary", name = "post_id", value = "{{post.pk}}"><i class="bi bi-hand-thumbs-up-fill"></i></button>
+                   </form>
+                   </div>
+                   <br><br>
+
+                   {% if user.is_authenticated %}
+                   <!--ADD COMMENT-->
+                   <form action = {% url 'newcomment' post.pk %} method = "POST">
+                    {% csrf_token %}
+                    <input type = "text" class = "container" name = "comment">
+                    <input type = "hidden" name = "pk" value = {{post.pk}}>
+                    <br><br>
+                    <button type= "submit" class="btn btn-primary">Post Comment</button>
+                    </form>
+                <!--COMMENT FEED-->
+
+                {% endif %}
+
+                {% if not post.comments.all %}
+                    {% if user.is_authenticated %}
+                    <strong>This place looks empty, start a discussion!</strong>
+                    {% else %}
+                    <strong>Please <a href = "{% url 'loginn' %}">login</a> or <a href = "{% url 'registerr' %}">register</a> to join the discussion.</strong>
+                    {% endif %}
+                {% else %}
+                {% for comment in post.comments.all %}
+                <strong>On {{comment.dateCreated}}, {{comment.author}} posted:</strong><br>
+                {{comment.content}}<br>
+                {% endfor %}
+                {% endif %}
+             </div>
+         </div>
+     </div>
+ </section>
+
+{% endblock %}

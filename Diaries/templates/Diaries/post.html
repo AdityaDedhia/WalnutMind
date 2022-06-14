@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block title %}
+<title>Publish | WM</title>
+{% endblock %}
+{% block body %}
+
+<div class="card text-center">
+    <div class="card-header">
+      <ul class="nav nav-tabs card-header-tabs">
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'newpost' %}">Publish Article</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'newbookpost' %}">Publish Commentary</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link active" href="">Publish Blog</a>
+        </li>
+
+      </ul>
+    </div>
+
+    <div class="card-body form-group">
+    <div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
+        <form method = "POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{form.media}}
+            {{form.as_p}}
+        <button>Publish</button>
+    </div>
+    </div>
+
+</div>
+
+
+{% endblock %} 

@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block title %}
+<title>Wiki | WM</title>
+{% endblock %}
+
+{% block body %}
+
+    <ol class="breadcrumb" style = "background-color:white">
+        <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Wiki</li>
+    </ol>
+
+    <div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
+
+<h1>Terms</h1><br>
+
+<div class="container-fluid">
+    <form method = POST action = "{% url 'searchterm' %}" class="d-flex">
+        {% csrf_token %}
+
+      <input class="form-control me-2" type="search" placeholder="Search for a specific term..." aria-label="Search" name = "searchedterm">
+
+      <button class="btn btn-outline-secondary" type="submit">Search</button>
+    </form>
+  </div>
+  <br>
+
+
+<ul>
+{% for term in object_list %}
+<li>
+<a href = "define-{{term.slug}}">{{term.term}}</a>
+</li>
+{% endfor %}
+</ul>
+
+
+
+
+
+
+
+</div>
+{% endblock %}
