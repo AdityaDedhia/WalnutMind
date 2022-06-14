@@ -1,0 +1,107 @@
+{% extends "layout.html" %}
+
+{% block title %}
+     <title>{{post.title}} | WM</title>
+{% endblock %}
+
+{% block body%}
+
+<ol class="breadcrumb" style = "background-color:white">
+    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'bookindex' %}">Books</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{post.title}}</li>
+</ol>
+
+<div class="row">
+
+<!--SIDE COLUMN-->
+<div class="col-6 col-md-4">
+<div class="card bg-light mb-3">
+    <div class="card-header" style ="display: flex; justify-content: space-between;">
+        <div>
+        <img style = "width:150px; float-end" class = "img-thumbnail" src = "{{post.cover.url}}">
+        </div>
+        <div>
+        <strong>{{post.author}}'s {{post.title}}</strong><br>
+        <p>Author: <a href = "{{post.authorlink}}">{{post.author}}</a></p>
+        <p>Year Published: {{post.year}}</p>
+        <p>Page Count: {{post.pages}}</p>
+        <p>Genre:</p>
+        <p>Rating: {{post.rating}}</p>
+        </div>
+    </div>
+    <div class="card-body">
+        <i>{{post.headquote}}</i>
+        <br>
+      <h5 class="card-title">{{post.headline}}</h5>
+    </div>
+</div>
+
+<div class="card text-white bg-primary">
+  <div class="card-header"><strong>Takeaways</strong></div>
+  <div class="card-body">
+    <p class="card-text">{{post.takeaways|safe}}</p>
+  </div>
+</div>
+<br>
+
+<div class="card text-white bg-dark">
+  <div class="card-header"><strong>Summary</strong></div>
+  <div class="card-body">
+    <p class="card-text">{{post.summary|safe}}</p>
+  </div>
+</div>
+<br>
+
+
+
+<br>
+<div class="card text-white bg-info" style = "onmousedown="return false"; onselectstart="return false"">
+    <div class="card-header"><strong>The Gist - A Chronological Quote Synopsis:</strong></div>
+    <div class="card-body">
+      <p class="card-text">{{post.quotes|safe}}</p>
+    </div>
+</div>
+<br>
+</div>
+
+<!--MAIN COLUMN-->
+<div class="col-12 col-md-8">
+
+  <ul>
+  <li>
+    Author:
+    {% load static %}
+    {% if post.publisher.profile.avatar %}
+    <img style = "position: relative; top:-3px; width: 40px; height: 40px; border-radius: 50%;" src = "{{post.publisher.profile.avatar.url}}">
+    {% else %}
+    <img style = "position: relative; top:-3px; width: 40px; height: 40px; border-radius: 50%;" src = "{% static 'Users/def_avatar.png' %}">
+    {% endif %}
+
+    <a href = "/users/{{post.publisher.username}}">{{post.publisher.first_name}} {{post.publisher.last_name}}</a> / 
+    <a href = "{{post.goodreads}}">Goodreads</a>
+  </li>
+  <li>Date of Publication: <b>{{post.dateCreated}}</b> (last revised <b>{{post.dateUpdated}}</b>)</i></li>
+  <li>Estimated Reading Time: <b>{{post.readingEST}} minutes</b>.</li>
+  </ul>
+  <p style = "text-align:end">Jump to <a href = "#resources">resources</a></p>
+
+
+  <h1>Commentary</h1>
+  <hr style="border-top: 2px solid rgb(0, 0, 0)">
+
+  <p>{{post.body|safe}}</p>
+  <br>
+  <h1 id = "resources">Resources</h1>
+  <hr style="border-top: 2px solid rgb(0, 0, 0)">
+
+
+  <p>{{post.resources|safe}}</p>
+
+
+</div>
+
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title %}
+     <title>{{post.title}} | WM</title>
+{% endblock %}
+
+{% block body%}
+<div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
+
+    <ol class="breadcrumb" style = "background-color:white">
+        <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'bookindex' %}">Blog</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{post.title}}</li>
+    </ol>
+
+<h1>{{post.title}}</h1>
+<hr style="border-top: 2px solid rgb(0, 0, 0)">
+<strong>Published on {{post.dateCreated}} by Aditya Dedhia</strong><br>
+<p>{{post.content|safe}}</p>
+
+<br>
+</div>
+{% endblock %}
+

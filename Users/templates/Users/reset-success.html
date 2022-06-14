@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block title %}
+<title> Reset Password | WM</title>
+{% endblock %}
+
+{% block body %}
+
+<div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+
+    <h1>Reset Profile Password</h1>
+    <br>
+    <p>You have successfully changed your password and may proceed to log back into the site</p>
+    <br>
+    <a style = "btn btn-primary" href = "{% url 'loginn' %}">Login now</a>
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+{% block title %}
+<title>Blog | WM</title>
+{% endblock %}
+
+{% block body %}
+
+
+    <ol class="breadcrumb" style = "background-color:white">
+        <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Blog</li>
+    </ol>
+
+    <cap>
+        This section covers the more personal aspects of the development of this project. It aims to preserve creative authenticity, and much like a diary, this blog documents my journey in this project and its nuances, if you are interested. Further links are provided at the bottom of the page.
+    </cap>
+    <hr style="border-top: 2px solid rgb(0, 0, 0)">
+
+    <br>
+
+    <ul>
+    {% for post in object_list %}
+    <div class = "row">
+        <li class = "list-group-item"><a href = "/blogs/{{post.slug}}">{{post.title}}</a>
+            <br>
+            <strong>Published: {{post.dateCreated}}</strong>
+            <div class="scroll-left">
+                <p>{{post.content|truncatewords:30|safe}}</p>
+            </div>
+        </li>
+    </div>
+    <br>
+    {% endfor %}
+    </ul>
+
+
+    <style>
+        .scroll-left {
+         height: 50px;	
+         overflow: hidden;
+         position: relative;
+        }
+        .scroll-left p {
+         position: absolute;
+         width: 100%;
+         height: 100%;
+         margin: 0;
+         line-height: 50px;
+         text-align: center;
+         /* Starting position */
+         transform:translateX(100%);
+         /* Apply animation to this element */
+         animation: scroll-left 15s linear infinite;
+        }
+        /* Move it (define the animation) */
+        @keyframes scroll-left {
+         0%   {
+         transform: translateX(100%); 		
+         }
+         100% {
+         transform: translateX(-100%); 
+         }
+        }
+    </style>
+        
+{% endblock %}

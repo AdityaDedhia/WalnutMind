@@ -1,0 +1,133 @@
+{% extends "layout.html" %}
+
+{% block title %}
+<title>Home | WM</title>
+{% endblock %}
+
+{% block body %}
+{% load static %}
+
+<style>
+  .title {
+      position: absolute;
+      top: 40%;
+      left: 40%;
+
+      font-size: 40px;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(to right, #f32170,
+              #ff6b08, #cf23cf, #eedd44);
+      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text;
+  }
+</style>
+
+
+<div style = "text-align: center; position: relative; color: black;">
+  <img src="{% static "Articles/home.jpg" %}" class="img-fluid" alt="Responsive image" style = "transform:translate(0,-5%)">
+      <strong class = "title" style = "opacity: 0.85; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -40%);">Liberate Your Learning Shell.<br></strong><h4 style = "opacity: 0.85; position: absolute; top: 50%; left: 50%; transform: translate(-50%, 80%);">Philosophy of economics and management.</h4>
+      
+</div>
+
+
+<section class="py-6">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 mx-auto text-center pb-4">
+        <h4 class="text-gradient text-primary">A Knowledge Firm</h4>
+        <h3><i>With</i> productivity in mind; <i>without</i> all the bells and whistles.</h3>
+        <p class="lead">Knowledge is important. Time is important. What if you could have both, distilled across distinct domains?</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-4 col-md-6">
+        <div class="p-3 text-center">
+            <i class="bi bi-mortarboard-fill"></i>
+          <h5 class="mt-4">Academic</h5>
+          <p>Research is at the forefront of all publications, with extensive research and citations to ensure correctness and credibility. Knowledge is not stagnant, and content is regularly reviewed to be kept up to date.</p>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="p-3 text-center">
+            <i class="bi bi-globe2"></i>
+          <h5 class="mt-4">Network</h5>
+          <p>Knowledge is collectively interconnected and unquantifiable. So why should publications be? Upon newly discovered knowledge links, older publications are promptly updated; notifications are made to members upon significant revisions.</p>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 mx-md-auto">
+        <div class="p-3 text-center">
+            <i class="bi bi-megaphone-fill"></i>
+          <h5 class="mt-4">Voice</h5>
+          <p>Accessibile information with no barriers is critical. Relevant information is either too informal or overly academic yet bland. We aim to strike a balance with an analytical and authentic voice.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr style="border-top: 4px solid rgb(0, 0, 0)">
+
+<div class="min-vh-75">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4 my-auto">
+        <h2 class="text-info mb-0">A glimpse into our...</h2>
+        <h2 class="mb-4"><i>publications;</i></h2>
+        <p class="lead">Interested in what we do? Get started now as a member or find out more below about the project and publishing on our site.</p>
+        <div class="buttons">
+          <a class="btn btn-primary" href = "{% url 'registerr' %}">GET STARTED</a>
+          <a class="btn btn-secondary" href = "{% url 'about' %}">OUR STORY</a>
+        </div>
+      </div>
+      <div class="col-lg-8 ps-5 pe-0">
+        <div class="row">
+          <div class="col-lg-3 col-6">
+            <img class="w-100 border-radius-lg shadow mt-0 mt-lg-7" src="{% static "Articles/thinkstatue.png" %}" alt="">
+          </div>
+          <div class="col-lg-3 col-6">
+            <img class="w-100 border-radius-lg shadow" src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/soft-ui-design-system/assets/img/chair.jpg" alt="">
+            <img class="w-100 border-radius-lg shadow mt-4" src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/soft-ui-design-system/assets/img/facade.jpg" alt="">
+          </div>
+          <div class="col-lg-3 col-6">
+            <img class="w-100 border-radius-lg shadow mt-0 mt-lg-5" src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/soft-ui-design-system/assets/img/architecture.jpg" alt="">
+            <img class="w-100 border-radius-lg shadow mt-4" src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/soft-ui-design-system/assets/img/baloon.jpg" alt="">
+          </div>
+          <div class="col-lg-3 col-6">
+            <img class="w-100 border-radius-lg shadow mt-3" src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/soft-ui-design-system/assets/img/seaside.jpg" alt="">
+            <img class="w-100 border-radius-lg shadow mt-4" src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/soft-ui-design-system/assets/img/medusa.jpg" alt="">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--LATEST ARTICLES-->
+<section class="article-list">
+  <div class="container">
+      <div class="intro">
+          <h2 class="text-center">Explore Our Latest</h2>
+      </div>
+      <hr style="border-top: 1px solid rgb(0, 0, 0)">
+
+
+      <div class="row articles">
+        {% for post in recent %}
+          <div class="col-sm-6 col-md-4 item zoom"><a href="articles/{{post.slug}}"><img class="img-fluid" src="{{post.cover.url}}"></a>
+              <h3 class="name">{{post.title}}</h3>
+              <p class="description">{{post.abstract}}</p>
+              {% for tag in post.tags.all %}
+              <span class="badge rounded-pill text-bg-info">#{{tag}}</span>
+              {% endfor %}
+              <a class="action" href="articles/{{post.slug}}"><i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+
+          {% endfor %}
+      </div>
+  </div>
+</section>
+
+
+
+{% endblock %}

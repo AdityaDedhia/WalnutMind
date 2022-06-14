@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block title %}
+<title>Search | WM</title>
+{% endblock %}
+
+{% block body %}
+
+<div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
+    <ol class="breadcrumb" style = "background-color:white">
+        <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'wikiindex' %}">Wiki</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Search</li>
+    </ol>
+
+<h1>Here are your search results for {{term}}:</h1>
+<br>
+
+<ul>
+{% for result in results %}
+<li>
+    <a href = "define-{{result.slug}}">{{result.term}}</a>
+</li>
+    <br>
+{% endfor %}
+</ul>
+
+
+
+</div>
+{% endblock %}

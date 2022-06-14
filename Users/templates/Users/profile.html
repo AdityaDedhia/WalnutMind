@@ -1,0 +1,84 @@
+{% extends "layout.html" %}
+
+{% block title %}
+<title> {{user.username}}'s Profile | WM</title>
+{% endblock %}
+
+{% block body %}
+<ol class="breadcrumb" style = "background-color:white">
+  <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'index' %}">Users</a></li>
+  <li class="breadcrumb-item active" aria-current="page">{{user.username}}</li>
+</ol>
+
+{% load static %}
+
+<!--PROFILE COVER-->
+<section class="h-100">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col col-lg-10 col-xl-12">
+        <div class="card">
+
+        {% if user.profile.banner %}
+        <div style = "
+          width: 100%;
+          height: 400px;
+          background-image: url('{{user.profile.banner.url}}');
+          background-size: cover;
+          border: 1px solid gray;
+          ">
+        {% else %}
+          <div style = "
+          width: 100%;
+          height: 400px;
+          background-image: url('{% static 'Users/def_banner.jpg' %}');
+          background-size: cover;
+          border: 1px solid gray;
+          ">
+        {% endif %}
+        </div>
+          <div class="rounded-top text-white d-flex flex-row" style = "position: relative; top: -190px;">
+            <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
+            <!--PROFILE PICTURE START-->
+              {% if user.profile.avatar %}
+              <img class="img-fluid mt-4 mb-2" style = "z-index: 1; border-radius: 50%;" src = "{{user.profile.avatar.url}}">
+              {% else %}
+              <img class="img-fluid mt-4 mb-2" style = "z-index: 1; border-radius: 50%;" src = "{% static 'Users/def_avatar.png' %}">
+              {% endif %}
+
+              <div style="z-index: 1;">
+                {% if request.user == user %}
+                <a class = "btn btn-outline-dark" href = "/users/{{user.username}}/edit">Edit Profile</a>
+                {% endif %}
+              </div>
+            </div>
+            <!--PROFILE PICTURE END-->
+            <div class="ms-3" style="margin-top: 130px;">
+              <h5>{{user.username}}</h5>
+              <p>Location: {{user.profile.location.name}} <img src = "{{user.profile.location.flag}}"></p>
+              <!--<P>Interests:</p>-->
+            </div>
+          </div>
+
+          <div class="card-body p-4 text-black">
+            <div class="mb-5">
+              <div class="p-4" style="background-color: #f8f9fa;">
+                <p>
+                  {{user.profile.bio|safe}}
+                </p>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--PROFILE COVER END-->
+
+<br><br>
+{% endblock %}
