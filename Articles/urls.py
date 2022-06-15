@@ -25,8 +25,8 @@ urlpatterns = [
     path('opportunities', views.opportunitiesView, name = 'opportunities'),
     path('contact', views.contactView, name = 'contact'),
     path('roadmap', views.roadmapView, name = 'roadmap'),
-    path('privacy_policy', views.privacyView, name = 'privacy'),
-    path('end-user_agreement', views.termsView, name = 'terms'),
+    path('privacy-policy', views.privacyView, name = 'privacy'),
+    path('end-user-agreement/', views.termsView, name = 'terms'),
     path('faq', views.faqView, name = "faq"),
 
 ] + static(settings.STATIC_URL, document_root = settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
