@@ -37,6 +37,9 @@
   <body>
 
     <style>
+      @import url('https://fonts.googleapis.com/css2?family=Nuosu+SIL&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Nuosu+SIL&display=swap');
+
       .btn-cool-blues {
         background: #2193b0;  /* fallback for old browsers */
         background: -webkit-linear-gradient(to right, #6dd5ed, #2193b0);  /* Chrome 10-25, Safari 5.1-6 */
@@ -52,6 +55,11 @@
         color: #fff;
         border: 3px solid #eee;
         }
+
+        .nav {
+          -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+          }
       </style>
 
     <!--NAVBAR-->
@@ -59,16 +67,28 @@
       <div class="row">
         <div class="col-12">
           <nav
-            class="navbar navbar-expand-lg blur blur-rounded badge-pill position-sticky my-3 top-0 border-bottom py-3 z-index-3 shadow my-3 py-2 start-0 end-0 mx-4"
-            style = "background-color: #ebebeb"
-            >
+            class="navbar navbar-expand-lg blur blur-rounded position-fixed my-3 top-0 border-bottom py-3 shadow my-3 py-2 start-0 end-0 mx-4"
+            style = "background-color: #ebebeb; opacity: 0.9;
+            ">
             <div class="container">
               <a class="navbar-brand">
                 <a class="navbar-brand" href="{% url 'index' %}" style = "color: #321c05">
-                  <img src="{% static 'Articles/logo.png' %}" width="45" height= "45" class="d-inline-block">
-                  <b>WALNUT</b>MIND | <sub><i>Where ideas click.</i></sub>
+                  <img src="{% static 'Articles/logo.png' %}" width="50" height= "50" class="d-inline-block">
                 </a>
               </a>
+
+              <div class = "flex-column ml-lg-0 ml-3">
+
+                <ul class="navbar-nav">
+                  <li style = "font-family: 'Josefin Sans', sans-serif;">
+                    WALNUTMIND
+                  </li>
+                </ul>
+                <ul class="navbar-nav flex-row mb-2">
+                  <li style = "font-family: 'Nuosu SIL', serif;"><sub><i>Where ideas click.</i></sub></li>
+                </ul>
+              </div>
+
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
@@ -137,6 +157,8 @@
           <!-- End Navbar -->
         </div>
       </div>
+
+      <br><br><br><br><br>
     
 
     
