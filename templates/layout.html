@@ -56,10 +56,6 @@
         border: 3px solid #eee;
         }
 
-        .nav {
-          -webkit-backdrop-filter: blur(10px);
-          backdrop-filter: blur(10px);
-          }
       </style>
 
     <!--NAVBAR-->
@@ -68,26 +64,20 @@
         <div class="col-12">
           <nav
             class="navbar navbar-expand-lg blur blur-rounded position-fixed my-3 top-0 border-bottom py-3 shadow my-3 py-2 start-0 end-0 mx-4"
-            style = "background-color: #ebebeb; opacity: 0.9; z-index:1; border-radius: 80px;
+            style = "background-color:rgba(222,222,222,0.6); z-index:1; border-radius: 80px;backdrop-filter: blur(4px);
             ">
+
             <div class="container">
               <a class="navbar-brand">
                 <a class="navbar-brand" href="{% url 'index' %}" style = "color: #321c05">
-                  <img src="{% static 'Articles/logo.png' %}" width="50" height= "50" class="d-inline-block">
+                  <img src="{% static 'Articles/logo.png' %}" width="55" height= "55" class="d-inline-block">
                 </a>
               </a>
-
-              <div class = "flex-column ml-lg-0 ml-3">
-
-                <ul class="navbar-nav">
-                  <li style = "font-family: 'Josefin Sans', sans-serif;">
-                    WALNUTMIND
-                  </li>
-                </ul>
-                <ul class="navbar-nav flex-row mb-2">
-                  <li style = "font-family: 'Nuosu SIL', serif;"><sub><i>Where ideas click.</i></sub></li>
-                </ul>
-              </div>
+              <b style = "font-family: 'Josefin Sans', sans-serif;">
+                <cap>WALNUTMIND</cap>
+                <br>
+                <i style = "white-space: nowrap;">Where ideas click</i>
+              </b>
 
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -160,7 +150,6 @@
 
       <br><br><br><br><br>
     
-
     
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
       <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
@@ -185,6 +174,9 @@
 
     {% block body%}
     {% endblock %}
+
+  </div>
+
     <section class="footer">
       <!-- Footer -->
       <footer class=" bg-dark text-white text-center text-md-start">
@@ -264,7 +256,6 @@
       <!-- Footer -->
     </section>
 
-  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">

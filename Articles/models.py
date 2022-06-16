@@ -18,7 +18,7 @@ class Post(models.Model):
     coverURL = models.URLField(max_length = 255)
     author = models.ForeignKey(User, on_delete= models.CASCADE, related_name="articlepublisher")
     abstract = models.CharField(max_length=255, blank = False)
-    tags = TaggableManager()
+    tags = TaggableManager(related_name="articletags")
     content = RichTextUploadingField(blank = False)
     resources = RichTextField(blank = True)
     dateCreated = models.DateTimeField(auto_now_add = True)

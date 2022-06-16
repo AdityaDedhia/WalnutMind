@@ -6,10 +6,13 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from django.forms import CharField
 from autoslug import AutoSlugField
 from Blog.utils import image_resize
+from taggit.managers import TaggableManager
+
 
 class Post(models.Model):
     title = models.CharField(max_length=128, blank = False) #Blank=false for required fields
     slug = AutoSlugField(populate_from='title', unique = True, null = True, default = None)
+    tags = TaggableManager(related_name="commentarytags")
     publisher = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bookpublisher")
     author = models.CharField(max_length = 50, blank = False)
     year = models.IntegerField(blank=False)
