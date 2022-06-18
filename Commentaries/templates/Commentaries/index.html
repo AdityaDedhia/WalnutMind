@@ -6,38 +6,41 @@
 
 {% block body %}
 
+<div class ="container"
+x-data="{tag: 'All', posts: []}"
+x-init="posts = await (await fetch('book-list')).json()">
+
   <ol class="breadcrumb" style = "background-color:white">
     <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Books</li>
+    <li class="breadcrumb-item"><a href="">Books</a></li>
+    <li class="breadcrumb-item active" aria-current="page" x-text="tag">
+    </li>
 </ol>
 
+<!--START ALPINE CONTAINER-->
 
 <div class="row">
 <!--CATEGORY PANE-->
-<div class="col-4 col-md-2">
 
+  <div class="col-4 col-md-2">
   <h3>Categories</h3>
+      <button type = "button"
+      class="btn btn-light"
+      @click = "tag = $el.textContent
+      ">All</button>
 
-</div>
+      {% for tag in tags %}
+      <br><br>
+      <button type = "button"
+              class="btn btn-light"
+              @click = "tag = $el.textContent
+              ">{{tag}}</button>
+      {% endfor %}
+  </div>
 
 
-<!--MAIN COLUMN-->
-<div class="col-16 col-md-10">
-
-  <style type="text/css" media="screen">
-    .gr_grid_container {
-      /* customize grid container div here. eg: width: 500px; */
-    }
-  
-    .gr_grid_book_container {
-      /* customize book cover container div here */
-      float: left;
-      width: 39px;
-      height: 60px;
-      padding: 0px 0px;
-      overflow: hidden;
-    }
-  </style>
+  <!--MAIN COLUMN-->
+  <div class="col-16 col-md-10">
 
   <!--CAUTION-->
   <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -45,32 +48,35 @@
       <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
     </symbol>
   </svg>
-  
-  
   <div class="alert alert-primary d-flex align-items-center alert-dismissible fade show" role="alert">
     <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
     It is advised that you have read the book beforehand if you were planning to do so already.
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
   
-<ul>
+  
   <div class = "row">
-  {% for post in object_list %}
-    <div class="col-sm-3">
-        <div class = "col zoom" style = "padding: 20px;">
-          <a href = "/books/{{post.slug}}"><img style = "height:250px; border: 2px solid black;" class = "float-start" src = "{{post.cover.url}}"></a>
-          <br>
-          <cap style = "white-space:nowrap; "><b>{{post.title}}</b></cap><br><b style = "color:grey;">Commentary</b>
+
+    <template x-for="post in posts.filter(f => tag === 'All' || f.tags.includes(tag))">
+
+        <div class="col-sm-3">
+          <!--BOOK LIST ITEM-->
+          <div class = "col zoom" style = "padding: 20px;">
+          <a :href = "post.slug">
+            <img :src = "post.cover" class = "img-thumbnail float-start" style = "height:250px; border: 2px solid black;"></a>
+            <br>
+            <cap style = "white-space:nowrap; "><i x-text="post.title"></i>
+            </cap><br><b style = "color:grey;">Commentary</b>
+          </div>
+          <!--BOOK LIST ITEM END-->
         </div>
-      </div>
-  </br>
-  {% endfor %}
+      <br>
+
+      
+    </template>
+  </div>
+
+
+
 </div>
-</ul>
-
-
-</div>
-
 {% endblock %}
-
-
