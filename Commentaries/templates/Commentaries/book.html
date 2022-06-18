@@ -5,12 +5,29 @@
 {% endblock %}
 
 {% block body%}
+{% load static %}
+
 
 <ol class="breadcrumb" style = "background-color:white">
     <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
     <li class="breadcrumb-item"><a href="{% url 'bookindex' %}">Books</a></li>
     <li class="breadcrumb-item active" aria-current="page">{{post.title}}</li>
 </ol>
+
+
+<div id = "spinner-box" class = "text-center mt-3">
+  <div class="spinner-border text-info" role="status"></div>
+</div>
+  
+<style>
+.not-visible{
+  display:none;
+}
+</style>
+
+<div id = "data-box" class = "not-visible">
+
+
 
 <div class="row">
 
@@ -102,6 +119,30 @@
 </div>
 
 </div>
+</div>
+
+<script type="text/javascript">
+const spinnerBox = document.getElementById('spinner-box')
+const dataBox = document.getElementById('data-box')
+
+$.ajax({
+  type: 'GET',
+  url: '/books/post-json/',
+  success: function(response){
+    setTimeout(()=>{
+      spinnerBox.classList.add('not-visible')
+      console.log('response',response)
+      dataBox.classList.remove('not-visible')
+
+    }, 300)
+
+  },
+  error: function(error){
+    console.log(error)
+  }
+})
+
+</script>
 
 
 {% endblock %}

@@ -3,14 +3,13 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import ListView,DetailView
 from .models import Post
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.contrib import messages
 from .forms import PostForm
 
 from taggit.models import Tag
 from .serializers import CommentarySerializer
 from rest_framework.generics import ListAPIView
-
 
 class booksView(ListView):
     model = Post
@@ -20,6 +19,7 @@ class booksView(ListView):
         tags = Tag.objects.all() #return all tags
         context['tags'] = tags
         return context
+
 
 class BookListAPIView(ListAPIView):
     queryset = Post.objects.all()
@@ -56,6 +56,9 @@ class bookView(DetailView):
             raise Http404(("No %(verbose_name)s found matching the query") %
                           {'verbose_name': queryset.model._meta.verbose_name})
         return obj
+def post_json(request):
+    data = list(Post.objects.values())
+    return JsonResponse(data, safe = False)
 
 @login_required(login_url='/users/login')
 def newPostView(request):
