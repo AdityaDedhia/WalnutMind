@@ -7,9 +7,24 @@ from django.http import Http404
 from django.contrib import messages
 from .forms import PostForm
 
+from taggit.models import Tag
+from .serializers import CommentarySerializer
+from rest_framework.generics import ListAPIView
+
+
 class booksView(ListView):
     model = Post
     template_name = 'Commentaries/index.html'
+    def get_context_data(self, *args, **kwargs):
+        context = super(booksView, self).get_context_data(*args, **kwargs)
+        tags = Tag.objects.all() #return all tags
+        context['tags'] = tags
+        return context
+
+class BookListAPIView(ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = CommentarySerializer
+
 
 class bookView(DetailView):
     model = Post
