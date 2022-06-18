@@ -4,7 +4,7 @@ from django.views.generic import ListView, DetailView
 from .models import Post
 from .forms import PostForm
 from django.contrib import messages
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import render, redirect
 from django.http import Http404
 
 

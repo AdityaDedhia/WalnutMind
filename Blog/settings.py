@@ -116,8 +116,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #FILES------------------------------------------------------------
 
-
-
 STATIC_HOST = os.environ.get('STATIC_HOST', '')
 STATIC_URL = STATIC_HOST + '/static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"

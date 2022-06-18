@@ -1,12 +1,11 @@
 from getpass import getuser
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.urls import reverse_lazy
 from .forms import RegisterUserForm, UpdateProfileForm, UpdateUserForm
 from .models import User, Profile
-from django.contrib.auth.forms import UserChangeForm
 from django.views import generic
 from django.templatetags.static import static
 from django.contrib.sites.shortcuts import get_current_site
@@ -149,4 +148,3 @@ def editProfileView(request, username):
     return render(request, 'Users/editprofile.html', {
         'user': requestedUser, 'u_form': u_form, 'p_form': p_form
     })
-
