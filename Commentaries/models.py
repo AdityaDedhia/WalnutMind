@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.db.models.deletion import CASCADE, DO_NOTHING
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
-from django.forms import CharField
 from autoslug import AutoSlugField
 from Blog.utils import image_resize
 from taggit.managers import TaggableManager
@@ -31,6 +30,7 @@ class Post(models.Model):
     resources = RichTextField(blank = False)
     dateCreated = models.DateTimeField(auto_now_add = True)
     dateUpdated = models.DateTimeField(auto_now = True)
+    public = models.BooleanField(default = False)
 
     #RATINGS
     One = 'Not recommended'

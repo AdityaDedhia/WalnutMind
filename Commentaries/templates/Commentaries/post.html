@@ -29,7 +29,6 @@
           {{form.media}}
 
           <!--ROW 1-->
-          <div class="form-row">
             <div class="col" id = "title">
               <label style = "float: left;" for="title">Title</label>
               {{ form.title }}
@@ -62,10 +61,8 @@
               <label style = "float: left;" for="goodreads">Goodreads</label>
               {{ form.goodreads }}
             </div>
-          </div>
           <br>
-          <!--ROW 2-->
-          <div class="form-row">
+
             <div class="col" id = "topics">
               <label style = "float: left;" for="topics">Topics (Comma Seperated List)</label>
               {{ form.topics }}
@@ -78,52 +75,40 @@
               <label style = "float: left;" for="headline">Headline</label>
               {{ form.headline }}
             </div>
-          </div>
-          <br>
+
           <!--ROW 3-->
-          <div class="form-row">
             <div class="col" id = "quotes">
               <label style = "float: left;" for="quotes">Quotes (New line)</label>
               {{ form.quotes }}
             </div>
-          </div>
-          <br>
-          <div class="form-row">
             <div class="col" id = "takeaways">
               <label style = "float: left;" for="takeaways">Takeaways (New line)</label>
               {{ form.takeaways }}
             </div>
-          </div>
-          <br>
-          <div class="form-row">
             <div class="col" id = "summary">
               <label style = "float: left;" for="summary">Summary</label>
               {{ form.summary }}
             </div>
-          </div>
-          <br>
-          <!--ROW 4-->
-          <div class="form-row">
               <div class="col" id = "body">
                   <label style = "float: left;" for="body">Commentary</label>
               {{ form.body }}
               </div>
-          </div>
 
-        <br>
-
-          <div class="form-row">
           <div class="col" id = "resources">
             <label style = "float: left;" for="resources">Resources</label>
             {{ form.resources }}
-        </div>
-      </div>
+          </div>
 
-          <br>
+          <div class = "col form-check form-switch" id = "public">
+            <label class="form-check-label" for="public">Publish Live</label>
+            {{ form.public }}
+          </div>
+
           <button style = "float: right;" class = "btn btn-primary">Publish</button>
     </div>
     </div>
   </div>
   
+<br>
 
 {% endblock %} 

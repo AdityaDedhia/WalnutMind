@@ -25,6 +25,7 @@
 }
 </style>
 
+{% if post.public == True %}
 <div id = "data-box" class = "not-visible">
 
 
@@ -120,6 +121,13 @@
 
 </div>
 </div>
+{% else %}
+<p>We apologoize for the inconvenience but the commentary for '{{post.title}}' has been redacted by the author.</p>
+
+<p>The author may currently be updating the post or it may have been archived.</p>
+
+<p>If you require access please check again at a later date or contact the author <a href = "/users/{{post.publisher}}">here</a>.</p>
+{% endif %}
 
 <script type="text/javascript">
 const spinnerBox = document.getElementById('spinner-box')

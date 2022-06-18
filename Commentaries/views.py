@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import render, redirect
 from django.views.generic import ListView,DetailView
 from .models import Post
 from django.http import Http404, JsonResponse
@@ -22,7 +22,7 @@ class booksView(ListView):
 
 
 class BookListAPIView(ListAPIView):
-    queryset = Post.objects.all()
+    queryset = Post.objects.filter(public = True)
     serializer_class = CommentarySerializer
 
 

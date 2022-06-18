@@ -4,7 +4,7 @@ from .models import Post
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ('title', 'author', 'authorlink', 'year', 'pages', 'readingEST', 'cover', 'topics','goodreads', 'headquote', 'headline', 'quotes', 'takeaways', 'summary', 'body', 'resources')
+        fields = ('title', 'author', 'authorlink', 'year', 'pages', 'readingEST', 'cover', 'topics','goodreads', 'headquote', 'headline', 'quotes', 'takeaways', 'summary', 'body', 'resources', 'public')
         
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
@@ -23,4 +23,5 @@ class PostForm(forms.ModelForm):
             'summary': forms.Textarea(attrs={'class': 'form-control'}),
             'body': forms.Textarea(attrs={'class': 'form-control'}),
             'resources': forms.Textarea(attrs={'class': 'form-control'}),
+            'public': forms.CheckboxInput(attrs = {'class': 'form-check-input'}),
         }

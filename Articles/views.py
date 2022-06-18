@@ -1,11 +1,8 @@
-from urllib import response
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, render, redirect
 from datetime import datetime, timedelta, date
 from django.contrib.auth.decorators import login_required
 from .models import Post, Comment
-from Users.models import Profile
-from django.utils import timezone
 from django.contrib import messages
 from django.views.generic import ListView, DetailView, UpdateView
 from .forms import PostForm, CommentForm
