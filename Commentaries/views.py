@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from django.views.generic import ListView,DetailView
+from django.urls import reverse_lazy
+from django.views.generic import ListView,DetailView, UpdateView
 from .models import Post
 from django.http import Http404, JsonResponse
 from django.contrib import messages
@@ -75,3 +76,9 @@ def newPostView(request):
         return render(request, 'Commentaries/post.html', {
                 'form': form
             })
+
+class updatePostView(UpdateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'Commentaries/updatepost.html'
+    success_url = reverse_lazy('index')

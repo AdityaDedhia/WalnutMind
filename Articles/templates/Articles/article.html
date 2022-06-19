@@ -1,11 +1,12 @@
 {% extends "layout.html" %}
 
 {% block title %}
-     <title> {{post.title}} | WM</title>
-{% endblock %}
+     <title> {{ post.title }} | WM</title>
+{% endblock title %}
 
-{% block body%}
-
+{% block body %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'Articles/Article-Clean.css' %}"/>
 
 <ol class="breadcrumb" style = "background-color:white">
     <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
@@ -18,7 +19,7 @@
 {% if post.public == True %}
 
 <figure>
-    <img style = "height: 300px; display: block; margin-left: auto; margin-right: auto;" src = "{{post.cover.url}}">
+    <img style = "height: 300px; display: block; margin-left: auto; margin-right: auto;" src = "{{ post.cover.url }}">
     <figcaption>Source: <a href = "{{post.coverURL}}">{{post.coverSrc}}</a></figcaption>
 </figure> 
 
@@ -103,8 +104,8 @@
                     {% endif %}
                 {% else %}
                 {% for comment in post.comments.all %}
-                <strong>On {{comment.dateCreated}}, {{comment.author}} posted:</strong><br>
-                {{comment.content}}<br>
+                <strong>On {{ comment.dateCreated }}, {{ comment.author }} posted:</strong><br>
+                {{ comment.content }}<br>
                 {% endfor %}
                 {% endif %}
              </div>
@@ -113,7 +114,7 @@
  </section>
 
  {% else %}
- <p>We apologoize for the inconvenience but the article '{{post.title}}' has been redacted by the author.</p>
+ <p>We apologoize for the inconvenience but the article '{{ post.title }}' has been redacted by the author.</p>
 
 <p>The author may currently be updating the post or it may have been archived.</p>
 
@@ -121,4 +122,4 @@
 
  {% endif %}
 
-{% endblock %}
+{% endblock body %}

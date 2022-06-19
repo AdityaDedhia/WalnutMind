@@ -2,11 +2,9 @@
 
 {% block title %}
 <title>Blog | WM</title>
-{% endblock %}
+{% endblock title %}
 
 {% block body %}
-
-
     <ol class="breadcrumb" style = "background-color:white">
         <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
         <li class="breadcrumb-item active" aria-current="page">Blog</li>
@@ -21,19 +19,18 @@
 
     <ul>
     {% for post in object_list %}
-    <div class = "row">
-        <li class = "list-group-item"><a href = "/blogs/{{post.slug}}">{{post.title}}</a>
-            <br>
-            <strong>Published: {{post.dateCreated}}</strong>
+    <div class="row">
+        <li class="list-group-item"><a href="/blogs/{{ post.author }}/{{ post.slug }}">{{ post.title }}</a>
+        </br>
+            <strong>Published: {{ post.dateCreated }}</strong>
             <div class="scroll-left">
-                <p>{{post.content|truncatewords:30|safe}}</p>
+                <p>{{ post.content|truncatewords:30|safe }}</p>
             </div>
         </li>
     </div>
-    <br>
+</br>
     {% endfor %}
     </ul>
-
 
     <style>
         .scroll-left {
@@ -64,4 +61,4 @@
         }
     </style>
         
-{% endblock %}
+{% endblock body %}

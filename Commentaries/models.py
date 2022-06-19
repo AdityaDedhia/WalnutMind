@@ -4,6 +4,7 @@ from django.db.models.deletion import CASCADE, DO_NOTHING
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
 from autoslug import AutoSlugField
+from django.forms import Textarea
 from Blog.utils import image_resize
 from taggit.managers import TaggableManager
 
@@ -15,17 +16,14 @@ class Post(models.Model):
     publisher = models.ForeignKey(User, on_delete=models.CASCADE, related_name="commentarypublisher")
     author = models.CharField(max_length = 50, blank = False)
     year = models.IntegerField(blank=False)
-    authorlink = models.URLField(max_length = 128, blank = True)
     pages = models.IntegerField()
-    readingEST = models.IntegerField()
     cover = models.ImageField(upload_to = 'Commentaries/commentary_covers', blank = False)
     topics = models.CharField(max_length = 100, blank = False)
-    goodreads = models.URLField(max_length = 128, blank = True)
     headquote = models.CharField(max_length = 255)
     headline = models.CharField(max_length=128)
-    quotes = RichTextField(blank = False)
-    takeaways = RichTextField(blank = False)
-    summary = RichTextField(blank = False)
+    quotes = models.TextField(max_length = 2000, blank = False)
+    takeaways = models.TextField(max_length = 512, blank = False)
+    summary = models.TextField(max_length = 512, blank = False)
     body = RichTextUploadingField(blank = False)
     resources = RichTextField(blank = False)
     dateCreated = models.DateTimeField(auto_now_add = True)

@@ -8,5 +8,5 @@ from .views import diariesView, diaryView
 urlpatterns = [
     path('',diariesView.as_view(), name = 'blogindex'),
     path('new', views.newPostView, name = 'newblogpost'),
-    path('<slug:pk_slug>', diaryView.as_view(), name = 'blogview'),
+    path('<str:username>/<slug:pk_slug>', diaryView.as_view(), name = 'blogview'),
 ] + static(settings.STATIC_URL, document_root = settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

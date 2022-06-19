@@ -1,19 +1,17 @@
 {% extends "layout.html" %}
 
 {% block title %}
-     <title>{{post.title}} | WM</title>
-{% endblock %}
+     <title>{{ post.title }} | WM</title>
+{% endblock title %}
 
-{% block body%}
+{% block body %}
 {% load static %}
 
-
-<ol class="breadcrumb" style = "background-color:white">
+<ol class="breadcrumb" style="background-color:white">
     <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
     <li class="breadcrumb-item"><a href="{% url 'bookindex' %}">Books</a></li>
-    <li class="breadcrumb-item active" aria-current="page">{{post.title}}</li>
+    <li class="breadcrumb-item active" aria-current="page">{{ post.title }}</li>
 </ol>
-
 
 <div id = "spinner-box" class = "text-center mt-3">
   <div class="spinner-border text-info" role="status"></div>
@@ -25,40 +23,46 @@
 }
 </style>
 
-{% if post.public == True %}
-<div id = "data-box" class = "not-visible">
+{% if post.publisher == request.user and post.public == False %}
+<div class="alert alert-danger d-flex align-items-center" role="alert">
+  <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+  <div>
+    You are currently in DRAFT mode. Only you are able to see this post. <a href="{% url 'updatebookpost' pk=post.pk %}">Edit</a> and turn on the publish live toggle to remove this message.</div>
+</div>
+{% endif %}
 
-
+{% if post.public == True or post.publisher == request.user %}
+<div id="data-box" class="not-visible">
 
 <div class="row">
 
 <!--SIDE COLUMN-->
 <div class="col-6 col-md-4">
 <div class="card bg-light mb-3">
-    <div class="card-header" style ="display: flex; justify-content: space-between;">
+    <div class="card-header" style="display: flex; justify-content: space-between;">
         <div>
-        <img style = "width:150px; float-end" class = "img-thumbnail" src = "{{post.cover.url}}">
+        <img style="width:150px; float-end" class="img-thumbnail" src="{{ post.cover.url }}">
         </div>
         <div>
-        <strong>{{post.author}}'s {{post.title}}</strong><br>
-        <p>Author: <a href = "{{post.authorlink}}">{{post.author}}</a></p>
-        <p>Year Published: {{post.year}}</p>
-        <p>Page Count: {{post.pages}}</p>
+        <strong>{{ post.author }}'s {{ post.title }}</strong></br>
+        <p>Author: {{ post.author }}</p>
+        <p>Year Published: {{ post.year }}</p>
+        <p>Page Count: {{ post.pages }}</p>
         <p>Genre:</p>
-        <p>Rating: {{post.rating}}</p>
+        <p>Rating: {{ post.rating }}</p>
         </div>
     </div>
     <div class="card-body">
-        <i>{{post.headquote}}</i>
-        <br>
-      <h5 class="card-title">{{post.headline}}</h5>
+        <i>{{ post.headquote }}</i>
+    </br>
+      <h5 class="card-title">{{ post.headline }}</h5>
     </div>
 </div>
 
 <div class="card text-white bg-primary">
   <div class="card-header"><strong>Takeaways</strong></div>
   <div class="card-body">
-    <p class="card-text">{{post.takeaways|safe}}</p>
+    <p class="card-text">{{ post.takeaways|safe }}</p>
   </div>
 </div>
 <br>
@@ -66,18 +70,16 @@
 <div class="card text-white bg-dark">
   <div class="card-header"><strong>Summary</strong></div>
   <div class="card-body">
-    <p class="card-text">{{post.summary|safe}}</p>
+    <p class="card-text">{{ post.summary|safe }}</p>
   </div>
 </div>
-<br>
+</br>
 
-
-
-<br>
+</br>
 <div class="card text-white bg-info" style = "onmousedown="return false"; onselectstart="return false"">
     <div class="card-header"><strong>The Gist - A Chronological Quote Synopsis:</strong></div>
     <div class="card-body">
-      <p class="card-text">{{post.quotes|safe}}</p>
+      <p class="card-text">{{ post.quotes|safe }}</p>
     </div>
 </div>
 <br>
@@ -91,42 +93,38 @@
     Author:
     {% load static %}
     {% if post.publisher.profile.avatar %}
-    <img style = "position: relative; top:-3px; width: 40px; height: 40px; border-radius: 50%;" src = "{{post.publisher.profile.avatar.url}}">
+    <img style="position: relative; top:-3px; width: 40px; height: 40px; border-radius: 50%;" src="{{ post.publisher.profile.avatar.url }}">
     {% else %}
-    <img style = "position: relative; top:-3px; width: 40px; height: 40px; border-radius: 50%;" src = "{% static 'Users/def_avatar.png' %}">
+    <img style="position: relative; top:-3px; width: 40px; height: 40px; border-radius: 50%;" src="{% static 'Users/def_avatar.png' %}">
     {% endif %}
 
-    <a href = "/users/{{post.publisher.username}}">{{post.publisher.first_name}} {{post.publisher.last_name}}</a> / 
-    <a href = "{{post.goodreads}}">Goodreads</a>
+    <a href="/users/{{ post.publisher.username }}">{{ post.publisher.first_name }} {{ post.publisher.last_name }}</a>
   </li>
-  <li>Date of Publication: <b>{{post.dateCreated}}</b> (last revised <b>{{post.dateUpdated}}</b>)</i></li>
-  <li>Estimated Reading Time: <b>{{post.readingEST}} minutes</b>.</li>
+  <li>Date of Publication: <b>{{ post.dateCreated }}</b> (last revised <b>{{ post.dateUpdated }}</b>)</i></li>
+  <li>Estimated Reading Time: <b>[] minutes</b>.</li>
   </ul>
-  <p style = "text-align:end">Jump to <a href = "#resources">resources</a></p>
-
+  <p style="text-align:end">Jump to <a href="#resources">resources</a></p>
 
   <h1>Commentary</h1>
-  <hr style="border-top: 2px solid rgb(0, 0, 0)">
+</hr style="border-top: 2px solid rgb(0, 0, 0)">
 
-  <p>{{post.body|safe}}</p>
-  <br>
-  <h1 id = "resources">Resources</h1>
-  <hr style="border-top: 2px solid rgb(0, 0, 0)">
+  <p>{{ post.body|safe }}</p>
+</br>
+  <h1 id="resources">Resources</h1>
+</hr style="border-top: 2px solid rgb(0, 0, 0)">
 
-
-  <p>{{post.resources|safe}}</p>
-
+  <p>{{ post.resources|safe }}</p>
 
 </div>
 
 </div>
 </div>
 {% else %}
-<p>We apologoize for the inconvenience but the commentary for '{{post.title}}' has been redacted by the author.</p>
+<p>We apologoize for the inconvenience but the commentary for '{{ post.title }}' has been redacted by the author.</p>
 
 <p>The author may currently be updating the post or it may have been archived.</p>
 
-<p>If you require access please check again at a later date or contact the author <a href = "/users/{{post.publisher}}">here</a>.</p>
+<p>If you require access please check again at a later date or contact the author <a href="/users/{{ post.publisher }}">here</a>.</p>
 {% endif %}
 
 <script type="text/javascript">
@@ -152,5 +150,4 @@ $.ajax({
 
 </script>
 
-
-{% endblock %}
+{% endblock body %}
