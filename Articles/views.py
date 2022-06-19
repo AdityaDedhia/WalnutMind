@@ -63,7 +63,7 @@ class searchView(ListView):
         return context
 
 class ArticleListAPIView(ListAPIView):
-    queryset = Post.objects.all()
+    queryset = Post.objects.filter(public = True)
     serializer_class = ArticleSerializer
 
 class articleView(DetailView):
