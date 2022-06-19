@@ -1,9 +1,6 @@
 import os
 import dotenv
 from pathlib import Path
-import django_heroku
-import dj_database_url
-from decouple import config
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/

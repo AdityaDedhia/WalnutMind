@@ -12,7 +12,7 @@ class Post(models.Model):
     title = models.CharField(max_length=128, blank = False) #Blank=false for required fields
     slug = AutoSlugField(populate_from='title', unique = True, null = True, default = None)
     tags = TaggableManager(related_name="commentarytags")
-    publisher = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bookpublisher")
+    publisher = models.ForeignKey(User, on_delete=models.CASCADE, related_name="commentarypublisher")
     author = models.CharField(max_length = 50, blank = False)
     year = models.IntegerField(blank=False)
     authorlink = models.URLField(max_length = 128, blank = True)

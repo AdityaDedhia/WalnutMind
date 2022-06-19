@@ -14,6 +14,9 @@
 </ol>
 
 <!--COVER-->
+
+{% if post.public == True %}
+
 <figure>
     <img style = "height: 300px; display: block; margin-left: auto; margin-right: auto;" src = "{{post.cover.url}}">
     <figcaption>Source: <a href = "{{post.coverURL}}">{{post.coverSrc}}</a></figcaption>
@@ -108,5 +111,14 @@
          </div>
      </div>
  </section>
+
+ {% else %}
+ <p>We apologoize for the inconvenience but the article '{{post.title}}' has been redacted by the author.</p>
+
+<p>The author may currently be updating the post or it may have been archived.</p>
+
+<p>If you require access please check again at a later date or contact the author <a href = "/users/{{post.author}}">here</a>.</p>
+
+ {% endif %}
 
 {% endblock %}

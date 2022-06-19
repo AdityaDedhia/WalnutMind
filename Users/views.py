@@ -3,15 +3,13 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from django.urls import reverse_lazy
 from .forms import RegisterUserForm, UpdateProfileForm, UpdateUserForm
 from .models import User, Profile
-from django.views import generic
 from django.templatetags.static import static
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_str, DjangoUnicodeDecodeError
+from django.utils.encoding import force_bytes, force_str
 from .utils import generate_token
 from django.core.mail import EmailMessage
 from django.conf import settings
@@ -48,9 +46,6 @@ def activate_user(request, uidb64, token):
     return render(request, 'Users/failedactivation.html', {
         'user':user
     })
-
-
-
         
 def registerView(request):
     if request.method == "POST":
@@ -113,9 +108,13 @@ def logoutView(request):
 def profileView(request, username):    
     if User.objects.filter(username = username).exists():
         requestedUser = User.objects.get(username = username)
+    
+        articles = requestedUser.articlepublisher.all()
+        commentaries = requestedUser.commentarypublisher.all()
+        diaries = requestedUser.diarypublisher.all()
 
         return render(request, 'Users/profile.html', {
-            'user': requestedUser
+            'user': requestedUser, 'articles':articles, 'commentaries': commentaries, 'diaries': diaries
         })
     else:
         messages.success(request, ("It appears that this user does not exist."))
