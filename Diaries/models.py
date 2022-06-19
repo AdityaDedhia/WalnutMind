@@ -13,6 +13,7 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete= models.CASCADE, related_name="diarypublisher")
     tags = TaggableManager(related_name="diarytags")
     content = RichTextUploadingField(blank = False)
+    public = models.BooleanField(default = False)
     dateCreated = models.DateTimeField(auto_now_add = True)
 
     def __str__(self):

@@ -1,24 +1,34 @@
 {% extends "layout.html" %}
 
 {% block title %}
-     <title>{{post.title}} | WM</title>
-{% endblock %}
+     <title>{{ post.title }} | WM</title>
+{% endblock title %}
 
-{% block body%}
+{% block body %}
 <div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
 
-    <ol class="breadcrumb" style = "background-color:white">
+    <ol class="breadcrumb" style="background-color:white">
         <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
         <li class="breadcrumb-item"><a href="{% url 'bookindex' %}">Blog</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{{post.title}}</li>
+        <li class="breadcrumb-item active" aria-current="page">{{ post.title }}</li>
     </ol>
 
-<h1>{{post.title}}</h1>
-<hr style="border-top: 2px solid rgb(0, 0, 0)">
-<strong>Published on {{post.dateCreated}} by Aditya Dedhia</strong><br>
-<p>{{post.content|safe}}</p>
+{% if post.public == True %}
 
-<br>
+<h1>{{ post.title }}</h1>
+</hr style="border-top: 2px solid rgb(0, 0, 0)">
+<strong>Published on {{ post.dateCreated }} by {{ post.author }}</strong></br>
+<p>{{ post.content|safe }}</p>
+
+</br>
+
+{% else %}
+<p>We apologoize for the inconvenience but the entry '{{ post.title }}' has been redacted by the author.</p>
+
+<p>The author may currently be updating the post or it may have been archived.</p>
+
+<p>If you require access please check again at a later date or contact the author <a href="/users/{{ post.author }}">here</a>.</p>
+
+{% endif %}
 </div>
-{% endblock %}
-
+{% endblock body %}

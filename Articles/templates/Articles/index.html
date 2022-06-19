@@ -2,10 +2,11 @@
 
 {% block title %}
 <title>Home | WM</title>
-{% endblock %}
+{% endblock title %}
 
 {% block body %}
 {% load static %}
+</link rel="stylesheet" type="text/css" href="{% static 'Articles/Article-List.css' %}">
 
 <style>
   .title {
@@ -22,10 +23,9 @@
   }
 </style>
 
-
-<div style = "text-align: center; position: relative; color: black; z-index:-1">
+<div style="text-align: center; position: relative; color: black; z-index:-1">
   <img src="{% static "Articles/home.jpg" %}" class="img-fluid" alt="Responsive image" style = "transform:translate(0,-5%)">
-      <strong class = "title" style = "font-size: 2.2vw; opacity: 0.85; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -40%);">Liberate Your Learning Shell<br></strong><h4 style = "font-size: 1.4vw; opacity: 0.85; position: absolute; top: 50%; left: 50%; transform: translate(-50%, 110%);">Philosophy of economics and management.</h4>
+      <strong class="title" style="font-size: 2.2vw; opacity: 0.85; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -40%);">Liberate Your Learning Shell<br></strong><h4 style = "font-size: 1.4vw; opacity: 0.85; position: absolute; top: 50%; left: 50%; transform: translate(-50%, 110%);">Philosophy of economics and management.</h4>
 </div>
 
 <section class="py-6">
@@ -100,18 +100,17 @@
       <div class="intro">
           <h2 class="text-center">Explore Our Latest</h2>
       </div>
-      <hr style="border-top: 1px solid rgb(0, 0, 0)">
+    </hr style="border-top: 1px solid rgb(0, 0, 0)">
 
 
       <div class="row articles">
         {% for post in recent %}
-          <div class="col-sm-6 col-md-4 item zoom"><a href="articles/{{post.slug}}"><img class="img-fluid" src="{{post.cover.url}}"></a>
-              <h3 class="name">{{post.title}}</h3>
-              <p class="description">{{post.abstract}}</p>
+          <div class="col-sm-6 col-md-4 item zoom"><a href="{% url 'articleview' pk_slug=post.slug %}"><img class="img-fluid" src="{{ post.cover.url }}"></a>
+              <h3 class="name">{{ post.title }}</h3>
+              <p class="description">{{ post.abstract }}</p>
               {% for tag in post.tags.all %}
-              <span class="badge rounded-pill text-bg-info">#{{tag}}</span>
+              <span class="badge rounded-pill text-bg-info">#{{ tag }}</span>
               {% endfor %}
-              <a class="action" href="articles/{{post.slug}}"><i class="fa fa-arrow-circle-right"></i></a>
           </div>
 
           {% endfor %}
@@ -119,6 +118,4 @@
   </div>
 </section>
 
-
-
-{% endblock %}
+{% endblock body %}

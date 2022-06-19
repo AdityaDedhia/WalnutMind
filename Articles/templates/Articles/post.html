@@ -2,7 +2,7 @@
 
 {% block title %}
 <title>Publish | WM</title>
-{% endblock %}
+{% endblock title %}
 
 {% block body %}
 
@@ -24,11 +24,11 @@
 
       <div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
 
-        <form method = "POST" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            {{form.media}}
+            {{ form.media }}
         
-            {{form.as_p}}
+            {{ form.as_p }}
             <button>Publish</button>
 
         </form>
@@ -38,6 +38,6 @@
     </div>
   </div>
 
-  <br>
+</br>
   
-{% endblock %} 
+{% endblock body %} 
