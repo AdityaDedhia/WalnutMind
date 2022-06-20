@@ -1,27 +1,45 @@
 from django.shortcuts import render
-from .models import Term
-from django.views.generic import ListView, DetailView
-from django.http import HttpResponseRedirect, Http404
+from .models import Term, List, Resource, Collection
+from django.views.generic import DetailView
+from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from .forms import NewTermForm
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect
 
-class wikiView(ListView):
-    model = Term
-    template_name = 'Wiki/index.html'
+def wikiView(request):
+    return render(request, 'Wiki/index.html')
+
+def collectionsView(request):
+    resources = Resource.objects.all()
+    collections = Collection.objects.all()
+    collectionsCount = collections.count()
+    return render(request, 'Wiki/collections.html', {
+        'resources':resources, 'collections':collections, 'collectionsCount': collectionsCount
+    })
+
+def listsView(request):
+    terms = Term.objects.all()
+    lists = List.objects.all()
+    listsCount = lists.count()
+    return render(request, 'Wiki/lists.html', {
+        'terms':terms, 'lists':lists, 'listsCount': listsCount
+    })
+
 
 def searchView(request):
     if request.method == "POST":
         searchedterm = request.POST['searchedterm'] 
         #query database
         if searchedterm:
-            results = Term.objects.filter(term__search= searchedterm)
+            relatedTerms = Term.objects.filter(term__search= searchedterm)
+            relatedResources = Resource.objects.filter(title__search=searchedterm)
         else:
-            results = None
+            relatedTerms = None
+            relatedResources = None
 
         return render(request, 'Wiki/search.html', {
-            'term': searchedterm, 'results': results
+            'query': searchedterm, 'terms': relatedTerms, 'resources': relatedResources
         })
     else:
         return render(request, 'Wiki/search.html')
@@ -59,6 +77,38 @@ class definitionView(DetailView):
                           {'verbose_name': queryset.model._meta.verbose_name})
         return obj
 
+
+class collectionView(DetailView):
+    model = Collection
+    slug_url_kwarg = 'pk_slug'
+    template_name = 'Wiki/collection.html'
+
+    def get_object(self, queryset = None):
+        if queryset is None:
+            queryset = self.get_queryset()
+
+        pk_slug = self.kwargs.get(self.slug_url_kwarg)
+
+        if pk_slug is not None and pk_slug.isdigit():
+            queryset = queryset.filter(pk=pk_slug)
+        
+        elif pk_slug is not None:
+            slug_field = self.get_slug_field()
+            queryset = queryset.filter(**{slug_field: pk_slug})
+
+        
+        if pk_slug is None:
+            raise AttributeError(
+                "Generic detail view %s must be called with an object "
+                "pk_slug in the URLconf." % self.__class__.__name__
+            )
+
+        try:
+            obj = queryset.get()
+        except queryset.model.DoesNotExist:
+            raise Http404(("No %(verbose_name)s found matching the query") %
+                          {'verbose_name': queryset.model._meta.verbose_name})
+        return obj
 
 @login_required(login_url='/users/login')
 def newTermView(request):

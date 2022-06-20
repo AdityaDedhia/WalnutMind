@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block title %}
+<title>Wiki | WM</title>
+{% endblock title %}
+
+{% block body %}
+
+<ol class="breadcrumb" style = "background-color:white">
+    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'wikiindex' %}">Wiki</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'collectionsview' %}">Collections</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ collection.title }}</li>
+</ol>
+
+<div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
+
+<h3>{{ collection.title }}</h3>
+<p>Collection by <a href="{% url 'profile' username=collection.creator %}">{{ collection.creator }}</a> | Created on <b>{{ collection.dateCreated }}</b>, last updated <b>{{ collection.dateUpdated }}</b></p>
+
+<ul>
+    <div class="list-group">
+    {% for resource in collection.resources.all %}
+  
+    <div class="list-group-item list-group-item-action">
+    <h5>{{ resource.title }}</h5><hr/>
+    Description: {{ resource.description }}
+    <br/>
+    Attachments: 
+    {% if resource.weblink %}
+    <i class="bi bi-filetype-html"> </i><a href="{{ resource.weblink }}" target="_blank" rel="noopener noreferrer">{{ resource.weblink }}</a>
+    {% endif %}
+    {% if resource.videolink %}
+    <i class="bi bi-file-earmark-play"> </i><a href="{{ resource.videolink }}" target="_blank" rel="noopener noreferrer">{{ resource.videolink }}</a>
+    {% endif %}
+    {% if resource.filelink %}
+    <i class="bi bi-file-earmark-text"> </i><a href="{{ resource.filelink }}" target="_blank" rel="noopener noreferrer">Files</a>
+    {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</ul>
+
+</div>
+{% endblock body %}

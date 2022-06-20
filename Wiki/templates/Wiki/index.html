@@ -2,7 +2,7 @@
 
 {% block title %}
 <title>Wiki | WM</title>
-{% endblock %}
+{% endblock title %}
 
 {% block body %}
 
@@ -11,35 +11,29 @@
         <li class="breadcrumb-item active" aria-current="page">Wiki</li>
     </ol>
 
-    <div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
+<div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
 
-<h1>Terms</h1><br>
-
-<div class="container-fluid">
+  <div class="container-fluid" style = "height: 300px;display: flex;align-items: center;justify-content: center;">
     <form method = POST action = "{% url 'searchterm' %}" class="d-flex">
         {% csrf_token %}
 
-      <input class="form-control me-2" type="search" placeholder="Search for a specific term..." aria-label="Search" name = "searchedterm">
+      <input class="form-control me-2" type="search" placeholder="Search anything..." aria-label="Search" name = "searchedterm">
 
       <button class="btn btn-outline-secondary" type="submit">Search</button>
     </form>
+</div>
+
+
+<div class="row" style = "padding:10px">
+  <div class="col btn btn-primary" style = "margin-right:10px; background-image: var(--bs-gradient);">
+    <a href = "{% url 'listsview' %}" style="text-align: center"><h1 style = "color:white">BROWSE DEFINITIONS</h1></a>
   </div>
-  <br>
 
+  <div class="col btn btn-primary" style = "background-image: var(--bs-gradient);">
+    <a href="{% url 'collectionsview' %}" style="text-align: center"><h1 style="color:white">BROWSE RESOURCES</h1></a>
 
-<ul>
-{% for term in object_list %}
-<li>
-<a href = "define-{{term.slug}}">{{term.term}}</a>
-</li>
-{% endfor %}
-</ul>
-
-
-
-
-
-
+  </div>
+</div>
 
 </div>
-{% endblock %}
+{% endblock body %}
