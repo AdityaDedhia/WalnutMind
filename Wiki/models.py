@@ -22,22 +22,31 @@ class List(models.Model):
     terms = models.ManyToManyField(Term)
     tags = TaggableManager(related_name="listtags")
 
-
+    def __str__(self):
+        return str(self.title)
 
 class Resource(models.Model):
-    title = models.CharField(max_length=128, blank = False)
-    creator = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    link = models.URLField(blank = False)
+    title = models.CharField(max_length=100, blank = False)
+    creator = models.ForeignKey(User, on_delete=models.DO_NOTHING, null = True, blank = True)
+    weblink = models.URLField(null = True, blank = True)
+    videolink = models.URLField(null = True, blank = True)
+    filelink = models.FileField(upload_to = 'Wiki/Resources', null = True, blank = True)
     description = models.CharField(max_length = 255, blank = True)
     dateCreated = models.DateTimeField(auto_now_add = True)
 
+    def __str__(self):
+        return str(self.title)
 
 class Collection(models.Model):
     title = models.CharField(max_length=128, blank = False)
     slug = AutoSlugField(populate_from='title', unique = True, null = True, default = None)
+    description = models.CharField(max_length = 255, blank = True)
     creator = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="collectionpublisher")
     contributors = models.ManyToManyField(User)
+    resources = models.ManyToManyField(Resource)
     dateCreated = models.DateTimeField(auto_now_add = True)
     dateUpdated = models.DateTimeField(auto_now = True)
-    resources = models.ManyToManyField(Resource)
     tags = TaggableManager(related_name="collectiontags")
+
+    def __str__(self):
+        return str(self.title)

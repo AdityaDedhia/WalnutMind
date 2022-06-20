@@ -2,7 +2,7 @@
 
 {% block title %}
 <title>Search | WM</title>
-{% endblock %}
+{% endblock title %}
 
 {% block body %}
 
@@ -13,19 +13,46 @@
         <li class="breadcrumb-item active" aria-current="page">Search</li>
     </ol>
 
-<h1>Here are your search results for {{term}}:</h1>
-<br>
+<h3>Here are your search results for {{ query }}:</h3>
+<br/>
 
+<h5>Related Terms</h5>
 <ul>
-{% for result in results %}
+{% for term in terms %}
 <li>
-    <a href = "define-{{result.slug}}">{{result.term}}</a>
+    <a href = "define-{{ term.slug }}">{{ term.term }}</a>
 </li>
     <br>
 {% endfor %}
 </ul>
 
+<hr/>
+
+<h5>Related Resources</h5>
+
+<ul>
+    <div class="list-group">
+    {% for resource in resources %}
+  
+    <div class="list-group-item list-group-item-action">
+    <h5>{{ resource.title }}</h5><hr/>
+    Description: {{ resource.description }}
+    <br/>
+    Attachments: 
+    {% if resource.weblink %}
+    <i class="bi bi-filetype-html"> </i><a href="{{ resource.weblink }}" target="_blank" rel="noopener noreferrer">{{ resource.weblink }}</a>
+    {% endif %}
+    {% if resource.videolink %}
+    <i class="bi bi-file-earmark-play"> </i><a href="{{ resource.videolink }}" target="_blank" rel="noopener noreferrer">{{ resource.videolink }}</a>
+    {% endif %}
+    {% if resource.filelink %}
+    <i class="bi bi-file-earmark-text"> </i><a href="{{ resource.filelink }}" target="_blank" rel="noopener noreferrer">Files</a>
+    {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</ul>
 
 
 </div>
-{% endblock %}
+{% endblock body %}

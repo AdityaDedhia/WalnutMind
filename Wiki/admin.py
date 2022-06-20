@@ -10,7 +10,5 @@ class FileAdmin(admin.ModelAdmin):
     readonly_fields = ['slug']
 
 admin.site.register(List)
-
 admin.site.register(Resource)
-
 admin.site.register(Collection)
