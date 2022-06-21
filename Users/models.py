@@ -13,6 +13,7 @@ class Profile(models.Model):
     banner = models.ImageField(upload_to = 'Users/profile_banners', null = True, blank = True)
     avatar = models.ImageField(upload_to = 'Users/profile_covers', null = True, blank = True)
     location = CountryField(null = True)
+    interests = models.CharField(max_length = 75, null = True)
     bio = RichTextField(max_length=2000, null = True)
 
     def __str__(self):

@@ -19,6 +19,24 @@
   margin-top: 20px;
 }
 
+.article-clean .text h2 {
+  margin-top: 28px;
+  margin-bottom: 20px;
+  line-height: 1.45;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.article-clean .text h3 {
+  margin-top: 22px;
+  margin-bottom: 20px;
+  line-height: 1.4;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
 .article-clean .intro p {
   color: #929292;
   font-size: 12px;
@@ -54,15 +72,6 @@
   .article-clean .text p {
     font-size: 16px;
   }
-}
-
-.article-clean .text h2 {
-  margin-top: 28px;
-  margin-bottom: 20px;
-  line-height: 1.45;
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
 }
 
 @media (min-width:768px) {
