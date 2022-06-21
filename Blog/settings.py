@@ -119,6 +119,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #FILES------------------------------------------------------------
 
+GEOIP_PATH = os.path.join(BASE_DIR, 'geoIP')
+
 STATIC_HOST = os.environ.get('STATIC_HOST', '')
 STATIC_URL = STATIC_HOST + '/static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
