@@ -1,8 +1,8 @@
 {% extends "layout.html" %}
 
 {% block title %}
-<title> {{user.username}}'s Profile | WM</title>
-{% endblock %}
+<title> {{ user.username }}'s Profile | WM</title>
+{% endblock title %}
 
 {% block body %}
 {% load static %}
@@ -10,7 +10,7 @@
 <ol class="breadcrumb" style = "background-color:white">
   <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
   <li class="breadcrumb-item"><a href="{% url 'index' %}">Users</a></li>
-  <li class="breadcrumb-item active" aria-current="page">{{user.username}}</li>
+  <li class="breadcrumb-item active" aria-current="page">{{ user.username }}</li>
 </ol>
 
 <!--PROFILE COVER-->
@@ -42,7 +42,7 @@
             <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
             <!--PROFILE PICTURE START-->
               {% if user.profile.avatar %}
-              <img class="img-fluid mt-4 mb-2" style = "z-index: 0; border-radius: 50%;" src = "{{user.profile.avatar.url}}">
+              <img class="img-fluid mt-4 mb-2" style = "z-index: 0; border-radius: 50%;" src = "{{ user.profile.avatar.url }}">
               {% else %}
               <img class="img-fluid mt-4 mb-2" style = "z-index: 0; border-radius: 50%;" src = "{% static 'Users/def_avatar.png' %}">
               {% endif %}
@@ -59,7 +59,7 @@
             <!--PROFILE PICTURE END-->
             <div class="ms-3" style="margin-top: 95px;">
               <h5>{{ user.username }}</h5>
-              Location: {{ user.profile.location.name }} <img src="{{user.profile.location.flag}}"><br/>
+              Location: {{ user.profile.location.name }} <img src="{{ user.profile.location.flag }}"><br/>
               Interests: {{ user.profile.interests }}
             </div>
           </div>
@@ -71,6 +71,14 @@
 
             <!--CONTENT MASONRY-->
             <div class = "col-8" style = "padding: 30px">  
+              <h3>Publication Highlights:</h3>
+              <div>
+                {% for highlight in highlights %}
+                <b><i>"{{ highlight.content }}"</i></b>
+                <p>Source: <a href="{{ highlight.sourcelink }}">{{ highlight.sourcename }}</a></p>
+                {% endfor %}
+              </div>
+              <br/>
             <h3>Recent Publications:</h3>
             <hr>
             <div id="masonry" class="row" data-masonry='{"percentPosition": true }'>
@@ -84,22 +92,22 @@
                   </div>
                 </div>
               </div>
-              <br>
+              <br/>
               {% endfor %}
               {% for commentary in commentaries %}
   
-              <div class = "col-sm-4 col-lg-2 mb-3 zoom row-item">
+              <div class="col-sm-4 col-lg-2 mb-3 zoom row-item">
                 <div class="card">
-                  <img class = "card-img-top" src = "{{ commentary.cover.url }}">
+                  <img class = "card-img-top" src = "{{ commentary.cover.url }}"/>
                     <p class="card-title">{{ commentary.title }} Commentary</p>
                 </div>
               </div>
-              <br>
+              <br/>
               {% endfor %}
             </div>
           </div>
 
-          <br><br><br>
+          <br/><br/><br/>
  
         
           </div>
@@ -159,7 +167,7 @@
                            <p class="badge bg-danger">Archived</p>
                            {% endif %}
                            <br>
-                          {{commentary.dateCreated}}
+                          {{ commentary.dateCreated }}
                            <a class="btn btn-primary btn-sm" href="/books/{{commentary.pk}}/edit" role="button">Edit</a>
                            {% if user.is_superuser %}
                            <a class="btn btn-danger btn-sm" href="/books/{{commentary.pk}}/delete" role="button">Delete</a>
@@ -206,19 +214,13 @@
                  </div>
                    {% endif %}
 
-
-
   </div>
 </section>
 
 <!--PROFILE COVER END-->
 
-<br><br>
+<br/><br/>
 
 <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
 
-<script>
-
-</script>
-
-{% endblock %}
+{% endblock body %}
