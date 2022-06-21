@@ -57,23 +57,23 @@
 
             </div>
             <!--PROFILE PICTURE END-->
-            <div class="ms-3" style="margin-top: 130px;">
-              <h5>{{user.username}}</h5>
-              <p>Location: {{user.profile.location.name}} <img src = "{{user.profile.location.flag}}"></p>
-              <!--<P>Interests:</p>-->
+            <div class="ms-3" style="margin-top: 95px;">
+              <h5>{{ user.username }}</h5>
+              Location: {{ user.profile.location.name }} <img src="{{user.profile.location.flag}}"><br/>
+              Interests: {{ user.profile.interests }}
             </div>
           </div>
 
-          <div class = "row" style = "margin-top: -130px;">
-          <div class=" card-body bg-dark col-4" style = "color:white; border-radius:25px; padding:30px">
-                <p>{{user.profile.bio|safe}}</p>
+          <div class="row" style = "margin-top: -130px;">
+          <div class=" card-body bg-dark col-4" style="color:white; border-radius:25px; padding:30px">
+                <p>{{ user.profile.bio|safe }}</p>
           </div>
 
             <!--CONTENT MASONRY-->
             <div class = "col-8" style = "padding: 30px">  
             <h3>Recent Publications:</h3>
             <hr>
-            <div id="masonry" class = "row" data-masonry='{"percentPosition": true }'>
+            <div id="masonry" class="row" data-masonry='{"percentPosition": true }'>
               {% for article in articles %}
   
               <div class = "col-sm-6 col-lg-3 mb-4 zoom row-item">

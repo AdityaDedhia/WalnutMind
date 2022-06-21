@@ -21,6 +21,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
+    'axes',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -52,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware',
 ]
 
 ROOT_URLCONF = 'Blog.urls'
@@ -100,6 +102,10 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+]
+AUTHENTICATION_BACKENDS = [
+'axes.backends.AxesBackend',
+'django.contrib.auth.backends.ModelBackend',
 ]
 
 LANGUAGE_CODE = 'en-us'

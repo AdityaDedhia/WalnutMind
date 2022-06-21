@@ -53,21 +53,24 @@ def registerView(request):
         if form.is_valid():
             form.save()
             username = form.cleaned_data['username']
-            password = form.cleaned_data['password1']
-            user = authenticate(username = username, password = password)
-            login(request, user)
-            send_activation_email(user, request)
-            profile = Profile(
-            user = user,
-            avatar = 'Users/profile_covers/def_avatar.png',
-            banner = 'Users/profile_banners/def_banner.png',
-            location = 'US',
-            bio = "Hello, I'm new to Walnut Mind!",
-            )
-            profile.save()
-            messages.success(request, ("Your registration is almost complete. Check your email for a verification link."))
-            logout(user)
-            return redirect('index')
+            password1 = form.cleaned_data['password1']
+            password2 = form.cleaned_data['password2']
+            if password1==password2:
+                user = authenticate(username = username, password = password1)
+                send_activation_email(user, request)
+                profile = Profile(
+                user = user,
+                avatar = 'Users/profile_covers/def_avatar.png',
+                banner = 'Users/profile_banners/def_banner.png',
+                location = 'US',
+                bio = "Hello, I'm new to Walnut Mind!",
+                )
+                profile.save()
+                messages.success(request, ("Your registration is almost complete. Check your email for a verification link."))
+                return redirect('index')
+            else:
+                messages.success(request, ("Registration failed because your passwords did not match."))
+                return redirect('registerr')
         else:
             messages.success(request, ("An unexpected error occured on our part. Please try again later."))
             return redirect('index')
@@ -83,17 +86,15 @@ def loginView(request):
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
-        userprofile = Profile.objects.get(user = user)
-        if not userprofile.is_email_verified:
-            send_activation_email(user, request)
-            messages.success(request, ("Your email has not yet been verified. Check your inbox."))
-            return redirect('index')
-
         if user is not None:
             login(request, user)
+            userprofile = Profile.objects.get(user = user)
+            if not userprofile.is_email_verified:
+                send_activation_email(user, request)
+                messages.success(request, ("Your email has not yet been verified. Check your inbox."))
             return redirect('index')
         else:
-            messages.success(request, ("There was an error logging in, please try again."))
+            messages.success(request, ("The username and/or password you have entered is incorrect, please try again."))
             return redirect('loginn')
     else:
         return render(request,'Users/login.html')
