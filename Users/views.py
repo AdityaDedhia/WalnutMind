@@ -1,4 +1,5 @@
 from getpass import getuser
+from django.forms import ValidationError
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -13,6 +14,17 @@ from django.utils.encoding import force_bytes, force_str
 from .utils import generate_token
 from django.core.mail import EmailMessage
 from django.conf import settings
+from django.contrib.gis.geoip2 import GeoIP2
+import threading
+
+class EmailThread(threading.Thread):
+    def __init__(self,email):
+        self.email = email
+        threading.Thread.__init__(self)
+
+    def run(self):
+        self.email.send()
+
 
 def send_activation_email(user, request):
     current_site = get_current_site(request)
@@ -25,7 +37,7 @@ def send_activation_email(user, request):
     })
 
     email = EmailMessage(subject=email_subject, body = email_body, from_email=settings.EMAIL_FROM_USER, to = [user.email])
-    email.send()
+    EmailThread(email).start()
 
 def activate_user(request, uidb64, token):
     try:
@@ -40,7 +52,7 @@ def activate_user(request, uidb64, token):
         profile.is_email_verified = True
         profile.save()
 
-        messages.success(request, ("Registration has been successful. Finish setting up your profile."))
+        messages.success(request, ("Registration has been successful. You may now login."))
         return redirect('loginn')
 
     return render(request, 'Users/failedactivation.html', {
@@ -51,29 +63,25 @@ def registerView(request):
     if request.method == "POST":
         form = RegisterUserForm(request.POST)
         if form.is_valid():
-            form.save()
             username = form.cleaned_data['username']
-            password1 = form.cleaned_data['password1']
-            password2 = form.cleaned_data['password2']
-            if password1==password2:
-                user = authenticate(username = username, password = password1)
-                send_activation_email(user, request)
-                profile = Profile(
-                user = user,
-                avatar = 'Users/profile_covers/def_avatar.png',
-                banner = 'Users/profile_banners/def_banner.png',
-                location = 'US',
-                bio = "Hello, I'm new to Walnut Mind!",
-                )
-                profile.save()
-                messages.success(request, ("Your registration is almost complete. Check your email for a verification link."))
-                return redirect('index')
-            else:
-                messages.success(request, ("Registration failed because your passwords did not match."))
-                return redirect('registerr')
-        else:
-            messages.success(request, ("An unexpected error occured on our part. Please try again later."))
+            password = form.cleaned_data['password1']
+            form.save()
+            user = authenticate(request=request, username = username, password = password)
+            send_activation_email(user, request)
+            profile = Profile(
+            user = user,
+            avatar = 'Users/profile_covers/def_avatar.png',
+            banner = 'Users/profile_banners/def_banner.png',
+            location = 'US',
+            interests = 'None',
+            bio = "Hello, I'm new to Walnut Mind!",
+            )
+            profile.save()
+            messages.success(request, ("Your registration is almost complete. Check your email for a verification link."))
             return redirect('index')
+        else:
+            messages.success(request, ("The form details you entered were invalid. Please verify them again."))
+            return redirect('registerr')
 
     else:
         form = RegisterUserForm()
@@ -89,6 +97,15 @@ def loginView(request):
         if user is not None:
             login(request, user)
             userprofile = Profile.objects.get(user = user)
+            #FORCE UPDATE USER LOCATION
+            x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
+            if x_forw_for is not None:
+                ip = x_forw_for.split(',')[0]
+            else:
+                ip = request.META.get('REMOTE_ADDR')
+            location = GeoIP2().country(ip)
+            userprofile.location = location
+            #FORCE PROFILE VERIFICATION
             if not userprofile.is_email_verified:
                 send_activation_email(user, request)
                 messages.success(request, ("Your email has not yet been verified. Check your inbox."))
