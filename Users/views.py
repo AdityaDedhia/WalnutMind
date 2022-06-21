@@ -103,7 +103,7 @@ def loginView(request):
                 ip = x_forw_for.split(',')[0]
             else:
                 ip = request.META.get('REMOTE_ADDR')
-            location = GeoIP2().country(ip)
+            location = GeoIP2.country_code(ip)
             userprofile.location = location
             #FORCE PROFILE VERIFICATION
             if not userprofile.is_email_verified:
