@@ -1,11 +1,8 @@
-from datetime import datetime
-from email.policy import default
 from django.db import models
-from django.contrib.auth.models import User, AbstractUser
+from django.contrib.auth.models import User
 from django_countries.fields import CountryField
-from ckeditor.fields import RichTextField
 from Blog.utils import image_resize
-
+from taggit.managers import TaggableManager
 
 class Profile(models.Model):
     user = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
@@ -13,8 +10,8 @@ class Profile(models.Model):
     banner = models.ImageField(upload_to = 'Users/profile_banners', null = True, blank = True)
     avatar = models.ImageField(upload_to = 'Users/profile_covers', null = True, blank = True)
     location = CountryField(null = True)
-    interests = models.CharField(max_length = 75, null = True)
-    bio = RichTextField(max_length=2000, null = True)
+    interests = models.CharField(max_length = 75, null = True, blank = True)
+    bio = models.TextField(max_length=300, null = True, blank = True)
 
     def __str__(self):
         return str(self.user)
@@ -23,3 +20,13 @@ class Profile(models.Model):
         image_resize(self.banner, 1200, 600)
         image_resize(self.avatar, 200, 200)
         super().save(*args, **kwargs)
+
+class Highlight(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.CharField(max_length=128, blank = False)
+    sourcename = models.CharField(max_length=255, blank = False)
+    sourcelink = models.URLField()
+    tags = TaggableManager(related_name="highlighttags")
+
+    def __str__(self):
+        return str(self.content)

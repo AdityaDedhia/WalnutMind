@@ -1,12 +1,9 @@
-from getpass import getuser
-from django.forms import ValidationError
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import RegisterUserForm, UpdateProfileForm, UpdateUserForm
-from .models import User, Profile
-from django.templatetags.static import static
+from .models import User, Profile, Highlight
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -75,6 +72,7 @@ def registerView(request):
             else:
                 ip = request.META.get('REMOTE_ADDR')
             location = GeoIP2().country(ip)
+            #INSTANTIATE USER PROFILE
             profile = Profile(
             user = user,
             avatar = 'Users/profile_covers/def_avatar.png',
@@ -125,13 +123,13 @@ def logoutView(request):
 def profileView(request, username):    
     if User.objects.filter(username = username).exists():
         requestedUser = User.objects.get(username = username)
-    
         articles = requestedUser.articlepublisher.all()
         commentaries = requestedUser.commentarypublisher.all()
         diaries = requestedUser.diarypublisher.all()
+        highlights = Highlight.objects.filter(author = requestedUser)
 
         return render(request, 'Users/profile.html', {
-            'user': requestedUser, 'articles':articles, 'commentaries': commentaries, 'diaries': diaries
+            'user': requestedUser, 'articles':articles, 'commentaries': commentaries, 'diaries': diaries, 'highlights': highlights
         })
     else:
         messages.success(request, ("It appears that this user does not exist."))

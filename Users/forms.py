@@ -31,3 +31,9 @@ class UpdateProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['avatar', 'location', 'interests', 'bio']
+
+    def __init__(self, *args, **kwargs):
+        super(UpdateProfileForm, self).__init__(*args, **kwargs)
+        self.fields['location'].widget.attrs['disabled'] = 'disabled'
+        self.fields['bio'].widget.attrs['class'] = 'form-control'
+

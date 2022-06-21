@@ -121,8 +121,8 @@
                     <!--User-->
             
                     <a class="" href="/users/{{request.user.username}}">
-                      {% if user.profile.avatar %}
-                      <img style = "width: 40px; height: 40px; border-radius: 50%; border: 3px solid #14a2b8; margin-right: 4px" class = "zoom float-md-start" src = "{{ user.profile.avatar.url }}">
+                      {% if request.user.profile.avatar %}
+                      <img style = "width: 40px; height: 40px; border-radius: 50%; border: 3px solid #14a2b8; margin-right: 4px" class = "zoom float-md-start" src = "{{ request.user.profile.avatar.url }}">
                       {% else %}
                       <img style="width: 40px; height: 40px; border-radius: 50%; border: 3px solid #14a2b8; margin-right: 4px" class = "zoom float-md-start" src = "{% static 'Users/def_avatar.png' %}">
                       {% endif %}
