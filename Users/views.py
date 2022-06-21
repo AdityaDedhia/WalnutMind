@@ -74,7 +74,7 @@ def registerView(request):
                 ip = x_forw_for.split(',')[0]
             else:
                 ip = request.META.get('REMOTE_ADDR')
-            location = GeoIP2.country_code(ip)
+            location = GeoIP2().country_code(ip)
             profile = Profile(
             user = user,
             avatar = 'Users/profile_covers/def_avatar.png',
