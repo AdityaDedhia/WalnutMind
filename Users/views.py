@@ -68,11 +68,18 @@ def registerView(request):
             form.save()
             user = authenticate(request=request, username = username, password = password)
             send_activation_email(user, request)
+            #GET USER LOCATION
+            x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
+            if x_forw_for is not None:
+                ip = x_forw_for.split(',')[0]
+            else:
+                ip = request.META.get('REMOTE_ADDR')
+            location = GeoIP2.country_code(ip)
             profile = Profile(
             user = user,
             avatar = 'Users/profile_covers/def_avatar.png',
             banner = 'Users/profile_banners/def_banner.png',
-            location = 'US',
+            location = location,
             interests = 'None',
             bio = "Hello, I'm new to Walnut Mind!",
             )
@@ -97,14 +104,6 @@ def loginView(request):
         if user is not None:
             login(request, user)
             userprofile = Profile.objects.get(user = user)
-            #FORCE UPDATE USER LOCATION
-            x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
-            if x_forw_for is not None:
-                ip = x_forw_for.split(',')[0]
-            else:
-                ip = request.META.get('REMOTE_ADDR')
-            location = GeoIP2.country_code(ip)
-            userprofile.location = location
             #FORCE PROFILE VERIFICATION
             if not userprofile.is_email_verified:
                 send_activation_email(user, request)
