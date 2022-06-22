@@ -111,7 +111,7 @@ def loginView(request):
                 messages.success(request, 'Login security bypassed from localhost: %s. You are now logged in.'% ip)
                 login(request,user)
                 return redirect('index')
-            loginlocation = GeoIP2().country(ip)
+            loginlocation = GeoIP2().country_code(ip)
             profilelocation = userprofile.location
             #BLOCK INTERNATIONAL LOGIN ATTEMPTS
 
