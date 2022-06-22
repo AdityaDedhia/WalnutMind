@@ -22,20 +22,11 @@
     <div class="list-group">
     {% for resource in collection.resources.all %}
   
-    <div class="list-group-item list-group-item-action">
+    <a href="{% url 'resourceview' pk=resource.pk %}" class="list-group-item list-group-item-action">
     <h5>{{ resource.title }}</h5><hr/>
     Description: {{ resource.description }}
     <br/>
-    Attachments: 
-    {% if resource.weblink %}
-    <i class="bi bi-filetype-html"> </i><a href="{{ resource.weblink }}" target="_blank" rel="noopener noreferrer">{{ resource.weblink }}</a>
-    {% endif %}
-    {% if resource.videolink %}
-    <i class="bi bi-file-earmark-play"> </i><a href="{{ resource.videolink }}" target="_blank" rel="noopener noreferrer">{{ resource.videolink }}</a>
-    {% endif %}
-    {% if resource.filelink %}
-    <i class="bi bi-file-earmark-text"> </i><a href="{{ resource.filelink }}" target="_blank" rel="noopener noreferrer">Files</a>
-    {% endif %}
+
     </div>
     {% endfor %}
   </div>
