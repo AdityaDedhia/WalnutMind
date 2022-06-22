@@ -42,13 +42,14 @@
                       </div>
 
                       <div class="d-flex flex-row align-items-center mb-4">
-                        <div class="g-recaptcha" data-sitekey="6LcD15AgAAAAAOSxsqKsuy2iR33_-xq0B5I8WIHv"></div>
+                        <i class="bi bi-patch-check-fill"></i>
+                        <div style="margin-left:28px" class="g-recaptcha" data-sitekey="6LcD15AgAAAAAOSxsqKsuy2iR33_-xq0B5I8WIHv"></div>
                       </div>
 
-                      <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                      <div class="d-flex float-end mx-4 mb-3 mb-lg-4">
                         <button type="submit" class="btn btn-primary btn-lg">LOG IN</button>
                       </div>
-                      <p>Forgot your password? <a href = "{% url 'reset_password' %}">Reset it here</a>.</p>
+                      Forgot your password? <a href = "{% url 'reset_password' %}">Reset it here</a>.
 
     
                     </form>
@@ -56,7 +57,7 @@
                   </div>
                   <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
     
-                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
+                    <img src="{% static "Users/registersplash.jpg" %}"
                       class="img-fluid" alt="Sample image">
     
                   </div>
