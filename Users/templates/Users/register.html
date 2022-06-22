@@ -5,12 +5,7 @@
 {% endblock %}
 
 {% block body %}
-{% if form.errors %}
-<div class="alert alert-warning alert-dismissible fade show" role="alert">
-    <strong>Holy guacamole!</strong> There is an error in your form!
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-{% endif %}
+{% load static %}
 
     <form action = "{% url 'registerr' %}" method = POST>
         {% csrf_token %}
@@ -52,10 +47,15 @@
                                 <div class="form-outline flex-fill mb-0">
                                   <div class="col" id = "username">
                                       {{ form.username }}
-                                      <label style = "float: left;" for="username">Username</label>
+                                      <label style = "float: left;" for="username">Username</label><br/>
+                                      <cap style = "color:gray">This username will be publicly accessible and cannot be changed.</cap>
+
                                     </div>
+                                  
                                 </div>
+                                
                             </div>
+
         
                             <div class="d-flex flex-row align-items-center mb-4">
                                 <i class="bi bi-envelope-fill fa-lg me-3 fa-fw"></i>
@@ -89,21 +89,24 @@
                                       <label style = "float: left;" for="pass2">Repeat Password</label>
                                   </div>
                                 </div>
-                            </div>
-          
+                            </div>      
                             <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                              <p style="font-size:16px; color:gray;">
+                                Account registration is
+                                <a href="#" type="button" data-toggle="tooltip" data-placement="top" title="One of our security measures is imposing geo-based restrictions on account access. This means that any attempts to login to your account outside of your residing country will be blocked. If you plan to move, you must contact support beforehand.">
+                                  geographically bounding</a>.
+                                </p>
                                 <button type="submit" class="btn btn-primary">REGISTER</button>
                             </div>
+    
                             <p>Already have an account? <a href = "{% url 'loginn' %}">Login here</a>.</p>
 
                           </form>
-          
                         </div>
                         <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
           
                           <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
-                            class="img-fluid" alt="Sample image">
-          
+                            class="img-fluid" alt="Sample image">                            
                         </div>
                       </div>
                     </div>
@@ -117,6 +120,11 @@
     </form>
     
 
+<script>
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>
 
-
-{% endblock %}
+<br/><br/><br/>
+{% endblock body %}

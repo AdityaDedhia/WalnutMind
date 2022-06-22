@@ -14,6 +14,9 @@ from django.conf import settings
 from django.contrib.gis.geoip2 import GeoIP2
 import threading
 from datetime import datetime
+import os
+import requests
+import json
 
 class EmailThread(threading.Thread):
     def __init__(self,email):
@@ -98,6 +101,17 @@ def registerView(request):
 
 def loginView(request):
     if request.method == "POST":
+        #FIRST CHECK FOR BOT ATTEMPTS
+        captcha_token = request.POST.get("g-recaptcha-response")
+        captcha_url = "https://www.google.com/recaptcha/api/siteverify"
+        captcha_secret = os.environ['captcha_secret']
+        captcha_data = {"secret": captcha_secret, "response": captcha_token}
+        captcha_response = requests.post(url=captcha_url, data = captcha_data)
+        captcha_response_json=json.loads(captcha_response.text)
+        if captcha_response_json['success']==False:
+                messages.success(request, 'Login request aborted. Human verification has failed.')
+                return redirect('loginn')
+
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
@@ -120,7 +134,7 @@ def loginView(request):
             #BLOCK INTERNATIONAL LOGIN ATTEMPTS
 
             if not profilelocation == loginlocation:
-                messages.success(request, 'Unauthorized login attempt from IP address: %s blocked. You are now being actively monitored for suspicious activity.'% ip)
+                messages.success(request, 'Unauthorized login attempt from IP address: %s blocked. You are now being actively monitored for suspicious activity. If you are the rightful account owner, contact support immediately.'% ip)
                 blacklistform = Blacklist(
                     ip = ip,
                     reason = "Automated ban reason: Suspicious login attempt to the user account: {username} was made.".format(username = username),
