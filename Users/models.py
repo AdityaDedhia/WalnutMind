@@ -9,6 +9,7 @@ class Profile(models.Model):
     is_email_verified = models.BooleanField(default = False)
     avatar = models.ImageField(upload_to = 'Users/profile_covers', null = True, blank = True)
     banner = models.ImageField(upload_to = 'Users/profile_banners', null = True, blank = True)
+    ip = models.GenericIPAddressField(null = True, blank = True)
     location = CountryField(null = True)
     interests = models.CharField(max_length = 75, null = True, blank = True)
     bio = models.TextField(max_length=300, null = True, blank = True)
