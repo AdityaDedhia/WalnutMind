@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import RegisterUserForm, UpdateProfileForm, UpdateUserForm
-from .models import User, Profile, Highlight
+from .models import User, Profile, Highlight, Blacklist
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -101,7 +101,7 @@ def loginView(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             userprofile = Profile.objects.get(user = user)
-            #GET USER LOCATION but BYPASS if served on localhost.
+            #GET USER LOCATION and RUN through Blacklisted IPs; BYPASS if served on localhost.
             x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
             if x_forw_for is not None:
                 ip = x_forw_for.split(',')[0]
@@ -111,12 +111,19 @@ def loginView(request):
                 login(request,user)
                 messages.success(request, 'Login security bypassed from localhost: %s. You have successfully signed in.'% ip)
                 return redirect('index')
+            if Blacklist.objects.filter(ip = ip):
+                return render(request, "blacklist.html")
             loginlocation = GeoIP2().country_code(ip)
             profilelocation = userprofile.location
             #BLOCK INTERNATIONAL LOGIN ATTEMPTS
 
             if not profilelocation == loginlocation:
                 messages.success(request, 'Unauthorized login attempt from IP address: %s blocked. You are now being actively monitored for suspicious activity.'% ip)
+                blacklistform = Blacklist(
+                    ip = ip,
+                    reason = "Automated ban reason: Suspicious login attempt to the user account: {username} was made.".format(username = username)
+                )
+                blacklistform.save()
                 return redirect('index')
             #FORCE PROFILE VERIFICATION
             if not userprofile.is_email_verified:

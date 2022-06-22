@@ -7,6 +7,9 @@ from .models import Post
 from django.http import Http404, JsonResponse
 from django.contrib import messages
 from .forms import PostForm
+from Users.models import Blacklist
+from django.contrib.auth import logout
+
 
 from taggit.models import Tag
 from .serializers import CommentarySerializer
@@ -20,6 +23,18 @@ class booksView(ListView):
         tags = Tag.objects.all() #return all tags
         context['tags'] = tags
         return context
+
+    def dispatch(self, request, *args, **kwargs):
+        #GET USER LOCATION and RUN through Blacklisted IPs.
+        x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forw_for is not None:
+            ip = x_forw_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        if Blacklist.objects.filter(ip = ip):
+            logout(request)
+            return render(request, "blacklist.html")
+        return super(booksView, self).dispatch(request, *args, **kwargs)
 
 
 class BookListAPIView(ListAPIView):
@@ -57,6 +72,19 @@ class bookView(DetailView):
             raise Http404(("No %(verbose_name)s found matching the query") %
                           {'verbose_name': queryset.model._meta.verbose_name})
         return obj
+
+    def dispatch(self, request, *args, **kwargs):
+        #GET USER LOCATION and RUN through Blacklisted IPs.
+        x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forw_for is not None:
+            ip = x_forw_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        if Blacklist.objects.filter(ip = ip):
+            logout(request)
+            return render(request, "blacklist.html")
+        return super(bookView, self).dispatch(request, *args, **kwargs)
+
 def post_json(request):
     data = list(Post.objects.values())
     return JsonResponse(data, safe = False)

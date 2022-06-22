@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block title %}
+<title>BLACKLISTED | WM</title>
+{% endblock title %}
+
+{% block body %}
+<h1>We regret to inform you that your access to our website has been terminated indefinitely due to a breach of our <a href="{% url 'terms' %}">terms of use</a> :(.</h1>
+<hr/>
+<h3>Access to our flagship publications apps and account functionality is revoked, but continued anonymous access priveleges for community-based services shall persist.</h3>
+<br/>
+<h5>Services such as our security system implementations are, for the most part, automated. If you feel that this was a mistake or want to request more information on the reason, contact us at <a href="mailto:support@walnutmind.org">support@walnutmind.org</a>.</h5><i>We will not be able to provide you with any further information about the specifics of our detection systems.</i>
+
+{% endblock body %}

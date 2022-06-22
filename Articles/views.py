@@ -9,13 +9,24 @@ from .forms import PostForm, CommentForm
 from django.urls import reverse
 from bootstrap_modal_forms.generic import BSModalDeleteView
 from django.urls import reverse_lazy
+from Users.models import Blacklist
 
 from taggit.models import Tag
 from .serializers import ArticleSerializer
 from rest_framework.generics import ListAPIView
+from django.contrib.auth import logout
 
 def indexView(request):
 
+    #GET USER LOCATION and RUN through Blacklisted IPs.
+    x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forw_for is not None:
+        ip = x_forw_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    if Blacklist.objects.filter(ip = ip):
+        logout(request)
+        return render(request, "blacklist.html")
 
     #fix does not work atm
     today = datetime.today()
@@ -62,6 +73,18 @@ class searchView(ListView):
         context['tags'] = tags
         return context
 
+    def dispatch(self, request, *args, **kwargs):
+        #GET USER LOCATION and RUN through Blacklisted IPs.
+        x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forw_for is not None:
+            ip = x_forw_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        if Blacklist.objects.filter(ip = ip):
+            logout(request)
+            return render(request, "blacklist.html")
+        return super(searchView, self).dispatch(request, *args, **kwargs)
+
 class ArticleListAPIView(ListAPIView):
     queryset = Post.objects.filter(public = True)
     serializer_class = ArticleSerializer
@@ -99,6 +122,17 @@ class articleView(DetailView):
                           {'verbose_name': queryset.model._meta.verbose_name})
         return obj
 
+    def dispatch(self, request, *args, **kwargs):
+        #GET USER LOCATION and RUN through Blacklisted IPs.
+        x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forw_for is not None:
+            ip = x_forw_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        if Blacklist.objects.filter(ip = ip):
+            logout(request)
+            return render(request, "blacklist.html")
+        return super(articleView, self).dispatch(request, *args, **kwargs)
 
 #A version of binary like/dislike implementation: does not work
 

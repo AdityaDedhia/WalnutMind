@@ -21,6 +21,14 @@ class Profile(models.Model):
         image_resize(self.avatar, 200, 200)
         super().save(*args, **kwargs)
 
+class Blacklist(models.Model):
+    ip = models.GenericIPAddressField()
+    reason = models.CharField(max_length=255)
+    datelog = models.DateTimeField(auto_now_add = True)
+
+    def __str__(self):
+        return str(self.ip)
+
 class Highlight(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.CharField(max_length=128, blank = False)
