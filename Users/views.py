@@ -101,16 +101,22 @@ def loginView(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             userprofile = Profile.objects.get(user = user)
-            #GET USER LOCATION
+            #GET USER LOCATION but BYPASS if served on localhost.
             x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
             if x_forw_for is not None:
                 ip = x_forw_for.split(',')[0]
             else:
                 ip = request.META.get('REMOTE_ADDR')
-            location = GeoIP2().country(ip)
+            if ip =='127.0.0.1':
+                messages.success(request, 'Login security bypassed from localhost: %s. You are now logged in.'% ip)
+                login(request,user)
+                return redirect('index')
+            loginlocation = GeoIP2().country(ip)
+            profilelocation = userprofile.location
             #BLOCK INTERNATIONAL LOGIN ATTEMPTS
-            if not userprofile.location == location:
-                messages.success(request, ("Unauthorized login attempt blocked. You are now being monitored for suspicious activity."))
+
+            if not profilelocation == loginlocation:
+                messages.success(request, 'Unauthorized login attempt from location: %s for account location: %s blocked. You are now being monitored for suspicious activity.'% loginlocation % profilelocation )
                 return redirect('index')
             #FORCE PROFILE VERIFICATION
             if not userprofile.is_email_verified:
