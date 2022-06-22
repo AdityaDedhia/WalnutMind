@@ -2,7 +2,7 @@
 
 {% block title %}
 <title> User Update | WM</title>
-{% endblock %}
+{% endblock title %}
 
 {% block body %}
 
@@ -14,27 +14,73 @@
 {% endif %}
 
 
-    {% if user.is_authenticated %}
+    {% if request.user == user %}
 
     <h1>Update Profile</h1>
-    <br>
+    <br/>
     <form method = "POST" enctype = "multipart/form-data">
         {% csrf_token %}
+        <!--PROFILE SETTINGS-->
         <h2>Profile Settings</h2>
-        <hr style="border-top: 2px solid rgb(0, 0, 0)">
-        <p>Your avatar will be automatically scaled down to 200x200 pixels. You agree that you have copyright rights to the image uploaded.</p>
-        {{ p_form.as_p }}
-        <br>
+        <hr style="border-top: 2px solid rgb(0, 0, 0)"/>
+
+        <div class="row">
+
+            <div class="col-md-5">
+                <b>Update Avatar:</b><br/>
+                {{ p_form.avatar }}
+                {{ p_form.avatar.help_text }}
+
+            </div>
+            <div class="col-md-5">
+                <b>Update Banner:</b><br/>
+                {{ p_form.banner }}
+                {{ p_form.banner.help_text }}
+
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-md-4">
+                <b>Interests:</b>
+                {{ p_form.interests }}
+                {{ p_form.interests.help_text }}
+            </div>
+            <div class="col-md-8">
+                <b>Description:</b>
+                {{ p_form.bio }}
+                {{ p_form.bio.help_text }}
+            </div>
+        </div>
+        <br/>
+        <!--USER SETTINGS-->
         <h2>User Settings</h2>
         <hr style="border-top: 2px solid rgb(0, 0, 0)">
-        <p>Your permanent username is: <b>{{user.username}}</b>. This serves as our unique identifier for search. Only in extreme circumstances may we perform a username change by emailing <a href = "mailto:support@walnutmind.org">support@walnutmind.org</a>.</p>
-        {{ u_form.as_p }}
+        <p>Your permanent username is: <b>{{ user.username }}</b>. This serves as our unique identifier for search. Only in extreme circumstances may we perform a username change by emailing <a href="mailto:support@walnutmind.org">support@walnutmind.org</a>.</p>
+        <p>Your account location is set to {{ user.profile.location.name }}.  This was set at the time of account creation and may not be changed manually. To protect your privacy your account may not be accessed outside of this country. If you plan to move, contact us.</p>
+
+        <div class="row">
+        <div class="col">
+        <b>Legal First Name:</b>
+        {{ u_form.first_name }}
+        </div>
+        <div class="col">
+        <b>Legal Last Name:</b>
+        {{ u_form.last_name }}
+        </div>
+        <div class="col">
+        <b>Current Email Address:</b>
+        {{ u_form.email }}
+        </div>
+        </div>
         <p style = "color:red">Your password is encrypted and unreadable by us. To update your password follow this <a href = "{% url 'update_password' %}">link</a>. In the case that you have forgotten your old password, to reset your password this <a href = "{% url 'reset_password' %}">link</a>.</p>
         <button type="submit" class="btn btn-primary">UPDATE PROFILE</button>
     </form>
+    {% else %}
+    <h1>Access Denied</h1>
     {% endif %}
     <br>
     <!--<a class = "btn btn-danger" href = "/users/{{user.username}}/edit">DEACTIVATE ACCOUNT</a>-->
 
 <br><br>
-{% endblock %}
+{% endblock body %}
