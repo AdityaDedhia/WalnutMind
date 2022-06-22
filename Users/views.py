@@ -81,16 +81,15 @@ def registerView(request):
                 existingProfile = Profile.objects.get(user = existingUser)
                 if existingProfile.is_email_verified:
                     messages.success(request, 'An active account with the email address: %s already exists. You are now being actively monitored for suspicious activity. If you are the rightful account owner, contact support immediately.'% email)
-                    return redirect('index')
-                else:
-                    username = existingUser.username
-                    messages.success(request, 'It appears that you have an unregistered account under the username: %s. Please log in or reset your password below and complete your registration.'% username)
                     blacklistform = Blacklist(
                     ip = ip,
-                    reason = "Automated ban reason: Suspicious registration attempt to an active user account: {username} was made.".format(username = username),
+                    reason = "Automated ban reason: Suspicious registration attempt to an active user account with email: {email} was made.".format(email = email),
                     datelog = datetime.now()
                     )
                     blacklistform.save()
+                    return redirect('index')
+                else:
+                    messages.success(request, 'It appears that you have an unregistered account with the email: %s. Please log in or reset your password below and follow further instructions to complete your registration.'% email)
                     return redirect('loginn')
             form.save()
             user = authenticate(request=request, username = username, password = password)
