@@ -13,6 +13,7 @@ from django.core.mail import EmailMessage
 from django.conf import settings
 from django.contrib.gis.geoip2 import GeoIP2
 import threading
+from datetime import datetime
 
 class EmailThread(threading.Thread):
     def __init__(self,email):
@@ -121,7 +122,8 @@ def loginView(request):
                 messages.success(request, 'Unauthorized login attempt from IP address: %s blocked. You are now being actively monitored for suspicious activity.'% ip)
                 blacklistform = Blacklist(
                     ip = ip,
-                    reason = "Automated ban reason: Suspicious login attempt to the user account: {username} was made.".format(username = username)
+                    reason = "Automated ban reason: Suspicious login attempt to the user account: {username} was made.".format(username = username),
+                    datelog = datetime.now()
                 )
                 blacklistform.save()
                 return redirect('index')
