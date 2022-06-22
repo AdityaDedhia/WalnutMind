@@ -108,15 +108,15 @@ def loginView(request):
             else:
                 ip = request.META.get('REMOTE_ADDR')
             if ip =='127.0.0.1':
-                messages.success(request, 'Login security bypassed from localhost: %s. You are now logged in.'% ip)
                 login(request,user)
+                messages.success(request, 'Login security bypassed from localhost: %s. You have successfully signed in.'% ip)
                 return redirect('index')
             loginlocation = GeoIP2().country_code(ip)
             profilelocation = userprofile.location
             #BLOCK INTERNATIONAL LOGIN ATTEMPTS
 
             if not profilelocation == loginlocation:
-                messages.success(request, 'Unauthorized login attempt from location: %s for account location: %s blocked. You are now being monitored for suspicious activity.'% loginlocation % profilelocation )
+                messages.success(request, 'Unauthorized login attempt from IP address: %s blocked. You are now being actively monitored for suspicious activity.'% ip)
                 return redirect('index')
             #FORCE PROFILE VERIFICATION
             if not userprofile.is_email_verified:
@@ -124,6 +124,7 @@ def loginView(request):
                 messages.success(request, ("Your email has not yet been verified. Check your inbox."))
                 return redirect('index')
             login(request, user)
+            messages.success(request, ("You have successfully signed in."))
             return redirect('index')
         else:
             messages.success(request, ("The username and/or password you have entered is incorrect, please try again."))
