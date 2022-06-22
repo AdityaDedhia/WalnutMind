@@ -101,7 +101,22 @@ def registerView(request):
 
 def loginView(request):
     if request.method == "POST":
-        #FIRST CHECK FOR BOT ATTEMPTS
+        #GET USER LOCATION and RUN through Blacklisted IPs; BYPASS ALL SECURITY if served on localhost.
+        x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forw_for is not None:
+            ip = x_forw_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        if ip =='127.0.0.1':
+            username = request.POST['username']
+            password = request.POST['password']
+            user = authenticate(request, username=username, password=password)
+            login(request,user)
+            messages.success(request, 'Login security bypassed from localhost: %s. You have successfully signed in.'% ip)
+            return redirect('index')
+        if Blacklist.objects.filter(ip = ip):
+            return render(request, "blacklist.html")
+        #IF NO IPBLOCK DETECTED CHECK FOR BOT LOGIN ATTEMPT
         captcha_token = request.POST.get("g-recaptcha-response")
         captcha_url = "https://www.google.com/recaptcha/api/siteverify"
         captcha_secret = os.environ['captcha_secret']
@@ -111,27 +126,15 @@ def loginView(request):
         if captcha_response_json['success']==False:
                 messages.success(request, 'Login request aborted. Human verification has failed.')
                 return redirect('loginn')
-
+        #SUCCESSFUL VERIFICATION WOULD THEN PROCEED WITH ACCOUNT LOGIN
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
             userprofile = Profile.objects.get(user = user)
-            #GET USER LOCATION and RUN through Blacklisted IPs; BYPASS if served on localhost.
-            x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
-            if x_forw_for is not None:
-                ip = x_forw_for.split(',')[0]
-            else:
-                ip = request.META.get('REMOTE_ADDR')
-            if ip =='127.0.0.1':
-                login(request,user)
-                messages.success(request, 'Login security bypassed from localhost: %s. You have successfully signed in.'% ip)
-                return redirect('index')
-            if Blacklist.objects.filter(ip = ip):
-                return render(request, "blacklist.html")
+            #IF LOGIN ATTEMPT IS MADE INTERNATIONALLY BLOCK IP
             loginlocation = GeoIP2().country_code(ip)
             profilelocation = userprofile.location
-            #BLOCK INTERNATIONAL LOGIN ATTEMPTS
 
             if not profilelocation == loginlocation:
                 messages.success(request, 'Unauthorized login attempt from IP address: %s blocked. You are now being actively monitored for suspicious activity. If you are the rightful account owner, contact support immediately.'% ip)
@@ -142,7 +145,7 @@ def loginView(request):
                 )
                 blacklistform.save()
                 return redirect('index')
-            #FORCE PROFILE VERIFICATION
+            #FORCE PROFILE VERIFICATION IF NOT ALREADY VERIFIED
             if not userprofile.is_email_verified:
                 send_activation_email(user, request)
                 messages.success(request, ("Your email has not yet been verified. Check your inbox."))
@@ -150,7 +153,6 @@ def loginView(request):
             #IF PASSES ALL CHECKS RECORD CURRENT LOGIN LOCATION AND LOGIN
             userprofile.ip = ip
             userprofile.save(update_fields=["ip"])
-
             login(request, user)
             messages.success(request, ("You have successfully signed in."))
             return redirect('index')
