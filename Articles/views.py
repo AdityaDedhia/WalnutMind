@@ -16,6 +16,7 @@ from .serializers import ArticleSerializer
 from rest_framework.generics import ListAPIView
 from django.contrib.auth import logout
 
+
 def indexView(request):
 
     #GET USER LOCATION and RUN through Blacklisted IPs.

@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}
+<title>Resource | WM</title>
+{% endblock title %}
+
+{% block body %}
+{% if metadata %}
+<p>The following data is fetched through Google Books and hence may be crude or incomplete.</p>
+<h3>{{ metadata.Title }}</h3>
+<h5>Authored by: {{ metadata.Authors }}</h5>
+<h5>Published by: {{metadata.Publisher}}, {{ metadata.Year }}</h5>
+<p>Digital Object Identifier (DOI): {{ DOI }}</p>
+{{ cover }}
+{% else %}
+Attachments: 
+{% if resource.weblink %}
+<i class="bi bi-filetype-html"> </i><a href="{{ resource.weblink }}" target="_blank" rel="noopener noreferrer">{{ resource.weblink }}</a>
+{% endif %}
+{% if resource.videolink %}
+<i class="bi bi-file-earmark-play"> </i><a href="{{ resource.videolink }}" target="_blank" rel="noopener noreferrer">{{ resource.videolink }}</a>
+{% endif %}
+{% if resource.filelink %}
+<i class="bi bi-file-earmark-pdf"> </i><a href="{{ resource.filelink }}" target="_blank" rel="noopener noreferrer">Files</a>
+{% endif %}
+{% endif %}
+
+{% endblock body %}

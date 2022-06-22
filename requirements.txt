@@ -33,6 +33,7 @@ html-tag-names==0.1.2
 html-void-elements==0.1.0
 idna==3.3
 importlib-metadata==4.11.4
+isbnlib==3.10.10
 jmespath==1.0.0
 maxminddb==2.2.0
 multidict==6.0.2

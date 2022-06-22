@@ -5,10 +5,30 @@ from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from .forms import NewTermForm
 from django.contrib import messages
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import render, redirect
+from isbnlib import meta, cover,doi
+from isbnlib.registry import bibformatters
+
+SERVICE = "goob"
 
 def wikiView(request):
     return render(request, 'Wiki/index.html')
+
+
+def resourceView(request, pk):
+    resource = Resource.objects.get(pk = pk)
+    if resource.isbnlink is not None:
+        isbn = resource.isbnlink
+        metadata = meta(isbn, SERVICE)
+        DOI = doi(isbn)
+        bookcover = cover(isbn)
+        return render(request,'Wiki/resource.html', {
+            'metadata':metadata, 'DOI':DOI, 'cover':bookcover
+        })
+    return render(request,'Wiki/resource.html', {
+        'resource': resource
+    })
+
 
 def collectionsView(request):
     resources = Resource.objects.all()
