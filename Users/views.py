@@ -102,6 +102,18 @@ def loginView(request):
         if user is not None:
             login(request, user)
             userprofile = Profile.objects.get(user = user)
+            #GET USER LOCATION
+            x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
+            if x_forw_for is not None:
+                ip = x_forw_for.split(',')[0]
+            else:
+                ip = request.META.get('REMOTE_ADDR')
+            location = GeoIP2().country(ip)
+            #BLOCK INTERNATIONAL LOGIN ATTEMPTS
+            if userprofile.location != location:
+                messages.success(request, ("Unauthorized login attempt from IP address %(location)s blocked. You are now being monitored for suspicious activity."))
+                return redirect('index')
+
             #FORCE PROFILE VERIFICATION
             if not userprofile.is_email_verified:
                 send_activation_email(user, request)

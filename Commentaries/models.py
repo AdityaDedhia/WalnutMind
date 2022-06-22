@@ -21,7 +21,7 @@ class Post(models.Model):
     topics = models.CharField(max_length = 100, blank = False)
     headquote = models.CharField(max_length = 255)
     headline = models.CharField(max_length=128)
-    quotes = models.TextField(max_length = 2000, blank = False)
+    quotes = models.TextField(blank = False)
     takeaways = models.TextField(max_length = 512, blank = False)
     summary = models.TextField(max_length = 512, blank = False)
     body = RichTextUploadingField(blank = False)

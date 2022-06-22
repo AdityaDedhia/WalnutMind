@@ -62,7 +62,7 @@
 <div class="card text-white bg-primary">
   <div class="card-header"><strong>Takeaways</strong></div>
   <div class="card-body">
-    <p class="card-text">{{ post.takeaways|safe }}</p>
+    <p class="card-text">{{ post.takeaways|linebreaks }}</p>
   </div>
 </div>
 <br>
@@ -70,7 +70,7 @@
 <div class="card text-white bg-dark">
   <div class="card-header"><strong>Summary</strong></div>
   <div class="card-body">
-    <p class="card-text">{{ post.summary|safe }}</p>
+    <p class="card-text">{{ post.summary|linebreaks }}</p>
   </div>
 </div>
 </br>
@@ -79,7 +79,7 @@
 <div class="card text-white bg-info" style = "onmousedown="return false"; onselectstart="return false"">
     <div class="card-header"><strong>The Gist - A Chronological Quote Synopsis:</strong></div>
     <div class="card-body">
-      <p class="card-text">{{ post.quotes|safe }}</p>
+      <p class="card-text">{{ post.quotes|linebreaks }}</p>
     </div>
 </div>
 <br>
