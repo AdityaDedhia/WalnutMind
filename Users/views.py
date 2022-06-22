@@ -64,17 +64,38 @@ def registerView(request):
     if request.method == "POST":
         form = RegisterUserForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password1']
-            form.save()
-            user = authenticate(request=request, username = username, password = password)
-            send_activation_email(user, request)
             #GET USER LOCATION
             x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
             if x_forw_for is not None:
                 ip = x_forw_for.split(',')[0]
             else:
                 ip = request.META.get('REMOTE_ADDR')
+
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
+            #VERIFY UNIQUE EMAIL
+            email = form.cleaned_data['email']
+            if User.objects.filter(email = email).exists():
+                #IF ACCOUNT IS UNVERIFIED; DELETE ACCOUNT AND PROCEED WITH REGISTRATION ELSE ABORT
+                existingUser = User.objects.get(email = email)
+                existingProfile = Profile.objects.get(user = existingUser)
+                if existingProfile.is_email_verified:
+                    messages.success(request, 'An active account with the email address: %s already exists. You are now being actively monitored for suspicious activity. If you are the rightful account owner, contact support immediately.'% email)
+                    return redirect('index')
+                else:
+                    username = existingUser.username
+                    messages.success(request, 'It appears that you have an unregistered account under the username: %s. Please log in or reset your password below and complete your registration.'% username)
+                    blacklistform = Blacklist(
+                    ip = ip,
+                    reason = "Automated ban reason: Suspicious registration attempt to an active user account: {username} was made.".format(username = username),
+                    datelog = datetime.now()
+                    )
+                    blacklistform.save()
+                    return redirect('loginn')
+            form.save()
+            user = authenticate(request=request, username = username, password = password)
+            send_activation_email(user, request)
+
             location = GeoIP2().country(ip)
             #INSTANTIATE USER PROFILE
             profile = Profile(
