@@ -78,6 +78,7 @@ def registerView(request):
             user = user,
             avatar = 'Users/profile_covers/def_avatar.png',
             banner = 'Users/profile_banners/def_banner.png',
+            ip = ip,
             location = location,
             interests = 'None',
             bio = "Hello, I'm new to Walnut Mind!",
@@ -132,6 +133,10 @@ def loginView(request):
                 send_activation_email(user, request)
                 messages.success(request, ("Your email has not yet been verified. Check your inbox."))
                 return redirect('index')
+            #IF PASSES ALL CHECKS RECORD CURRENT LOGIN LOCATION AND LOGIN
+            userprofile.ip = ip
+            userprofile.save(update_fields=["ip"])
+
             login(request, user)
             messages.success(request, ("You have successfully signed in."))
             return redirect('index')
