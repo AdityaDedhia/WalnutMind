@@ -2,11 +2,10 @@
 
 {% block title %}
 <title> User Login | WM</title>
-{% endblock %}
-
+{% endblock title %}
 
 {% block body %}
-
+{% load static %}
 
 <form action = "{% url 'loginn' %}" method = POST>
     {% csrf_token %}
@@ -41,7 +40,11 @@
 
                         </div>
                       </div>
-    
+
+                      <div class="d-flex flex-row align-items-center mb-4">
+                        <div class="g-recaptcha" data-sitekey="6LcD15AgAAAAAOSxsqKsuy2iR33_-xq0B5I8WIHv"></div>
+                      </div>
+
                       <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                         <button type="submit" class="btn btn-primary btn-lg">LOG IN</button>
                       </div>
@@ -70,6 +73,7 @@
 
 
 
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 
-{% endblock %}
+{% endblock body %}

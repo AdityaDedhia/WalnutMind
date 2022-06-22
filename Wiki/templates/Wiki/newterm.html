@@ -2,16 +2,18 @@
 
 {% block title %}
 <title>New Term | WM</title>
-{% endblock %}
+{% endblock title %}
 
 {% block body %}
-<form method = "POST" enctype="multipart/form-data">
+<form method="post">
     {% csrf_token %}
-    {{form.media}}
+    {{ form.media }}
 
-    {{form.as_p}}
-    <button>Publish</button>
+    {{ form.term }}
+    {{ form.definition }}
+
+    <button class="btn btn-primary btn-lg">Publish</button>
 
 </form>
 
-{% endblock %}
+{% endblock body %}

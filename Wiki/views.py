@@ -29,7 +29,6 @@ def resourceView(request, pk):
         'resource': resource
     })
 
-
 def collectionsView(request):
     resources = Resource.objects.all()
     collections = Collection.objects.all()
@@ -45,7 +44,6 @@ def listsView(request):
     return render(request, 'Wiki/lists.html', {
         'terms':terms, 'lists':lists, 'listsCount': listsCount
     })
-
 
 def searchView(request):
     if request.method == "POST":
@@ -133,7 +131,7 @@ class collectionView(DetailView):
 @login_required(login_url='/users/login')
 def newTermView(request):
         if request.method == 'POST':
-            form = NewTermForm(request.POST, request.FILES) #Requires both request.Files, else will be left blank.
+            form = NewTermForm(request.POST)
             if form.is_valid():
                 form.save()
                 messages.success(request, ("Term was successfully published!"))
