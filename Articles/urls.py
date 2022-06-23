@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import searchView, articleView, updatePostView, articleupvote, articledownvote, newCommentView
+from .views import articlesave, searchView, articleView, updatePostView, articleupvote, newCommentView
  
 urlpatterns = [
     path('', views.indexView, name = 'index'),
@@ -19,7 +19,7 @@ urlpatterns = [
     path('articles/<int:pk>/post',newCommentView, name = "newcomment"),
 
     path('articles/<int:pk>/upvote', articleupvote, name = 'article_upvote'),
-    path('articles/<int:pk>/upvote', articledownvote, name = 'article_downvote'),
+    path('articles/<int:pk>/save', articlesave, name = 'article_save'),
 
     path('about', views.aboutView, name = 'about'),
     path('opportunities', views.opportunitiesView, name = 'opportunities'),

@@ -21,15 +21,15 @@
         <div class="card">
 
         {% if user.profile.banner %}
-        <div style = "
+        <div style="
           width: 100%;
           height: 400px;
-          background-image: url('{{user.profile.banner.url}}');
+          background-image: url('{{ user.profile.banner.url }}');
           background-size: cover;
           border: 1px solid gray;
           ">
         {% else %}
-          <div style = "
+          <div style="
           width: 100%;
           height: 400px;
           background-image: url('{% static 'Users/def_banner.jpg' %}');
@@ -38,7 +38,7 @@
           ">
         {% endif %}
         </div>
-          <div class="rounded-top text-white d-flex flex-row" style = "position: relative; top: -190px;">
+          <div class="rounded-top text-white d-flex flex-row" style = "position: relative; top: -200px;">
             <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
             <!--PROFILE PICTURE START-->
               {% if user.profile.avatar %}
@@ -49,10 +49,17 @@
 
               <div style="z-index: 1;">
                 {% if request.user == user %}
-                <a class = "btn btn-outline-dark" href = "/users/{{user.username}}/edit">Edit Profile</a>
+                <a class="btn btn-outline-dark" href="{% url 'editprofile' username=user.username %}">Edit Profile</a>
                 {% else %}
-                <a class = "btn btn-outline-dark" href = "mailto:{{ user.email }}">Contact</a>
+                <div style="white-space:nowrap">
+                  {% if isFollowing %}
+                <a style="display: inline-block" class="btn btn-dark" href="{% url 'followprofile' username=user.username %}">Unfollow</a>
+                  {% else %}
+                  <a style="display: inline-block" class="btn btn-dark" href="{% url 'followprofile' username=user.username %}">Follow</a>
+                  {% endif %}
+                <a class="btn btn-outline-dark" href="mailto:{{ user.email }}">Contact</a>
                 {% endif %}
+                </div>
               </div>
 
             </div>
@@ -65,13 +72,33 @@
           </div>
 
           <div class="row" style = "margin-top: -130px;">
-          <div class=" card-body bg-dark col-4" style="color:white; border-radius:25px; padding:30px">
-                <p>{{ user.profile.bio|safe }}</p>
+          <div class=" card-body bg-dark col-3" style="color:white; border-radius:25px; padding:30px">
+              <b>About Me</b>
+              <hr/>
+                <p style="text-align: justify;
+                text-justify: inter-word;">{{ user.profile.bio }}</p>
+                <b>Recent Activity</b>
+                <hr/>
+                <div>
+                  <ul>
+                {% for item in log %}
+                <li>
+                {{ item.datelog }} GMT
+                {% if item.link %}
+                <a href="{{ item.link }}">{{ item.description }}</a>
+                {% else %}
+                <p>{{ item.description }}</p>
+                {% endif %}
+                </li>
+                {% endfor %}
+                  </ul>
+                </div>
+
           </div>
 
             <!--CONTENT MASONRY-->
-            <div class = "col-8" style = "padding: 30px">  
-              <h3>Publication Highlights:</h3>
+            <div class = "col-9" style = "padding: 30px">  
+              <h3>🚀 Highlights:</h3>
               <div>
                 {% for highlight in highlights %}
                 <b><i>"{{ highlight.content }}"</i></b>
@@ -81,12 +108,12 @@
               <br/>
             <h3>Recent Publications:</h3>
             <hr>
-            <div id="masonry" class="row" data-masonry='{"percentPosition": true }'>
+            <div id="masonry" class="row">
               {% for article in articles %}
   
               <div class = "col-sm-6 col-lg-3 mb-4 zoom row-item">
                 <div class="card">
-                  <img class = "card-img-top img-thumbnail" src = "{{ article.cover.url }}">
+                  <img class = "card-img-top" src = "{{ article.cover.url }}">
                   <div class="card-body">
                     <p class="card-title">{{ article.title }}</p>
                   </div>
@@ -116,6 +143,20 @@
 
                    {% if request.user == user %}
                    <div class = "bg-light" style = "margin-top:50px; padding: 30px">
+
+                    <h3>Saved for Later: </h3>
+                    {% if saved_articles %}
+                    <h5>Articles</h5><hr/>
+                    <div>
+                      <ul>
+                    {% for post in saved_articles %}
+                    <li><a href="{% url 'articleview' pk_slug=post.slug %}">{{ post.title }}</a></li>
+                    {% endfor %}
+                      </ul>
+                    </div>
+                    {% else %}
+                    Nothing saved yet...
+                    {% endif %}
                 
                    <h3 id="publicationsmanager">Manage Your Publications:</h3>
                    <br>

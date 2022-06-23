@@ -13,6 +13,7 @@ class Profile(models.Model):
     location = CountryField(null = True)
     interests = models.CharField(max_length = 75, null = True, blank = True)
     bio = models.TextField(max_length=300, null = True, blank = True)
+    following = models.ManyToManyField(User, related_name="following")
 
     def __str__(self):
         return str(self.user)
@@ -39,3 +40,12 @@ class Highlight(models.Model):
 
     def __str__(self):
         return str(self.content)
+
+class Log(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    description = models.CharField(max_length=255, null = True, blank = True)
+    link = models.URLField(blank = True, null = True)
+    datelog = models.DateTimeField(auto_now_add = True)
+
+    def __str__(self):
+        return str(self.description)

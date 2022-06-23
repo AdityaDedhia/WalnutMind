@@ -65,37 +65,44 @@
                             {% endif %}
                              
 
-                        </span> <a href="/users/{{post.author}}">{{post.author.first_name}} {{post.author.last_name}}</a>
+                        </span> <a href="{% url 'profile' username=post.author %}">{{ post.author.first_name }} {{ post.author.last_name }}</a>
                         <span class="date">
-                         Published {{post.dateCreated}}
+                         Published {{ post.dateCreated }}
                         </span></p>
                         {% for tag in post.tags.all %}
-                        <span class="badge rounded-pill text-bg-info">#{{tag}}</span>
+                        <span class="badge rounded-pill text-bg-info">#{{ tag }}</span>
                         {% endfor %}
                  </div>
                  <div class="text">
-                    {{post.content|safe }}
-                    <hr style="border-top: 4px solid rgb(0, 0, 0)">
-                    {{post.resources|safe }}
+                    {{ post.content|safe }}
+                    <hr style="border-top: 4px solid rgb(0, 0, 0)"/>
+                    {{ post.resources|safe }}
                  </div>
 
-                 <br>
+                 <br/>
 
                  <h3>Comments</h3>
-                 <hr style="border-top: 2px solid rgb(0, 0, 0)">
+                 <hr style="border-top: 2px solid rgb(0, 0, 0)"/>
+      
                  <!--RATE-->
-                <div style = "float:right">
-                <form action = {% url 'article_downvote' post.pk %} method = "POST">
-                    {% csrf_token %}
-                    <button type = "submit", class = "btn btn-danger", name = "post_id", value = "{{post.pk}}"><i class="bi bi-hand-thumbs-down-fill"></i></button>
-                </form>
+                 <div style = "float:right;">
+                    <form action = {% url 'article_save' post.pk %} method = "POST">
+                        {% csrf_token %}
+                        <button type = "submit" class = "btn btn-dark" name = "post_id" value = "{{ post.pk }}"  
+            
+                        ><i class="bi bi-star-fill"></i></button>
+                    </form>
                 </div>
                 <div style = "float:right; margin-right:8px">
                     <form action = {% url 'article_upvote' post.pk %} method = "POST">
                        {% csrf_token %}
                        <button type = "submit", class = "btn btn-primary", name = "post_id", value = "{{post.pk}}"><i class="bi bi-hand-thumbs-up-fill"></i></button>
                    </form>
+                   <p style="text-align:center">{{ post.total_likes }}</p>
                    </div>
+
+
+
                    <br><br>
 
                    {% if user.is_authenticated %}
@@ -136,5 +143,11 @@
 <p>If you require access please check again at a later date or contact the author <a href = "{% url 'profile' username=post.author %}">here</a>.</p>
 
  {% endif %}
+
+ <script>
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+ </script>
+
 
 {% endblock body %}

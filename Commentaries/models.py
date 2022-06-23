@@ -50,7 +50,7 @@ class Post(models.Model):
         return str(self.title)
     
     def get_absolute_url(self):
-        return reverse('bookindex')
+        return reverse('bookview', kwargs={'pk_slug': str(self.slug)})
     
     def save(self, *args, **kwargs):
         image_resize(self.cover, 625, 1000)

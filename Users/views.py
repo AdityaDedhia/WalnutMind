@@ -3,13 +3,15 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import RegisterUserForm, UpdateProfileForm, UpdateUserForm
-from .models import User, Profile, Highlight, Blacklist
+from .models import User, Profile, Highlight, Blacklist, Log
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from .utils import generate_token
 from django.core.mail import EmailMessage
+from django.http import HttpResponseRedirect, Http404
+from django.urls import reverse
 from django.conf import settings
 from django.contrib.gis.geoip2 import GeoIP2
 import threading
@@ -192,18 +194,39 @@ def logoutView(request):
 def profileView(request, username):    
     if User.objects.filter(username = username).exists():
         requestedUser = User.objects.get(username = username)
+        
+        if request.user.is_authenticated:
+            user = Profile.objects.get(user = request.user)
+            if requestedUser in user.following:
+                isFollowing = True
+            else:
+                isFollowing = False
+        else:
+            isFollowing = False
         articles = requestedUser.articlepublisher.all()
         commentaries = requestedUser.commentarypublisher.all()
         diaries = requestedUser.diarypublisher.all()
         highlights = Highlight.objects.filter(author = requestedUser)
-
+        saved_articles = requestedUser.article_saves.all()
+        log = Log.objects.filter(user = requestedUser).order_by('-datelog')[:6] #Descending order limited to last 6 items.
         return render(request, 'Users/profile.html', {
-            'user': requestedUser, 'articles':articles, 'commentaries': commentaries, 'diaries': diaries, 'highlights': highlights
+            'user': requestedUser,'isFollowing':isFollowing, 'articles':articles, 'commentaries': commentaries, 'diaries': diaries, 'highlights': highlights, 'saved_articles': saved_articles, 'log': log
         })
     else:
         messages.success(request, ("It appears that this user does not exist."))
         return redirect('index')
 
+@login_required(login_url='/users/login')
+def followProfileView(request, username):
+    requestedUser = User.objects.get(username = username)
+    user = Profile.objects.get(user = request.user)
+    if Profile.objects.filter(following = requestedUser).exists():
+        user.following.remove(requestedUser)
+        messages.success(request, (f"You are no longer following {username}."))
+        return HttpResponseRedirect(reverse('profile', args =[str(username)]))
+    user.following.add(requestedUser)
+    messages.success(request, (f"You are now following {username}."))
+    return HttpResponseRedirect(reverse('profile', args =[str(username)]))
 
 @login_required(login_url='/users/login')
 def editProfileView(request, username):

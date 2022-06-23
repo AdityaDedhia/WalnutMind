@@ -11,6 +11,8 @@ urlpatterns = [
     path('logout', views.logoutView, name = 'logoutt'),
     path('<str:username>/', views.profileView, name = "profile"),
     path('<str:username>/edit', views.editProfileView, name = 'editprofile'),
+        path('<str:username>/follow', views.followProfileView, name = 'followprofile'),
+
 
     #PASSWORD MANAGEMENT URLS
     path('password/', auth_views.PasswordChangeView.as_view(template_name = 'Users/change-password.html', success_url = reverse_lazy('index')), name = "update_password"),

@@ -5,20 +5,34 @@
 {% endblock title %}
 
 {% block body %}
-<div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
+{% load static %}
 
-<h1>About the Project</h1>
+    <section class="py-5">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-lg-5 col-6 mx-lg-0 mx-auto px-lg-0 px-md-0 my-auto">
+              <img class="w-100 border-radius-lg shadow" src="{% static "Articles/worldtradecenter.jpg" %}">
+            </div>
+            <div class="col-lg-4 col-10 d-flex justify-content-center flex-column mx-auto text-lg-start text-center">
+              <h2 class="mb-0 mt-lg-0 mt-4 text-gradient text-info">Words from the founder</h2>
+              <p class="lead">I am <a href="{% url 'profile' username='adityadedhia' %}">Aditya Dedhia</a>, a recent graduate of the International Baccaulerate (IB) Diploma Programme. During my studies across four countries and two continents, I would be rather underwhelmed; academic disciplines to this day are often taught very rigidly, often times, at the expense of holistic clarity and real-life application. </p>
+              <ul class="m-lg-2 m-auto">
+                <li class="lead mb-2">Maybe I was missing something.</li>
+                <li class="lead mb-2">That is rather how things have always been...</li>
+                <li class="lead mb-2">Could a learning drive be imposed?</li>
+              </ul>
+              <h3 class="mt-4">Traditional methods of module-based instruction do not provide the same experience as exploring by one's own means.</h3>
+              <p class="lead">I struggled to understand this myself, until I found something that clicked; knowledge links. Digging deeper into the lore of the scientific literature, this project was born. There is one underlying aim- to disseminate the interrelationships between what appear to be distinct areas of knowledge, yet which share a multitude of similarities.</p>
+              <p class="blockquote my-3 ps-2">
+                <span class="text-bold">“With sufficient importance, what needs to be done will be done.”</span>
+                <br/>
+                <small class="blockquote-footer">
+                  Aditya Dedhia
+                </small>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-<h2>Words from the Founder</h2>
-
-<p><i>Academic disciplines to this day are often taught very rigidly, often times, at the expense of holistic clarity and real-life application. This project was born out of this very angst, and aims to disseminate the interrelationships between what appear to be distinct areas of knowledge, yet which share a multitude of similarities.</i></p>
-
-<p>
-    I am Aditya Dedhia, a recent graduate from the international baccaulerate (IB) diploma programme. In Fall 2020, I formally began studying economics and business management with a sustained emphasis on current world affairs. Broadening the scope, I became particularly fond of microeconomics as well as game theory to better understand how firms operate and the decisions they make considering relevant busines tools and theories such as SWOT and STEEPLE analyses that help determine the utilities of the various stakeholders or, agents.
-</p>
-<p>
-    Investigating different learning methods and research over the years across several countries, I noted how traditional methods of module-based instruction do not provide the same experience as exploring by one's own means. With this project being a content-publishing platform, the goal is to extend the role of in our day to day lives and academia in general, and with practical extension: how world economy and businesses function, especially in today's technological and industrial revolution.
-</p>
-
-</div>
 {% endblock body %}
