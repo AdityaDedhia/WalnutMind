@@ -4,9 +4,9 @@ from django.db.models.deletion import CASCADE, DO_NOTHING
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
 from autoslug import AutoSlugField
-from django.forms import Textarea
 from Blog.utils import image_resize
 from taggit.managers import TaggableManager
+from django.urls import reverse
 
 
 class Post(models.Model):
@@ -15,6 +15,7 @@ class Post(models.Model):
     tags = TaggableManager(related_name="commentarytags")
     publisher = models.ForeignKey(User, on_delete=models.CASCADE, related_name="commentarypublisher")
     author = models.CharField(max_length = 50, blank = False)
+    isbn = models.CharField(null = True, blank = True, max_length=13)
     year = models.IntegerField(blank=False)
     pages = models.IntegerField()
     cover = models.ImageField(upload_to = 'Commentaries/commentary_covers', blank = False)
@@ -47,6 +48,9 @@ class Post(models.Model):
 
     def __str__(self):
         return str(self.title)
+    
+    def get_absolute_url(self):
+        return reverse('bookindex')
     
     def save(self, *args, **kwargs):
         image_resize(self.cover, 625, 1000)
