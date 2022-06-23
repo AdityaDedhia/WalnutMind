@@ -1,12 +1,21 @@
 {% extends "layout.html" %}
-
 {% block title %}
-<title>Publish | WM</title>
+  <title>Publish | WM</title>
 {% endblock title %}
-
 {% block body %}
-
-<div class="card text-center">
+  <ol class="breadcrumb" style = "background-color:white">
+    <li class="breadcrumb-item">
+      <a href="{% url 'index' %}">Home</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'profile' username=request.user %}">Profile</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="/users/{{ request.user }}/#publicationsmanager">Publications Manager</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">Content Publisher</li>
+  </ol>
+  <div class="card text-center">
     <div class="card-header bg-funkpurple">
       <ul class="nav nav-tabs card-header-tabs">
         <li class="nav-item">
@@ -21,76 +30,58 @@
       </ul>
     </div>
     <div class="card-body form-group">
-
-
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.media }}
-        
-            <div class="row">
-
-            <div class="col-md-4" id = "title">
-              <label style = "float: left;" for="title">Title</label>
-              {{ form.title }}
-            </div>
-            <div class="col-md-3" id = "tags">
-              <label style = "float: left;" for="tags">Tags (' , ' seperated)</label>
-              {{ form.tags }}
-            </div>
-            <div class="col-md-5" id="abstract">
-              <label style = "float: left;" for="abstract">Abstract</label>
-              {{ form.abstract }}
-            </div>
-
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.media }}
+        <div class="row">
+          <div class="col-md-4" id = "title">
+            <label style = "float: left;" for="title">Title</label>
+            {{ form.title }}
           </div>
-
-            <div class="row">
-              <div class="col-md-4" id="cover">
-                <label style = "float: left;" for="cover">Cover</label>
-                {{ form.cover }}
-              </div>
-              <div class="col-md-4" id="coverSrc">
-                <label style = "float: left;" for="coverSrc">Cover Source</label>
-                {{ form.coverSrc }}
-              </div>
-
-              <div class="col-md-4" id="coverURL">
-                <label style = "float: left;" for="coverURL">Cover URL</label>
-                {{ form.coverURL }}
-              </div>
-            </div>
-            <br/>
-
-          <div class="row">
-
-            <div id = "top" class="col" id="content">
-              <label style = "float: left;" for="content">Content</label>
-              {{ form.content }}
-            </div>
-
-            <div id = "bottom" class="col" id="resources">
-              <label style = "float: left;" for="resources">Resources</label>
-              {{ form.resources }}
-            </div>
-
+          <div class="col-md-3" id = "tags">
+            <label style = "float: left;" for="tags">Topics (' , ' seperated)</label>
+            {{ form.tags }}
           </div>
-
-            <br/>
-
-              <div class="form-check form-switch" id="public" style="float: right;">
-                <label class="form-check-label" for="public">Publish Live</label>
-                {{ form.public }}
-              </div>
-              </br></br>
-              <button type="submit" style="float: right;" class="btn btn-primary btn-lg">SAVE</button>
-    
-
-        </form>
-        
-      </div>
-
+          <div class="col-md-5" id="abstract">
+            <label style = "float: left;" for="abstract">Abstract</label>
+            {{ form.abstract }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4" id="cover">
+            <label style = "float: left;" for="cover">Cover</label>
+            {{ form.cover }}
+          </div>
+          <div class="col-md-4" id="coverSrc">
+            <label style = "float: left;" for="coverSrc">Cover Source</label>
+            {{ form.coverSrc }}
+          </div>
+          <div class="col-md-4" id="coverURL">
+            <label style = "float: left;" for="coverURL">Cover URL</label>
+            {{ form.coverURL }}
+          </div>
+        </div>
+        <br/>
+        <div class="row">
+          <div id = "top" class="col" id="content">
+            <label style = "float: left;" for="content">Content</label>
+            {{ form.content }}
+          </div>
+          <div id = "bottom" class="col" id="resources">
+            <label style = "float: left;" for="resources">Resources</label>
+            {{ form.resources }}
+          </div>
+        </div>
+        <br/>
+        <div class="form-check form-switch" id="public" style="float:left">
+          <label class="form-check-label" for="public">
+            {{ form.public }}
+            <i class="bi bi-cloud-arrow-up-fill"></i>
+            <b> PUBLISH LIVE</b>
+          </label>
+        </div>
+        <button type="submit" style="float: right;" class="btn btn-primary btn-lg">SAVE</button>
+      </form>
+    </div>
   </div>
-
-</br>
-  
-{% endblock body %} 
+{% endblock body %}

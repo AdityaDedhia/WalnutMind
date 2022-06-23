@@ -1,6 +1,13 @@
 {% extends "layout.html" %}
 {% block title %}<title>Publish | WM</title>{% endblock title %}
 {% block body %}
+<ol class="breadcrumb" style = "background-color:white">
+  <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'profile' username=request.user %}">Profile</a></li>
+  <li class="breadcrumb-item"><a href="/users/{{ request.user }}/#publicationsmanager">Publications Manager</a></li>
+  <li class="breadcrumb-item active" aria-current="page">Content Publisher</li>
+</ol>
+
   <div class="card text-center">
     <div class="card-header">
       <ul class="nav nav-tabs card-header-tabs">
@@ -22,91 +29,92 @@
 
           <!--ROW 1-->
           <div class="row">
-            <div class="col-md-3" id="title">
+            <div class="col-md-4" id="title">
               <label style="float: left;" for="title">Title</label>
               {{ form.title }}
             </div>
-            <div class="col-md-3" id="cover">
-              <label style = "float: left;" for="cover">Cover</label>
-              {{ form.cover }}
+            <div class="col-md-2" id = "topics">
+              <label style = "float: left;" for="topics">Topics (' , ' seperated)</label>
+              {{ form.topics }}
             </div>
             <div class="col-md-2" id = "author">
               <label style = "float: left;" for="author">Author</label>
               {{ form.author }}
             </div>
-            <div class="col-md-2" id = "year">
+            <div class="col-md-1" id = "year">
               <label style = "float: left;" for="year">Year</label>
               {{ form.year }}
             </div>
-            <div class="col-md-2" id="pages">
+            <div class="col-md-1" id="pages">
               <label style = "float: left;" for="title">Pages</label>
               {{ form.pages }}
             </div>
+            <div class="col-md-2" id = "isbn">
+              <label style = "float: left;" for="author">ISBN-13</label>
+              {{ form.isbn }}
+            </div>
+
           </div>
 
           <!--ROW 2-->
           <div class = "row">
-          <div class="col-md-2" id = "topics">
-            <label style = "float: left;" for="topics">Topics (A,B)</label>
-            {{ form.topics }}
-          </div>
-          <div class="col-md-5" id = "headquote">
+            <div class="col-md-3" id="cover">
+              <label style = "float: left;" for="cover">Cover</label>
+              {{ form.cover }}
+            </div>
+          <div class="col-md-4" id = "headquote">
             <label style = "float: left;" for="headquote">Header Quote</label>
             {{ form.headquote }}
           </div>
-          <div class="col-md-5" id = "headline">
+          <div class="col-md-4" id = "headline">
             <label style = "float: left;" for="headline">Headline</label>
             {{ form.headline }}
+          </div>
+          <div class="col-md-1" id = "rating">
+            <label style = "float: left;" for="rating">Rating</label>
+            {{ form.rating }}
           </div>
         </div>
 
         <div class = "row">
-          <div class="col-md-8" id = "summary">
+          <div class="col-md-2" id = "takeaways">
+            <label style = "float: left;" for="takeaways">Takeaways (New line)</label>
+            {{ form.takeaways }}
+          </div>
+          <div class="col-md-4" id = "summary">
             <label style = "float: left;" for="summary">Summary</label>
             {{ form.summary }}
           </div>
 
-          <div class="col-md-4" id = "takeaways">
-            <label style = "float: left;" for="takeaways">Takeaways (New line)</label>
-            {{ form.takeaways }}
+          <div class="col-md-6" id = "quotes">
+            <label style = "float: left;" for="quotes">Quotes (New line)</label>
+            {{ form.quotes }}
           </div>
+
         </div>
 
         <div class="row">
-        <div class="col-md-4" id = "quotes">
-          <label style = "float: left;" for="quotes">Quotes (New line)</label>
-          {{ form.quotes }}
-        </div>
-        <div class="col-md-8" id = "body">
-          <label style = "float: left;" for="body">Commentary</label>
-          {{ form.body }}
-        </div>
-      </div>
-
-    </br>
-
-    <div class="row">
-
-          <div class="col-md-10" id = "resources">
-            <label style="float: left;" for="resources">Resources:</label>
+          <div id = "top" class="col" id="content">
+            <label style = "float: left;" for="content">Content</label>
+            {{ form.body }}
+          </div>
+          <div id = "bottom" class="col" id="resources">
+            <label style = "float: left;" for="resources">Resources</label>
             {{ form.resources }}
           </div>
-          
-          <div class="col-md-2">
-          <div class="form-check form-switch" id="public" style="float: right;">
-            <label class="form-check-label" for="public">Publish Live</label>
+        </div>
+  
+        <br/>
+        <div class="form-check form-switch" id="public" style="float:left">
+          <label class="form-check-label" for="public">
             {{ form.public }}
-          </div>
-          </br></br>
-          <button style="float: right;" class="btn btn-primary btn-lg">SAVE</button>
-          </div>
-
-
-    </div>
-
+            <i class="bi bi-cloud-arrow-up-fill"></i>
+            <b> PUBLISH LIVE</b>
+          </label>
+        </div>
+        <button type="submit" style="float: right;" class="btn btn-primary btn-lg">SAVE</button>
 
         </form>
         </div>
     </div>
-    <br>
   {% endblock body %}

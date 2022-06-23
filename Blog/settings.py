@@ -122,7 +122,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CKEDITOR_CONFIGS = {
     'default': {
         'skin': 'kama',
-        'height': 300,
+        'height': 275,
         'width': 600,
         'toolbarCanCollapse': True,
         'tabSpaces': 4,

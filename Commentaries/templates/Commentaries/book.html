@@ -23,12 +23,20 @@
 }
 </style>
 
+
 {% if post.publisher == request.user and post.public == False %}
 <div class="alert alert-danger d-flex align-items-center" role="alert">
   <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
   <div>
     You are currently in DRAFT mode. Only you are able to see this post. <a href="{% url 'updatebookpost' pk=post.pk %}">Edit</a> and turn on the publish live toggle to remove this message.</div>
 </div>
+{% endif %}
+
+{% if post.publisher == request.user %}
+<div style="position:absolute; right:0; width:300px">
+  <a class="btn btn-primary" href="{% url 'updatebookpost' pk=post.pk %}" style="float:right">EDIT THIS COMMENTARY</a>
+</div>
+
 {% endif %}
 
 {% if post.public == True or post.publisher == request.user %}

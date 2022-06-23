@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -10,10 +9,13 @@ from .forms import PostForm
 from Users.models import Blacklist
 from django.contrib.auth import logout
 
+from isbnlib import is_isbn13
 
 from taggit.models import Tag
 from .serializers import CommentarySerializer
 from rest_framework.generics import ListAPIView
+
+
 
 class booksView(ListView):
     model = Post
@@ -95,6 +97,9 @@ def newPostView(request):
             form = PostForm(request.POST, request.FILES) #Requires both request.Files, else will be left blank.
             if form.is_valid():
                 form.instance.publisher = request.user #Because author field from forms.py was excluded
+                isbnfield = form.instance.isbn
+                if not is_isbn13(isbnfield):
+                    isbnfield = None
                 form.save()
                 messages.success(request, ("Commentary is successfully published!"))
                 latest_id = Post.objects.latest('pk').pk #Essentially gets latest entry object based on last pk added, and then gets the pk of that entry object.
@@ -109,4 +114,3 @@ class updatePostView(UpdateView):
     model = Post
     form_class = PostForm
     template_name = 'Commentaries/updatepost.html'
-    success_url = reverse_lazy('index')

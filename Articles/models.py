@@ -36,7 +36,7 @@ class Post(models.Model):
     def __str__(self):
         return str(self.title)
 
-    def get_absolute_url(self):
+    def get_absolute_url(self): #REDIRECT TO PAGE WHEN MODEL IS UPDATED
         return reverse('articleindex')
     
     def save(self, *args, **kwargs):
