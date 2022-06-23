@@ -109,6 +109,7 @@ def registerView(request):
             bio = "Hello, I'm new to Walnut Mind!",
             )
             profile.save(commit=False)
+            profile.following.add()
             profile.save_m2m()
             messages.success(request, ("Your registration is almost complete. Check your email for a verification link."))
             return redirect('index')
