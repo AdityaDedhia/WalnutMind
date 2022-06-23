@@ -19,8 +19,10 @@ class Profile(models.Model):
         return str(self.user)
 
     def save(self, *args, **kwargs):
-        image_resize(self.banner, 1200, 600)
-        image_resize(self.avatar, 200, 200)
+        if self.banner:
+            image_resize(self.banner, 1200, 600)
+        if self.avatar:
+            image_resize(self.avatar, 200, 200)
         super().save(*args, **kwargs)
 
 class Blacklist(models.Model):
