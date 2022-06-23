@@ -101,8 +101,8 @@ def registerView(request):
             #INSTANTIATE USER PROFILE
             profile = Profile(
             user = user,
-            avatar = '',
-            banner = '',
+            avatar = None,
+            banner = None,
             ip = ip,
             location = location,
             interests = 'None',
