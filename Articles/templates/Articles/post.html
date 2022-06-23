@@ -22,20 +22,66 @@
     </div>
     <div class="card-body form-group">
 
-      <div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
 
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.media }}
         
-            {{ form.as_p }}
-            <button>Publish</button>
+            <div class="row">
+
+            <div class="col-md-4" id = "title">
+              <label style = "float: left;" for="title">Title</label>
+              {{ form.title }}
+            </div>
+            <div class="col-md-3" id = "tags">
+              <label style = "float: left;" for="tags">Tags (',' seperated)</label>
+              {{ form.tags }}
+            </div>
+            <div class="col-md-5" id="abstract">
+              <label style = "float: left;" for="abstract">Abstract</label>
+              {{ form.abstract }}
+            </div>
+
+          </div>
+
+            <div class="row">
+              <div class="col-md-4" id="cover">
+                <label style = "float: left;" for="cover">Cover</label>
+                {{ form.cover }}
+              </div>
+              <div class="col-md-4" id="coverSrc">
+                <label style = "float: left;" for="coverSrc">Cover Source</label>
+                {{ form.coverSrc }}
+              </div>
+
+              <div class="col-md-4" id="coverURL">
+                <label style = "float: left;" for="coverURL">Cover URL</label>
+                {{ form.coverURL }}
+              </div>
+            </div>
+            <br/>
+
+          <div class="row">
+
+            <div class="col" id="content">
+              <label style = "float: left;" for="content">Article</label>
+              {{ form.content }}
+            </div>
+
+            <div class="col" id="resources">
+              <label style = "float: left;" for="resources">Resources</label>
+              {{ form.resources }}
+            </div>
+
+          </div>
+
+            <br/>
+            <button type="submit" style="float: right;" class="btn btn-primary btn-lg">SAVE</button>
 
         </form>
         
-            </div>
+      </div>
 
-    </div>
   </div>
 
 </br>

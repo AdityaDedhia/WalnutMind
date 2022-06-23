@@ -6,7 +6,7 @@ from pathlib import Path
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 #PRODUCTION SETTINGS ---------------------------------------------------
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ['127.0.0.1', 'www.walnutmind.org', 'walnutmind.org']
 
 # CONFIG SETTINGS ---------------------------------------------------
@@ -117,6 +117,26 @@ USE_TZ = False
 TAGGIT_CASE_INSENSITIVE = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+#RICH TEXT EDITOR-------------
+CKEDITOR_CONFIGS = {
+    'default': {
+        'skin': 'moono',
+        'height': 300,
+        'width': 600,
+            'extraPlugins': ','.join([
+            'uploadimage', # the upload image feature
+            # your extra plugins here
+            'div',
+            'autolink',
+            'autoembed',
+            'embedsemantic',
+            'find',
+        ]),
+    },
+
+}
+
 #FILES------------------------------------------------------------
 
 GEOIP_PATH = os.path.join(BASE_DIR, 'geoIP')
@@ -130,7 +150,7 @@ STATICFILES_DIRS = ()
 MEDIA_URL = '/user_content/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'user_content')
 
-CKEDITOR_UPLOAD_PATH = "Articles/uploads/"
+CKEDITOR_UPLOAD_PATH = "uploads/ckeditor/"
 
 AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_BUCKET_NAME']
 AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']

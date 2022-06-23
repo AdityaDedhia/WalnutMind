@@ -22,10 +22,11 @@
   <div class="col-md-2" style="height:500px;border:1px solid #ccc; border-radius: 10px; overflow:auto;">
     <br/>
     <ul>
-    {% for resource in resources %}
-  
-    <li>{{ resource.title }}</li>
-    {% endfor %}
+      {% for resource in resources %}
+      <li>
+      <a href = "resource-{{ resource.pk }}">{{ resource.title }}</a>
+      </li>
+      {% endfor %}
   </ul>
   </div>
 
