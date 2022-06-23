@@ -101,15 +101,14 @@ def registerView(request):
             #INSTANTIATE USER PROFILE
             profile = Profile(
             user = user,
-            avatar = 'Users/profile_covers/def_avatar.png',
-            banner = 'Users/profile_banners/def_banner.png',
+            avatar = '',
+            banner = '',
             ip = ip,
             location = location,
             interests = 'None',
             bio = "Hello, I'm new to Walnut Mind!",
             )
             profile.save()
-            profile.following.add(1)
             messages.success(request, ("Your registration is almost complete. Check your email for a verification link."))
             return redirect('index')
         else:
