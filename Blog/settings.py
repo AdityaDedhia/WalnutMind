@@ -121,17 +121,42 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #RICH TEXT EDITOR-------------
 CKEDITOR_CONFIGS = {
     'default': {
-        'skin': 'moono',
+        'skin': 'kama',
         'height': 300,
         'width': 600,
-            'extraPlugins': ','.join([
-            'uploadimage', # the upload image feature
-            # your extra plugins here
-            'div',
-            'autolink',
-            'autoembed',
-            'embedsemantic',
-            'find',
+        'toolbarCanCollapse': True,
+        'tabSpaces': 4,
+            'toolbar': 'custom',
+            'toolbar_custom': [
+            {'name': 'document', 'items': ['Source', '-', 'Save', 'NewPage', 'Print', '-', 'Templates']},
+            {'name': 'clipboard', 'items': ['Cut', 'Copy', 'PasteText', '-', 'Undo', 'Redo']},
+            {'name': 'editing', 'items': ['Find', 'Replace', '-',]},
+            {'name': 'basicstyles',
+             'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']},
+            {'name': 'paragraph',
+             'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-',
+                       'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl',
+                       'Language']},
+            {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor']},
+            {'name': 'insert',
+             'items': ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'Iframe']},
+            '/',
+            {'name': 'styles', 'items': ['Styles', 'Format', 'Font', 'FontSize']},
+            {'name': 'colors', 'items': ['TextColor', 'BGColor']},
+            {'name': 'tools', 'items': ['Maximize', 'ShowBlocks']},
+           ],
+        'extraPlugins': ','.join([
+        'uploadimage', # the upload image feature
+        # your extra plugins here
+        'div',
+        'autolink',
+        'autoembed',
+        'embedsemantic',
+        'find',
+        'sharedspace',
+        'notification',
+        'wordcount',
+        'balloontoolbar',
         ]),
     },
 
