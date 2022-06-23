@@ -9,16 +9,14 @@ from .forms import PostForm, CommentForm
 from django.urls import reverse
 from bootstrap_modal_forms.generic import BSModalDeleteView
 from django.urls import reverse_lazy
-from Users.models import Blacklist
+from Users.models import Blacklist, Log
 
 from taggit.models import Tag
 from .serializers import ArticleSerializer
 from rest_framework.generics import ListAPIView
 from django.contrib.auth import logout
 
-
 def indexView(request):
-
     #GET USER LOCATION and RUN through Blacklisted IPs.
     x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forw_for is not None:
@@ -62,8 +60,6 @@ def termsView(request):
 
 def faqView(request):
     return render(request, 'Articles/faq.html')
-
-#ARTICLE VIEWS-------------------
 
 class searchView(ListView):
     model = Post
@@ -135,24 +131,50 @@ class articleView(DetailView):
             return render(request, "blacklist.html")
         return super(articleView, self).dispatch(request, *args, **kwargs)
 
-#A version of binary like/dislike implementation: does not work
+
+@login_required(login_url='/users/login')
+def articlesave(request, pk):
+    post = get_object_or_404(Post, id = pk)
+    if request.user in post.saves.all():
+        post.saves.remove(request.user)
+        messages.success(request, ("Article removed from your list."))
+        return HttpResponseRedirect(reverse('articleview', args =[str(post.slug)]))
+
+    post.saves.add(request.user)
+    link = f"https://www.walnutmind.org/articles/{post.slug}"
+    description = f"Saved article: {post.title}"
+    logitem = Log(
+        user = request.user,
+        description =description,
+        link = link,
+        datelog = datetime.now()
+    )
+    logitem.save()
+    messages.success(request, ("Article saved to your list."))
+    return HttpResponseRedirect(reverse('articleview', args =[str(post.slug)]))
 
 @login_required(login_url='/users/login')
 def articleupvote(request, pk):
     post = get_object_or_404(Post, id = pk)
+    if request.user in post.likes.all():
+        post.likes.remove(request.user)
+        messages.success(request, ("Article unliked."))
+        return HttpResponseRedirect(reverse('articleview', args =[str(post.slug)]))
     post.likes.add(request.user)
-    messages.success(request, ("Rating saved, thank you for your feedback."))
-    return HttpResponseRedirect(reverse('articleview', args =[str(pk)]))
+    link = f"https://www.walnutmind.org/articles/{post.slug}"
+    description = f"Liked article: {post.title}"
+    logitem = Log(
+        user = request.user,
+        description =description,
+        link = link,
+        datelog = datetime.now()
+    )
+    logitem.save()
+    messages.success(request, ("Article liked, thank you for your feedback."))
+    return HttpResponseRedirect(reverse('articleview', args =[str(post.slug)]))
 
-@login_required(login_url='/users/login')
-def articledownvote(request, pk):
-    post = get_object_or_404(Post, id = pk)
-    post.dislikes.add(request.user)
-    messages.success(request, ("Rating saved, thank you for your feedback."))
-    return HttpResponseRedirect(reverse('articleview', args =[str(pk)]))
 
-#---------------------------------------------------------------------------------
-  
+#---------------------------------------------------------------------------------  
 @login_required(login_url='/users/login')
 def newPostView(request):
         if request.method == 'POST':

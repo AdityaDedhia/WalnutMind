@@ -59,12 +59,13 @@
 
 <hr style="border-top: 4px solid rgb(0, 0, 0)">
 
+
 <div class="min-vh-75">
   <div class="container">
     <div class="row">
       <div class="col-lg-4 my-auto">
-        <h2 class="text-info mb-0">Built by writers;</h2>
-        <h2 class="mb-4"><i>for the writers</i></h2>
+        <h2 class="text-info mb-0">For the writers;</h2>
+        <h2 class="mb-4"><i>By the writers</i></h2>
         <p class="lead">Interested in what we do? Whether you are a casual reader, bibliophile, blogger, or notetaker, we have something for you.</p>
         <p class="lead">Got something to share? Get started today and find out more about publishing on our site.</p>
         <div class="buttons">
@@ -96,6 +97,8 @@
   </div>
 </div>
 
+
+
 <!--LATEST ARTICLES-->
 <section class="article-list">
   <div class="container">
@@ -105,7 +108,7 @@
     </hr style="border-top: 1px solid rgb(0, 0, 0)">
 
 
-      <div class="row articles">
+      <div class="row gy-4 articles">
         {% for post in recent %}
           <div class="col-sm-6 col-md-4 item zoom"><a href="{% url 'articleview' pk_slug=post.slug %}"><img class="img-fluid" src="{{ post.cover.url }}"></a>
               <h3 class="name">{{ post.title }}</h3>

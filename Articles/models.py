@@ -1,7 +1,6 @@
 from enum import unique
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.deletion import CASCADE, DO_NOTHING
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.urls import reverse
@@ -25,19 +24,21 @@ class Post(models.Model):
     dateUpdated = models.DateTimeField(auto_now = True)
     public = models.BooleanField(default = False)
     likes = models.ManyToManyField(User, related_name="article_likes")
-    dislikes = models.ManyToManyField(User, related_name="article_dislikes")
+    saves = models.ManyToManyField(User, related_name="article_saves")
 
     def total_likes(self):
         return self.likes.count()
 
-    def total_dislikes(self):
-        return self.dislikes.count()
+
+    def total_saves(self):
+        return self.saves.count()
 
     def __str__(self):
         return str(self.title)
 
     def get_absolute_url(self): #REDIRECT TO PAGE WHEN MODEL IS UPDATED
-        return reverse('articleindex')
+        return reverse('articleview', kwargs={'pk_slug': str(self.slug)})
+
     
     def save(self, *args, **kwargs):
         image_resize(self.cover, 1280, 720)
