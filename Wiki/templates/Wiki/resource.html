@@ -21,7 +21,9 @@ Attachments:
 <i class="bi bi-file-earmark-play"> </i><a href="{{ resource.videolink }}" target="_blank" rel="noopener noreferrer">{{ resource.videolink }}</a>
 {% endif %}
 {% if resource.filelink %}
-<i class="bi bi-file-earmark-pdf"> </i><a href="{{ resource.filelink }}" target="_blank" rel="noopener noreferrer">Files</a>
+<i class="bi bi-file-earmark-pdf"> </i><a href="{{ resource.filelink.url }}" target="_blank" rel="noopener noreferrer">Files</a>
+<embed src="{{ resource.filelink.url }}" type="application/pdf" height="500px" width="800px"/>
+
 {% endif %}
 {% endif %}
 

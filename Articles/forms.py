@@ -10,6 +10,7 @@ class PostForm(forms.ModelForm):
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'cover': forms.FileInput(attrs={'class': 'form-control'}),
             'abstract': forms.TextInput(attrs={'class': 'form-control'}),
+            'tags': forms.TextInput(attrs={'class': 'form-control'}),
             'coverSrc': forms.TextInput(attrs={'class': 'form-control'}),
             'coverURL': forms.TextInput(attrs={'class': 'form-control'}),
             'content': forms.Textarea(attrs={'class': 'form-control'}),
