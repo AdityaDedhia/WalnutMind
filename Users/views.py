@@ -107,7 +107,6 @@ def registerView(request):
             location = location,
             interests = 'None',
             bio = "Hello, I'm new to Walnut Mind!",
-            following = None,
             )
             profile.save()
             messages.success(request, ("Your registration is almost complete. Check your email for a verification link."))
