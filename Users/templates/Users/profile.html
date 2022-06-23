@@ -51,7 +51,7 @@
                 {% if request.user == user %}
                 <a class = "btn btn-outline-dark" href = "/users/{{user.username}}/edit">Edit Profile</a>
                 {% else %}
-                <a class = "btn btn-outline-dark" href = "mailto:{{user.email}}">Contact</a>
+                <a class = "btn btn-outline-dark" href = "mailto:{{ user.email }}">Contact</a>
                 {% endif %}
               </div>
 
@@ -117,7 +117,7 @@
                    {% if request.user == user %}
                    <div class = "bg-light" style = "margin-top:50px; padding: 30px">
                 
-                   <h3>Manage Your Publications:</h3>
+                   <h3 id="publicationsmanager">Manage Your Publications:</h3>
                    <br>
                    <div id = "masonry" class = "row" data-masonry='{"percentPosition": true }'>
        

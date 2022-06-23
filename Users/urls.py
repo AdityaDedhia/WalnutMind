@@ -9,7 +9,7 @@ urlpatterns = [
     path('activate-user/<uidb64>/<token>',views.activate_user, name = 'activate'),
     path('login',views.loginView, name = "loginn"),
     path('logout', views.logoutView, name = 'logoutt'),
-    path('<str:username>', views.profileView, name = "profile"),
+    path('<str:username>/', views.profileView, name = "profile"),
     path('<str:username>/edit', views.editProfileView, name = 'editprofile'),
 
     #PASSWORD MANAGEMENT URLS

@@ -34,7 +34,7 @@
               {{ form.title }}
             </div>
             <div class="col-md-3" id = "tags">
-              <label style = "float: left;" for="tags">Tags (',' seperated)</label>
+              <label style = "float: left;" for="tags">Tags (' , ' seperated)</label>
               {{ form.tags }}
             </div>
             <div class="col-md-5" id="abstract">
@@ -64,7 +64,7 @@
           <div class="row">
 
             <div id = "top" class="col" id="content">
-              <label style = "float: left;" for="content">Article</label>
+              <label style = "float: left;" for="content">Content</label>
               {{ form.content }}
             </div>
 
@@ -76,7 +76,14 @@
           </div>
 
             <br/>
-            <button type="submit" style="float: right;" class="btn btn-primary btn-lg">SAVE</button>
+
+              <div class="form-check form-switch" id="public" style="float: right;">
+                <label class="form-check-label" for="public">Publish Live</label>
+                {{ form.public }}
+              </div>
+              </br></br>
+              <button type="submit" style="float: right;" class="btn btn-primary btn-lg">SAVE</button>
+    
 
         </form>
         
