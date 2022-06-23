@@ -194,6 +194,13 @@ class updatePostView(UpdateView):
     form_class = PostForm
     template_name = 'Articles/updatepost.html'
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(updatePostView, self).get_context_data(*args, **kwargs)
+        tags = Tag.objects.all() #return all tags
+        context['tags'] = tags
+        return context
+
+
 class deletePostView(BSModalDeleteView):
     model = Post
     template_name = 'Articles/deletepost.html'

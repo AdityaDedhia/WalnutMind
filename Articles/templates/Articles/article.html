@@ -11,16 +11,31 @@
 <ol class="breadcrumb" style = "background-color:white">
     <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
     <li class="breadcrumb-item"><a href="{% url 'articleindex' %}">Articles</a></li>
-    <li class="breadcrumb-item active" aria-current="page">{{post.title}}</li>
+    <li class="breadcrumb-item active" aria-current="page">{{ post.title }}</li>
 </ol>
 
+{% if post.author == request.user and post.public == False %}
+<div class="alert alert-danger d-flex align-items-center" role="alert">
+  <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+  <div>
+    You are currently in DRAFT mode. Only you are able to see this post. <a href="{% url 'updatearticlepost' pk=post.pk %}">Edit</a> and turn on the publish live toggle to remove this message.</div>
+</div>
+{% endif %}
+
+{% if post.author == request.user %}
+<div style="position:absolute; right:0; width:300px">
+<a class="btn btn-primary" href="{% url 'updatearticlepost' pk=post.pk %}" style="float:right">EDIT THIS ARTICLE</a>
+<br/>
+<cap style="float:right; color:gray;">You last reviewed this article on: {{ post.dateUpdated }}</cap>
+
+</div>
+{% endif %}
+
+{% if post.public == True or post.author == request.user %}
 <!--COVER-->
-
-{% if post.public == True %}
-
 <figure>
     <img style = "height: 300px; display: block; margin-left: auto; margin-right: auto;" src = "{{ post.cover.url }}">
-    <figcaption>Source: <a href = "{{post.coverURL}}">{{post.coverSrc}}</a></figcaption>
+    <figcaption>Source: <a href = "{{ post.coverURL }}">{{ post.coverSrc }}</a></figcaption>
 </figure> 
 
 <style>
@@ -118,7 +133,7 @@
 
 <p>The author may currently be updating the post or it may have been archived.</p>
 
-<p>If you require access please check again at a later date or contact the author <a href = "/users/{{post.author}}">here</a>.</p>
+<p>If you require access please check again at a later date or contact the author <a href = "{% url 'profile' username=post.author %}">here</a>.</p>
 
  {% endif %}
 

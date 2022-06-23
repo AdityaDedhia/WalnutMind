@@ -4,11 +4,5 @@
  */
 
 CKEDITOR.editorConfig = function (config) {
-	config.skin = 'kama';
-	config.language = 'en';
-	config.extraPlugins = 'wordcount,notification,find,dialog,balloontoolbar,sharedSpaces';
-	config.sharedSpaces = {
-		top: 'top',
-		bottom: 'bottom'
-	};
+
 };

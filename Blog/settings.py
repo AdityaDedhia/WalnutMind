@@ -128,22 +128,19 @@ CKEDITOR_CONFIGS = {
         'tabSpaces': 4,
             'toolbar': 'custom',
             'toolbar_custom': [
-            {'name': 'document', 'items': ['Source', '-', 'Save', 'NewPage', 'Print', '-', 'Templates']},
-            {'name': 'clipboard', 'items': ['Cut', 'Copy', 'PasteText', '-', 'Undo', 'Redo']},
+            {'name': 'document', 'items': ['Maximize','Source', '-', 'Save', '-', 'Templates']},
+            {'name': 'clipboard', 'items': ['Undo', 'Redo']},
             {'name': 'editing', 'items': ['Find', 'Replace', '-',]},
             {'name': 'basicstyles',
-             'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']},
+             'items': ['TextColor', 'BGColor', 'Subscript', 'Superscript', '-', 'RemoveFormat']},
             {'name': 'paragraph',
              'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-',
-                       'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl',
-                       'Language']},
+                       'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-']},
             {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor']},
             {'name': 'insert',
-             'items': ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'Iframe']},
+             'items': ['Image', 'Flash', 'Table', 'HorizontalRule', 'SpecialChar', 'Iframe']},
             '/',
-            {'name': 'styles', 'items': ['Styles', 'Format', 'Font', 'FontSize']},
-            {'name': 'colors', 'items': ['TextColor', 'BGColor']},
-            {'name': 'tools', 'items': ['Maximize', 'ShowBlocks']},
+            {'name': 'styles', 'items': ['Styles', 'Format','Bold','Italic','Underline','Strike', 'Font', 'FontSize']},
            ],
         'extraPlugins': ','.join([
         'uploadimage', # the upload image feature
@@ -153,11 +150,9 @@ CKEDITOR_CONFIGS = {
         'autoembed',
         'embedsemantic',
         'find',
-        'sharedspace',
         'notification',
-        'wordcount',
-        'balloontoolbar',
         ]),
+        
     },
 
 }
