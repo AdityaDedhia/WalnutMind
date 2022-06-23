@@ -187,7 +187,6 @@ AWS_S3_SIGNATURE_VERSION = 's3v4'
 STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 #django_heroku.settings(locals())
 
-
 #EMAIL FOR USER MANAGEMENT
 EMAIL_FROM_USER = 'support@walnutmind.org'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
