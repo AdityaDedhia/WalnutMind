@@ -66,23 +66,7 @@ def activate_user(request, uidb64, token):
         #ACTIVATE USER ACCOUNT
         user.is_active = True
         user.save()
-        #INSTANTIATE USER PROFILE
-        profile = Profile(
-        user = user,
-        ip = ip,
-        location = location,
-        interests = 'None',
-        bio = "Hello, I'm new to Walnut Mind!",
-        is_email_verified = True,
-        )
-        profile.save()
-        description = "Joined WalnutMind 🚩"
-        logitem = Log(
-        user = user,
-        description =description,
-        datelog = datetime.now()
-        )
-        logitem.save()
+
         messages.success(request, ("Registration has been successful. You may now login."))
         return redirect('loginn')
 
