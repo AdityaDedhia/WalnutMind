@@ -43,21 +43,20 @@ def send_activation_email(user, request):
     EmailThread(email).start()
 
 def activate_user(request, uidb64, token):
-    #GET USER LOCATION
-    x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forw_for is not None:
-        ip = x_forw_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk = uid)
-        profile = Profile.objects.get(user = user)
 
     except Exception as e:
         user = None
 
     if user and generate_token.check_token(user, token):
+        #GET USER LOCATION
+        x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forw_for is not None:
+            ip = x_forw_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
         #BYPASS IP CHECK IF SERVED ON LOCAL HOST
         if ip =='127.0.0.1':
             location = 'LU' #THIS NEEDS TO BE CHANGED WHEN LOCALHOST LOCATION CHANGES
@@ -66,7 +65,23 @@ def activate_user(request, uidb64, token):
         #ACTIVATE USER ACCOUNT
         user.is_active = True
         user.save()
-
+        #INSTANTIATE USER PROFILE
+        profile = Profile(
+        user = user,
+        ip = ip,
+        location = location,
+        interests = 'None',
+        bio = "Hello, I'm new to Walnut Mind!",
+        is_email_verified = True,
+        )
+        profile.save()
+        description = "Joined WalnutMind 🚩"
+        logitem = Log(
+        user = user,
+        description =description,
+        datelog = datetime.now()
+        )
+        logitem.save()
         messages.success(request, ("Registration has been successful. You may now login."))
         return redirect('loginn')
 
