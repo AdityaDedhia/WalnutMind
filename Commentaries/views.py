@@ -1,15 +1,15 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+from datetime import datetime
 from django.views.generic import ListView,DetailView, UpdateView
 from .models import Post
-from django.http import Http404, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, Http404
 from django.contrib import messages
 from .forms import PostForm
-from Users.models import Blacklist
+from Users.models import Blacklist, Log
 from django.contrib.auth import logout
-
 from isbnlib import is_isbn13
+from django.urls import reverse
 
 from taggit.models import Tag
 from .serializers import CommentarySerializer
@@ -97,12 +97,24 @@ def newPostView(request):
             form = PostForm(request.POST, request.FILES) #Requires both request.Files, else will be left blank.
             if form.is_valid():
                 form.instance.publisher = request.user #Because author field from forms.py was excluded
+                title = form.instance.title
                 isbnfield = form.instance.isbn
-                if not is_isbn13(isbnfield):
-                    isbnfield = None
+                if isbnfield:
+                    if not is_isbn13(isbnfield):
+                        isbnfield = None
                 form.save()
                 messages.success(request, ("Commentary is successfully published!"))
-                latest_id = Post.objects.latest('pk').pk #Essentially gets latest entry object based on last pk added, and then gets the pk of that entry object.
+                post_slug = Post.objects.latest('pk').slug #Essentially gets latest entry object based on last pk added, and then gets the pk of that entry object.
+                link = f"https://www.walnutmind.org/books/{post_slug}"
+                description = f"Published new commentary: {title}"
+                logitem = Log(
+                    user = request.user,
+                    description =description,
+                    link = link,
+                    datelog = datetime.now()
+                )
+                logitem.save()
+                return HttpResponseRedirect(reverse('bookview', args =[str(post_slug)]))
                 return redirect(f"/books/{latest_id}")
         else:
             form = PostForm()

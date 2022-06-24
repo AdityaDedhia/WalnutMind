@@ -1,5 +1,5 @@
 from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, render
 from datetime import datetime, timedelta, date
 from django.contrib.auth.decorators import login_required
 from .models import Post, Comment
@@ -33,7 +33,7 @@ def indexView(request):
 
     recentArticles = Post.objects.filter(dateCreated__range = [today, one_week_ago])
 
-    recent = Post.objects.all()
+    recent = Post.objects.filter(public = True)
 
     tags = Tag.objects.all() #return all tags
     return render(request, 'Articles/index.html', {
@@ -181,10 +181,20 @@ def newPostView(request):
             form = PostForm(request.POST, request.FILES) #Requires both request.Files, else will be left blank.
             if form.is_valid():
                 form.instance.author = request.user #Because author field from forms.py was excluded
+                title = form.instance.title
                 form.save()
                 messages.success(request, ("Article is successfully published!"))
-                latest_id = Post.objects.latest('pk').pk #Essentially gets latest entry object based on last pk added, and then gets the pk of that entry object.
-                return redirect(f"/articles/{latest_id}")
+                post_slug = Post.objects.latest('pk').slug #Essentially gets latest entry object based on last pk added, and then gets the pk of that entry object.
+                link = f"https://www.walnutmind.org/articles/{post_slug}"
+                description = f"Published article: {title}"
+                logitem = Log(
+                    user = request.user,
+                    description =description,
+                    link = link,
+                    datelog = datetime.now()
+                )
+                logitem.save()
+                return HttpResponseRedirect(reverse('articleview', args =[str(post_slug)]))
         else:
             form = PostForm()
         return render(request, 'Articles/post.html', {

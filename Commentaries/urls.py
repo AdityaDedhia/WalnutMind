@@ -8,7 +8,7 @@ urlpatterns = [
     path('post-json/', post_json, name = 'post-json-view'),
     path('',booksView.as_view(), name = 'bookindex'),
     path('new', views.newPostView, name = 'newbookpost'),
-    path('<int:pk>/edit', updatePostView.as_view(), name = 'updatebookpost'),
+    path('<int:pk>/edit', updatePostView.as_view(), name = 'updatebook'),
     path('<slug:pk_slug>/', bookView.as_view(), name = 'bookview'),
     path('book-list',views.BookListAPIView.as_view(), name = 'book-list'),
 
