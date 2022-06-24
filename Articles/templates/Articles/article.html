@@ -18,16 +18,13 @@
 <div class="alert alert-danger d-flex align-items-center" role="alert">
   <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
   <div>
-    You are currently in DRAFT mode. Only you are able to see this post. <a href="{% url 'updatearticlepost' pk=post.pk %}">Edit</a> and turn on the publish live toggle to remove this message.</div>
+    You are currently in DRAFT mode. Only you are able to see this post. <a href="{% url 'updatearticle' pk=post.pk %}">Edit</a> and turn on the publish live toggle to remove this message.</div>
 </div>
 {% endif %}
 
 {% if post.author == request.user %}
-<div style="position:absolute; right:0; width:300px">
-<a class="btn btn-primary" href="{% url 'updatearticlepost' pk=post.pk %}" style="float:right">EDIT THIS ARTICLE</a>
-<br/>
-<cap style="float:right; color:gray;">You last reviewed this article on: {{ post.dateUpdated }}</cap>
-
+<div style="position:absolute; left:0">
+<a class="btn btn-primary" href="{% url 'updatearticle' pk=post.pk %}">EDIT</a>
 </div>
 {% endif %}
 

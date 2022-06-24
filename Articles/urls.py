@@ -14,7 +14,7 @@ urlpatterns = [
 
     path('article-list',views.ArticleListAPIView.as_view(), name = 'article-list'),
 
-    path('articles/<int:pk>/edit', updatePostView.as_view(), name = 'updatearticlepost'),
+    path('articles/<int:pk>/edit', updatePostView.as_view(), name = 'updatearticle'),
     path('articles/<int:pk>/delete',views.deletePostView.as_view(), name = 'deletepost'),
     path('articles/<int:pk>/post',newCommentView, name = "newcomment"),
 

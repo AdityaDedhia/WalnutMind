@@ -6,8 +6,11 @@ from pathlib import Path
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 #PRODUCTION SETTINGS ---------------------------------------------------
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ['127.0.0.1', 'www.walnutmind.org', 'walnutmind.org']
+ADMINS = [
+    ('Aditya Dedhia', 'aditya23dedhia@gmail.com'),
+]
 
 # CONFIG SETTINGS ---------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent

@@ -8,7 +8,6 @@ from taggit.managers import TaggableManager
 from autoslug import AutoSlugField
 from Blog.utils import image_resize
 
-
 class Post(models.Model):
     title = models.CharField(max_length=128, blank = False) #Blank=false for required fields
     slug = AutoSlugField(populate_from='title', unique = True, null = True, default = None)

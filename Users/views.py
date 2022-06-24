@@ -96,13 +96,14 @@ def registerView(request):
             form.save()
             user = authenticate(request=request, username = username, password = password)
             send_activation_email(user, request)
-
-            location = GeoIP2().country(ip)
+            #BYPASS IP CHECK IF SERVED ON LOCAL HOST
+            if ip =='127.0.0.1':
+                location = None
+            else:
+                location = GeoIP2().country(ip)
             #INSTANTIATE USER PROFILE
             profile = Profile(
             user = user,
-            avatar = None,
-            banner = None,
             ip = ip,
             location = location,
             interests = 'None',
@@ -197,20 +198,21 @@ def profileView(request, username):
         
         if request.user.is_authenticated:
             user = Profile.objects.get(user = request.user)
-            if requestedUser in user.following:
+            if requestedUser in user.following.all():
                 isFollowing = True
             else:
                 isFollowing = False
         else:
             isFollowing = False
-        articles = requestedUser.articlepublisher.all()
+        followers = Profile.objects.filter(following = requestedUser)
+        articles = requestedUser.articlepublisher.all() #THESE MUST BE ALL AND NOT PUBLIC=TRUE DUE TO PUBS MANAGER
         commentaries = requestedUser.commentarypublisher.all()
         diaries = requestedUser.diarypublisher.all()
         highlights = Highlight.objects.filter(author = requestedUser)
         saved_articles = requestedUser.article_saves.all()
         log = Log.objects.filter(user = requestedUser).order_by('-datelog')[:6] #Descending order limited to last 6 items.
         return render(request, 'Users/profile.html', {
-            'user': requestedUser,'isFollowing':isFollowing, 'articles':articles, 'commentaries': commentaries, 'diaries': diaries, 'highlights': highlights, 'saved_articles': saved_articles, 'log': log
+            'user': requestedUser,'isFollowing':isFollowing,'followers':followers, 'articles':articles, 'commentaries': commentaries, 'diaries': diaries, 'highlights': highlights, 'saved_articles': saved_articles, 'log': log
         })
     else:
         messages.success(request, ("It appears that this user does not exist."))

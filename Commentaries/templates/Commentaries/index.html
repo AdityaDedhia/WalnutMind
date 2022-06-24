@@ -2,7 +2,7 @@
 
 {% block title %}
 <title>Books | WM</title>
-{% endblock %}
+{% endblock title %}
 
 {% block body %}
 {% load static %}
@@ -11,7 +11,7 @@
 x-data="{tag: 'All', posts: []}"
 x-init="posts = await (await fetch('book-list')).json()">
 
-  <ol class="breadcrumb" style = "background-color:white">
+  <ol class="breadcrumb" style="background-color:white">
     <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
     <li class="breadcrumb-item"><a href="">Books</a></li>
     <li class="breadcrumb-item active" aria-current="page" x-text="tag">
@@ -122,4 +122,4 @@ x-init="posts = await (await fetch('book-list')).json()">
   
   </script>
 
-{% endblock %}
+{% endblock body %}

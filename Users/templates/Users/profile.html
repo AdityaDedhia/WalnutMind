@@ -19,23 +19,10 @@
     <div class="row d-flex justify-content-center align-items-center h-100">
       <div class="col col-lg-10 col-xl-12">
         <div class="card">
-
         {% if user.profile.banner %}
-        <div style="
-          width: 100%;
-          height: 400px;
-          background-image: url('{{ user.profile.banner.url }}');
-          background-size: cover;
-          border: 1px solid gray;
-          ">
+        <div style="width: 100%; height: 400px; background-image: url('{{ user.profile.banner.url }}'); background-size: cover; border: 1px solid gray;">
         {% else %}
-          <div style="
-          width: 100%;
-          height: 400px;
-          background-image: url('{% static 'Users/def_banner.jpg' %}');
-          background-size: cover;
-          border: 1px solid gray;
-          ">
+          <div style=" width: 100%; height: 400px; background-image: url('{% static 'Users/def_banner.jpg' %}'); background-size: cover; border: 1px solid gray;">
         {% endif %}
         </div>
           <div class="rounded-top text-white d-flex flex-row" style = "position: relative; top: -200px;">
@@ -47,15 +34,24 @@
               <img class="img-fluid mt-4 mb-2" style = "z-index: 0; border-radius: 50%;" src = "{% static 'Users/def_avatar.png' %}">
               {% endif %}
 
-              <div style="z-index: 1;">
+              <style>
+                .unfollowlabel:after{
+                  content:'Following';
+              }
+              .unfollowlabel:hover:after{
+                  content:'Unfollow';
+              }
+              </style>
+
+              <div style="z-index: 0;">
+                <div style="white-space:nowrap">
                 {% if request.user == user %}
                 <a class="btn btn-outline-dark" href="{% url 'editprofile' username=user.username %}">Edit Profile</a>
                 {% else %}
-                <div style="white-space:nowrap">
                   {% if isFollowing %}
-                <a style="display: inline-block" class="btn btn-dark" href="{% url 'followprofile' username=user.username %}">Unfollow</a>
+                <a style="display: inline-block" class="btn btn-dark" href="{% url 'followprofile' username=user.username %}"><span class="unfollowlabel"></span></a>
                   {% else %}
-                  <a style="display: inline-block" class="btn btn-dark" href="{% url 'followprofile' username=user.username %}">Follow</a>
+                  <a style="display: inline-block;" class="btn btn-outline-dark" href="{% url 'followprofile' username=user.username %}">Follow</a>
                   {% endif %}
                 <a class="btn btn-outline-dark" href="mailto:{{ user.email }}">Contact</a>
                 {% endif %}
@@ -63,16 +59,19 @@
               </div>
 
             </div>
-            <!--PROFILE PICTURE END-->
-            <div class="ms-3" style="margin-top: 95px;">
+            <!--PROFILE META-->
+            <div class="ms-3" style="margin-top: 100px;">
               <h5>{{ user.username }}</h5>
               Location: {{ user.profile.location.name }} <img src="{{ user.profile.location.flag }}"><br/>
               Interests: {{ user.profile.interests }}
             </div>
           </div>
 
-          <div class="row" style = "margin-top: -130px;">
-          <div class=" card-body bg-dark col-3" style="color:white; border-radius:25px; padding:30px">
+
+          <div class="row" style = "margin-top: -175px;">
+          <!--SIDE PANEL-->
+
+          <div class=" card-body bg-dark col-lg-3 col-sm-4" style="color:white; border-radius:25px; padding:30px">
               <b>About Me</b>
               <hr/>
                 <p style="text-align: justify;
@@ -91,14 +90,36 @@
                 {% endif %}
                 </li>
                 {% endfor %}
+                .....
                   </ul>
                 </div>
 
+                {% if followers %}
+              <div class="container py-4">
+                <div class="row">
+                  <b>Followers</b>
+                  <hr/>
+                  {% for follower in followers %}
+                  <div class="col-3" style="padding:10px">
+                      <a href="{% url 'profile' username=follower %}" class="avatar avatar-lg rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ follower }}">
+                        {% if follower.avatar %}
+                        <img style = "width: 50px; height: 50px; border-radius: 50%; border: 2px solid #16060e; margin-right: 4px" class = "zoom float-md-start" src = "{{ follower.avatar.url }}">
+                        {% else %}
+                        <img style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid #16060e; margin-right: 4px" class = "zoom float-md-start" src = "{% static 'Users/def_avatar.png' %}">
+                        {% endif %}
+                      </a>
+                  </div>                  
+                  {% endfor %}
+                </div>
+              </div>
+              {% endif %}
           </div>
 
-            <!--CONTENT MASONRY-->
-            <div class = "col-9" style = "padding: 30px">  
+            <!--MAIN PANEL-->
+            <div class = "col-lg-9 col-sm-8" style = "padding: 30px">  
+
               <h3>🚀 Highlights:</h3>
+              <hr/>
               <div>
                 {% for highlight in highlights %}
                 <b><i>"{{ highlight.content }}"</i></b>
@@ -107,29 +128,37 @@
               </div>
               <br/>
             <h3>Recent Publications:</h3>
-            <hr>
+            <hr/>
             <div id="masonry" class="row">
               {% for article in articles %}
-  
+              {% if article.public %}
+              
               <div class = "col-sm-6 col-lg-3 mb-4 zoom row-item">
+                <a href="{% url 'articleview' pk_slug=article.slug %}">
                 <div class="card">
                   <img class = "card-img-top" src = "{{ article.cover.url }}">
                   <div class="card-body">
                     <p class="card-title">{{ article.title }}</p>
                   </div>
                 </div>
+              </a>
               </div>
               <br/>
+              {% endif %}
               {% endfor %}
               {% for commentary in commentaries %}
+              {% if commentary.public %}
   
               <div class="col-sm-4 col-lg-2 mb-3 zoom row-item">
+                <a href="{% url 'bookview' pk_slug=commentary.slug %}">
                 <div class="card">
                   <img class = "card-img-top" src = "{{ commentary.cover.url }}"/>
                     <p class="card-title">{{ commentary.title }} Commentary</p>
                 </div>
+              </a>
               </div>
               <br/>
+              {% endif %}
               {% endfor %}
             </div>
           </div>
@@ -144,8 +173,8 @@
                    {% if request.user == user %}
                    <div class = "bg-light" style = "margin-top:50px; padding: 30px">
 
-                    <h3>Saved for Later: </h3>
                     {% if saved_articles %}
+                    <h3>Saved for Later: </h3>
                     <h5>Articles</h5><hr/>
                     <div>
                       <ul>
@@ -155,7 +184,6 @@
                       </ul>
                     </div>
                     {% else %}
-                    Nothing saved yet...
                     {% endif %}
                 
                    <h3 id="publicationsmanager">Manage Your Publications:</h3>
@@ -164,12 +192,13 @@
        
                      <div class = "col-4">
                        <h5>Articles
-                        <a style = "margin-left:5px" class="btn btn-info btn-sm" href="{% url 'newpost' %}" role="button">Add</a>
+                        <a style = "margin-left:5px" href="{% url 'newpost' %}" role="button"><i class="bi bi-plus-circle-fill"></i>
+                        </a>
                        </h5>
                        {% for article in articles %}
                        <ul>
                          <li>
-                           <a href = "/articles/{{article.slug}}">
+                           <a href = "{% url 'articleview' pk_slug=article.slug %}">
                            {{article.title}} 
                          </a>
        
@@ -180,10 +209,7 @@
                            {% endif %}
                            <br>
                           {{article.dateCreated}}
-                           <a class="btn btn-primary btn-sm" href="/articles/{{article.pk}}/edit" role="button">Edit</a>
-                           {% if user.is_superuser %}
-                           <a class="btn btn-danger btn-sm" href="/articles/{{article.pk}}/delete" role="button">Delete</a>
-                           {% endif %}
+                           <a href="{% url 'updatearticle' pk=article.pk %}" role="button">Edit</a>
                            <hr>
        
                          </li>
@@ -193,12 +219,13 @@
                      </div>
                      <div class = "col-4">
                        <h5>Books
-                        <a style = "margin-left:5px" class="btn btn-info btn-sm" href="{% url 'newbookpost' %}" role="button">Add</a>
+                        <a style = "margin-left:5px" href="{% url 'newbookpost' %}" role="button"><i class="bi bi-plus-circle-fill"></i>
+                        </a>
                        </h5>
                        {% for commentary in commentaries %}
                        <ul>
                          <li>
-                           <a href = "/books/{{commentary.slug}}">
+                           <a href = "{% url 'bookview' pk_slug=commentary.slug %}">
                            {{commentary.title}} Commentary
                          </a>
        
@@ -209,10 +236,7 @@
                            {% endif %}
                            <br>
                           {{ commentary.dateCreated }}
-                           <a class="btn btn-primary btn-sm" href="/books/{{commentary.pk}}/edit" role="button">Edit</a>
-                           {% if user.is_superuser %}
-                           <a class="btn btn-danger btn-sm" href="/books/{{commentary.pk}}/delete" role="button">Delete</a>
-                           {% endif %}
+                           <a href="{% url 'updatebook' pk=commentary.pk %}" role="button">Edit</a>
                            <hr>
        
                          </li>
@@ -222,8 +246,9 @@
        
                      </div>
                      <div class = "col-4">
-                       <h5>Entries
-                        <a style = "margin-left:5px" class="btn btn-info btn-sm" href="{% url 'newblogpost' %}" role="button">Add</a>
+                       <h5>Blog
+                        <a style = "margin-left:5px" href="{% url 'newblogpost' %}" role="button"><i class="bi bi-plus-circle-fill"></i>
+                        </a>
                        </h5>
                        {% for diary in diaries %}
                        <ul>
@@ -238,10 +263,7 @@
                          {% endif %}
                            <br>
                           {{diary.dateCreated}}
-                           <a class="btn btn-primary btn-sm" href="/blogs/{{diary.pk}}/edit" role="button">Edit</a>
-                           {% if user.is_superuser %}
-                           <a class="btn btn-danger btn-sm" href="/blogs/{{diary.pk}}/delete" role="button">Delete</a>
-                           {% endif %}
+                           <a href="/blogs/{{diary.pk}}/edit" role="button">Edit</a>
                            <hr>
        
                          </li>
