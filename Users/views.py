@@ -98,9 +98,9 @@ def registerView(request):
             send_activation_email(user, request)
             #BYPASS IP CHECK IF SERVED ON LOCAL HOST
             if ip =='127.0.0.1':
-                location = None
+                location = 'LU'
             else:
-                location = GeoIP2().country(ip)
+                location = GeoIP2().country_code(ip)
             #INSTANTIATE USER PROFILE
             profile = Profile(
             user = user,
