@@ -108,9 +108,8 @@ def registerView(request):
             if User.objects.filter(email = email).exists():
                 #IF ACCOUNT IS UNVERIFIED; DELETE ACCOUNT AND PROCEED WITH REGISTRATION ELSE ABORT
                 existingUser = User.objects.get(email = email)
-                existingProfile = Profile.objects.get(user = existingUser)
-                if existingProfile.is_email_verified:
-                    messages.success(request, 'An active account with the email address: %s already exists. You are now being actively monitored for suspicious activity. If you are the rightful account owner, contact support immediately.'% email)
+                if existingUser.is_active == True:
+                    messages.success(request, 'Unauthorized registration detected for email address: %s. You are now being actively monitored for suspicious activity. If you are the rightful account owner, contact support immediately.'% email)
                     blacklistform = Blacklist(
                     ip = ip,
                     reason = "Automated ban reason: Suspicious registration attempt to an active user account with email: {email} was made.".format(email = email),
@@ -119,8 +118,12 @@ def registerView(request):
                     blacklistform.save()
                     return redirect('index')
                 else:
-                    messages.success(request, 'It appears that you have an unregistered account with the email: %s. Please log in or reset your password below and follow further instructions to complete your registration.'% email)
-                    return redirect('loginn')
+                    if Profile.objects.filter(user = existingUser).exists():
+                        messages.success(request, 'It appears that you have an unregistered account with the email: %s. Please log in or reset your password below and follow further instructions to complete your registration.'% email)
+                        return redirect('loginn')
+                    else:
+                        existingUser.delete() #DELETE THE ORPHAN ACCOUNT AND PROCEED WITH REGISTRATION
+
             form.save()
             user = authenticate(request=request, username = username, password = password)
             #DEACTIVATE ACCOUNT UNTIL ACTIVATION
