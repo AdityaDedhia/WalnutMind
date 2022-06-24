@@ -52,9 +52,39 @@ def activate_user(request, uidb64, token):
         user = None
 
     if user and generate_token.check_token(user, token):
-        profile.is_email_verified = True
-        profile.save()
+         #GET USER LOCATION
+        x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forw_for is not None:
+            ip = x_forw_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
 
+        #BYPASS IP CHECK IF SERVED ON LOCAL HOST
+        if ip =='127.0.0.1':
+            location = 'LU' #THIS NEEDS TO BE CHANGED WHEN LOCALHOST LOCATION CHANGES
+        else:
+            location = GeoIP2().country_code(ip)
+
+        #ACTIVATE USER ACCOUNT
+        user.is_active = True
+        user.save()
+        #INSTANTIATE USER PROFILE
+        profile = Profile(
+        user = user,
+        ip = ip,
+        location = location,
+        interests = 'None',
+        bio = "Hello, I'm new to Walnut Mind!",
+        is_email_verified = True,
+        )
+        profile.save()
+        description = "Joined WalnutMind 🚩"
+        logitem = Log(
+        user = user,
+        description =description,
+        datelog = datetime.now()
+        )
+        logitem.save()
         messages.success(request, ("Registration has been successful. You may now login."))
         return redirect('loginn')
 
@@ -95,21 +125,10 @@ def registerView(request):
                     return redirect('loginn')
             form.save()
             user = authenticate(request=request, username = username, password = password)
+            #DEACTIVATE ACCOUNT UNTIL ACTIVATION
+            user.is_active = False
+            user.save()
             send_activation_email(user, request)
-            #BYPASS IP CHECK IF SERVED ON LOCAL HOST
-            if ip =='127.0.0.1':
-                location = 'LU'
-            else:
-                location = GeoIP2().country_code(ip)
-            #INSTANTIATE USER PROFILE
-            profile = Profile(
-            user = user,
-            ip = ip,
-            location = location,
-            interests = 'None',
-            bio = "Hello, I'm new to Walnut Mind!",
-            )
-            profile.save()
             messages.success(request, ("Your registration is almost complete. Check your email for a verification link."))
             return redirect('index')
         else:
