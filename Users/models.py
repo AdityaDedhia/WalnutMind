@@ -1,3 +1,4 @@
+from unittest.util import _MAX_LENGTH
 from django.db import models
 from django.contrib.auth.models import User
 from django_countries.fields import CountryField
@@ -9,7 +10,7 @@ class Profile(models.Model):
     is_email_verified = models.BooleanField(default = False)
     avatar = models.ImageField(upload_to = 'Users/profile_covers', null = True, blank = True)
     banner = models.ImageField(upload_to = 'Users/profile_banners', null = True, blank = True)
-    ip = models.GenericIPAddressField(null = True, blank = True)
+    ip = models.GenericIPAddressField(null = True, blank = True, max_length = 32)
     location = CountryField(null = True)
     interests = models.CharField(max_length = 75, null = True, blank = True)
     bio = models.TextField(max_length=300, null = True, blank = True)
