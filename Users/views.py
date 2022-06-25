@@ -93,16 +93,17 @@ def activate_user(request, uidb64, token):
 
 @sensitive_variables('password')
 def registerView(request):
+    #GET USER LOCATION and RUN through Blacklisted IPs
+    x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forw_for is not None:
+        ip = x_forw_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    if Blacklist.objects.filter(ip = ip):
+        return render(request, "blacklist.html")
     if request.method == "POST":
         form = RegisterUserForm(request.POST)
         if form.is_valid():
-            #GET USER LOCATION
-            x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
-            if x_forw_for is not None:
-                ip = x_forw_for.split(',')[0]
-            else:
-                ip = request.META.get('REMOTE_ADDR')
-
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
             #VERIFY UNIQUE EMAIL
@@ -146,13 +147,17 @@ def registerView(request):
 
 @sensitive_variables('password')
 def loginView(request):
+    #GET USER LOCATION and RUN through Blacklisted IPs
+    x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forw_for is not None:
+        ip = x_forw_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    if Blacklist.objects.filter(ip = ip):
+        return render(request, "blacklist.html")
+
     if request.method == "POST":
-        #GET USER LOCATION and RUN through Blacklisted IPs; BYPASS ALL SECURITY if served on localhost.
-        x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
-        if x_forw_for is not None:
-            ip = x_forw_for.split(',')[0]
-        else:
-            ip = request.META.get('REMOTE_ADDR')
+        #BYPASS ALL SECURITY if served on localhost
         if ip =='127.0.0.1':
             username = request.POST['username']
             password = request.POST['password']
@@ -160,8 +165,6 @@ def loginView(request):
             login(request,user)
             messages.success(request, 'Login security bypassed from localhost: %s. You have successfully signed in.'% ip)
             return redirect('index')
-        if Blacklist.objects.filter(ip = ip):
-            return render(request, "blacklist.html")
         #IF NO IPBLOCK DETECTED CHECK FOR BOT LOGIN ATTEMPT
         captcha_token = request.POST.get("g-recaptcha-response")
         captcha_url = "https://www.google.com/recaptcha/api/siteverify"
