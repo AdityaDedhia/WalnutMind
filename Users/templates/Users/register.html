@@ -89,13 +89,14 @@
                                       <label style = "float: left;" for="pass2">Repeat Password</label>
                                   </div>
                                 </div>
-                            </div>      
-                            <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                              <p style="font-size:16px; color:gray;">
-                                Account registration is
+                            </div>
+                            <div class="d-flex flex-row align-items-center mb-4">
+                            <p><b>By clicking register, you acknowledge and agree to WalnutMind's <a href="{% url 'terms' %}" target="_blank" rel="noopener noreferrer" type="button" data-toggle="tooltip" data-placement="top" title="Opens in a new tab.">terms of use</a>.</b>
+                            Account registration is
                                 <a href="#" type="button" data-toggle="tooltip" data-placement="top" title="Our security measures impose geo-based restrictions on account access. This means that any attempts to login to your account outside of your residing country at time of registration will be blocked. If you plan to move, you must contact support beforehand.">
-                                  geographically bounding</a>.
-                                </p>
+                                  geographically bounding</a>.</p>
+                            </div>
+                            <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                                 <button type="submit" class="btn btn-primary">REGISTER</button>
                             </div>
     
@@ -127,5 +128,5 @@
   })
 </script>
 
-<br/><br/><br/><br/><br/><br/>
+<br/><br/><br/><br/>
 {% endblock body %}

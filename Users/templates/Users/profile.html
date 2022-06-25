@@ -6,6 +6,7 @@
 
 {% block body %}
 {% load static %}
+{% load humanize %}
 
 <ol class="breadcrumb" style = "background-color:white">
   <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
@@ -76,13 +77,13 @@
               <hr/>
                 <p style="text-align: justify;
                 text-justify: inter-word;">{{ user.profile.bio }}</p>
-                <b>Recent Activity</b>
+                <b>Recent Activity ({% now "jS \o\f F" %})</b>
                 <hr/>
                 <div>
                   <ul>
                 {% for item in log %}
                 <li>
-                {{ item.datelog }} GMT
+                {{ item.datelog|naturaltime }} -
                 {% if item.link %}
                 <a href="{{ item.link }}">{{ item.description }}</a>
                 {% else %}
@@ -117,6 +118,7 @@
 
             <!--MAIN PANEL-->
             <div class = "col-lg-9 col-sm-8" style = "padding: 30px">  
+
 
               <h3>🚀 Highlights:</h3>
               <hr/>

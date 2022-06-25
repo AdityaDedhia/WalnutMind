@@ -7,4 +7,4 @@ class ArticleSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
     class Meta:
         model = Post
-        fields = ('id', 'slug', 'title', 'cover', 'abstract', 'tags')
+        fields = ('id', 'slug', 'title', 'cover', 'dateCreated', 'author', 'abstract', 'tags')

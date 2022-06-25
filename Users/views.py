@@ -10,6 +10,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from .utils import generate_token
 from django.core.mail import EmailMessage
+from django.views.decorators.debug import sensitive_variables
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.conf import settings
@@ -19,6 +20,7 @@ from datetime import datetime
 import os
 import requests
 import json
+
 
 class EmailThread(threading.Thread):
     def __init__(self,email):
@@ -75,7 +77,7 @@ def activate_user(request, uidb64, token):
         is_email_verified = True,
         )
         profile.save()
-        description = "Joined WalnutMind 🚩"
+        description = "🚩 Joined WalnutMind"
         logitem = Log(
         user = user,
         description =description,
@@ -88,7 +90,8 @@ def activate_user(request, uidb64, token):
     return render(request, 'Users/failedactivation.html', {
         'user':user
     })
-        
+
+@sensitive_variables('password')
 def registerView(request):
     if request.method == "POST":
         form = RegisterUserForm(request.POST)
@@ -141,6 +144,7 @@ def registerView(request):
             'form': form
         })
 
+@sensitive_variables('password')
 def loginView(request):
     if request.method == "POST":
         #GET USER LOCATION and RUN through Blacklisted IPs; BYPASS ALL SECURITY if served on localhost.

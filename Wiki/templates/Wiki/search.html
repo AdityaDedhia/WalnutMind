@@ -5,54 +5,105 @@
 {% endblock title %}
 
 {% block body %}
+{% load static %}
 
-<div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
     <ol class="breadcrumb" style = "background-color:white">
         <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
         <li class="breadcrumb-item"><a href="{% url 'wikiindex' %}">Wiki</a></li>
         <li class="breadcrumb-item active" aria-current="page">Search</li>
     </ol>
 
-<h3>Here are your search results for {{ query }}:</h3>
+
+    <section class="pt-4">
+        <div class="container">
+            <div class="row">
+          <div class="col-lg-9 mx-auto text-center py-5">
+              <span>Search results for</span>
+              <h2 class="display-5">{{ query }}</h2>
+              <span class="lead">{{ terms.count|add:resources.count }} results found</span>
+              <!-- Search -->
+              <div class="row">
+                <div class="col-sm-8 col-md-6 col-lg-5 mx-auto">
+
+                  <form method = POST action = "{% url 'searchterm' %}" class="input-group mt-4">
+                    {% csrf_token %}
+
+                    <input style="border-radius:8px 0px 0px 8px" class="form-control form-control-lg border-primary" type="search" placeholder="Enter query..." aria-label="Search" name = "searchedterm">
+                    <button class="btn btn-primary btn-lg m-0" type="submit">
+                      <span class="d-none d-md-block">Search</span>
+                      <i class="d-block d-md-none bi bi-search"></i></button>
+                  </form>
+
+                </div>
+              </div>
+          </div>
+        </div>
+        </div>
+    </section>
+
 <br/>
 
-<h5>Related Terms</h5>
-<ul>
-{% for term in terms %}
-<li>
-    <a href = "define-{{ term.slug }}">{{ term.term }}</a>
-</li>
-    <br>
-{% endfor %}
-</ul>
 
-<hr/>
+<!--MAIN CONTENT-->
 
-<h5>Related Resources</h5>
+<section class="position-relative pt-0">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-9 mx-auto">
 
-<ul>
-    <div class="list-group">
-    {% for resource in resources %}
-  
-    <div class="list-group-item list-group-item-action">
-    <h5>{{ resource.title }}</h5><hr/>
-    Description: {{ resource.description }}
-    <br/>
-    Attachments: 
-    {% if resource.weblink %}
-    <i class="bi bi-filetype-html"> </i><a href="{{ resource.weblink }}" target="_blank" rel="noopener noreferrer">{{ resource.weblink }}</a>
-    {% endif %}
-    {% if resource.videolink %}
-    <i class="bi bi-file-earmark-play"> </i><a href="{{ resource.videolink }}" target="_blank" rel="noopener noreferrer">{{ resource.videolink }}</a>
-    {% endif %}
-    {% if resource.filelink %}
-    <i class="bi bi-file-earmark-text"> </i><a href="{{ resource.filelink }}" target="_blank" rel="noopener noreferrer">Files</a>
-    {% endif %}
-    </div>
-    {% endfor %}
-  </div>
-</ul>
+            <h5>Related Terms</h5>
+            <hr/>
+
+            <ul>
+            {% for term in terms %}
+            <li>
+                <a href = "define-{{ term.slug }}">{{ term.term }}</a>
+            </li>
+                <br>
+            {% endfor %}
+            </ul>
 
 
-</div>
+            <h5>Related Resources</h5>
+            <hr/>
+
+            <ul>
+                <div class="list-group">
+                {% for resource in resources %}
+            
+                <div class="list-group-item list-group-item-action card border rounded-3 p-4 mb-4">
+                <h4 class="btn-link">{{ resource.title }}</h4>
+                <a href="#" class="badge bg-danger mb-2">Tags</a>
+                <a href="#" class="badge bg-dark mb-2">Tags</a>
+                <hr/>
+                Description: {{ resource.description }}
+                <br/>
+                Attachments: 
+                {% if resource.weblink %}
+                <i class="bi bi-filetype-html"> </i><a href="{{ resource.weblink }}" target="_blank" rel="noopener noreferrer">{{ resource.weblink }}</a>
+                {% endif %}
+                {% if resource.videolink %}
+                <i class="bi bi-file-earmark-play"> </i><a href="{{ resource.videolink }}" target="_blank" rel="noopener noreferrer">{{ resource.videolink }}</a>
+                {% endif %}
+                {% if resource.filelink %}
+                <i class="bi bi-file-earmark-text"> </i><a href="{{ resource.filelink }}" target="_blank" rel="noopener noreferrer">Files</a>
+                {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            </ul>
+            <br/>
+
+
+
+
+
+
+            </div>
+		</div>
+	</div>
+</section>
+
+
+
 {% endblock body %}
