@@ -7,7 +7,7 @@ from pathlib import Path
 
 #PRODUCTION SETTINGS ---------------------------------------------------
 DEBUG = False
-ALLOWED_HOSTS = ['127.0.0.1', 'www.walnutmind.org', 'walnutmind.org']
+ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', 'localhost', 'testserver', 'www.walnutmind.org', 'walnutmind.org']
 SERVER_EMAIL = 'support@walnutmind.org'
 ADMINS = [
     ('Aditya Dedhia', 'aditya23dedhia@gmail.com'),
@@ -171,7 +171,8 @@ STATIC_HOST = os.environ.get('STATIC_HOST', '')
 STATIC_URL = STATIC_HOST + '/static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-STATICFILES_DIRS = ()
+STATICFILES_DIRS = (
+)
 
 MEDIA_URL = '/user_content/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'user_content')

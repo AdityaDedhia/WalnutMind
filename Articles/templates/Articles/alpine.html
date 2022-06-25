@@ -20,7 +20,7 @@
     <h3 style="font-family: 'Josefin Sans', sans-serif;">WM <b style="color:gray">Articles</b></h3>
     <hr/>
 
-    <div style="background-color: #d6d6d6; border-radius:15px; padding:10px">
+    <div style="background-color: #ebebeb; border-radius:15px; padding:10px; display:flex; justify-content:center">
     <button type="button"
     class="btn btn-dark"
     @click = "tag = $el.textContent
@@ -28,7 +28,7 @@
 
     {% for tag in tags %}
     <button style="margin:3px" type="button"
-            class="btn btn-light"
+            class="btn btn-dark"
             @click="tag = $el.textContent
             ">{{ tag }}</button>
     {% endfor %}
@@ -36,17 +36,53 @@
     </div>
     <br/>
 
+    <style>
+        .img-container {
+            display: inline-block;
+            overflow: hidden;         
+          }
+          .img-container img {
+            display: block;
+            transition: transform 1s; 
+          }
+          .img-container:hover img {
+            transform: scale(1.3);
+            transform-origin: 50% 50%;
+        }
+   
+        .text-hover:hover {
+            font-size: 20px;
+              color: #0096ff;
+              cursor: pointer;
+              font-weight: 600;
+              text-decoration: underline;
+              padding-bottom: 5px;
+              transition: all 0.35s linear;
+              background: linear-gradient(
+                to bottom,
+                rgba(#ff9900, 1) 0%,
+                rgba(#ff9900, 1) 98%
+              );
+              background-size: 0px 4px;
+              background-repeat: no-repeat;
+              background-position: left 100%;
+            
+            }
+
+    </style>
+
     <div class="row">
         <div class="col-12">
             <div class="row gy-4">
 
+
 <template x-for="post in posts.filter(f => tag === 'All' || f.tags.includes(tag))">
        <!-- Card START -->
-       <div class="col-sm-6 col-lg-4">
-        <div class="card">
+       <div class="col-sm-4 col-lg-3">
+        <div class="card" style="border:none">
             <!-- Card img -->
-            <div class="position-relative">
-                <img :src = "post.cover" class="card-img" alt="Card image">
+            <div class="position-relative img-container">
+                <img :src = "post.cover" class="card-img" alt="Card image" id="image">
                 <div class="card-img-overlay d-flex align-items-start flex-column p-3">
                     <!-- Card overlay bottom -->
                     <div class="w-100 mt-auto">
@@ -60,13 +96,10 @@
                     </div>
                 </div>
             </div>
-            <div class="card-body px-0 pt-3">
-                <h4 class="card-title"><a :href="'/articles/'+post.slug" class="btn-link text-reset fw-bold"><b x-text="post.title"></b></a></h4>
-                <p class="card-text"><i x-text="post.abstract"></i></p>
-                <!-- Card info -->
-                <ul class="nav nav-divider align-items-center d-none d-sm-inline-block">
-                    <li><b x-data="{date: new Date(post.dateCreated)}"  x-text="date.toLocaleString()" class="nav-item" style="color:gray; font-size:12px">Published </b></li>
-                </ul>
+            <div class="card-body" style="padding:15px">
+                <h5 class="card-title text-hover"><a :href="'/articles/'+post.slug" class="btn-link text-reset fw-bold"><b x-text="post.title"></b></a></h5>
+                <i class="card-text" style="font-size: 13px;   text-align: justify; text-justify: inter-word;" x-text="post.abstract"></i><br/>
+                <b x-data="{date: new Date(post.dateCreated)}"  x-text="date.toLocaleString()" class="nav-item" style="color:gray; font-size:12px"></b>
             </div>
         </div>
     </div>

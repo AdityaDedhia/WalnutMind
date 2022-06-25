@@ -173,7 +173,7 @@
                    <!--PUBLICATIONS MANAGER-->
 
                    {% if request.user == user %}
-                   <div class = "bg-light" style = "margin-top:50px; padding: 30px">
+                   <div class="bg-light" style = "margin-top:50px; padding: 30px">
 
                     {% if saved_articles %}
                     <h3>Saved for Later: </h3>
@@ -190,18 +190,18 @@
                 
                    <h3 id="publicationsmanager">Manage Your Publications:</h3>
                    <br>
-                   <div id = "masonry" class = "row" data-masonry='{"percentPosition": true }'>
+                   <div id="masonry" class="row" data-masonry='{"percentPosition": true }'>
        
                      <div class = "col-4">
                        <h5>Articles
-                        <a style = "margin-left:5px" href="{% url 'newpost' %}" role="button"><i class="bi bi-plus-circle-fill"></i>
+                        <a style="margin-left:5px" href="{% url 'newpost' %}" role="button"><i class="bi bi-plus-circle-fill"></i>
                         </a>
                        </h5>
                        {% for article in articles %}
                        <ul>
                          <li>
                            <a href = "{% url 'articleview' pk_slug=article.slug %}">
-                           {{article.title}} 
+                           {{ article.title }} 
                          </a>
        
                            {% if article.public == True %}
@@ -210,7 +210,7 @@
                            <p class="badge bg-danger">Archived</p>
                            {% endif %}
                            <br>
-                          {{article.dateCreated}}
+                          {{ article.dateCreated }}
                            <a href="{% url 'updatearticle' pk=article.pk %}" role="button">Edit</a>
                            <hr>
        
@@ -219,16 +219,16 @@
        
                        {% endfor %}
                      </div>
-                     <div class = "col-4">
+                     <div class="col-4">
                        <h5>Books
-                        <a style = "margin-left:5px" href="{% url 'newbookpost' %}" role="button"><i class="bi bi-plus-circle-fill"></i>
+                        <a style="margin-left:5px" href="{% url 'newbookpost' %}" role="button"><i class="bi bi-plus-circle-fill"></i>
                         </a>
                        </h5>
                        {% for commentary in commentaries %}
                        <ul>
                          <li>
                            <a href = "{% url 'bookview' pk_slug=commentary.slug %}">
-                           {{commentary.title}} Commentary
+                           {{ commentary.title }} Commentary
                          </a>
        
                            {% if commentary.public == True %}
@@ -247,16 +247,16 @@
                        {% endfor %}
        
                      </div>
-                     <div class = "col-4">
+                     <div class="col-4">
                        <h5>Blog
-                        <a style = "margin-left:5px" href="{% url 'newblogpost' %}" role="button"><i class="bi bi-plus-circle-fill"></i>
+                        <a style="margin-left:5px" href="{% url 'newblogpost' %}" role="button"><i class="bi bi-plus-circle-fill"></i>
                         </a>
                        </h5>
                        {% for diary in diaries %}
                        <ul>
                          <li>
-                           <a href = "/blogs/{{diary.author}}/{{diary.slug}}">
-                           {{diary.title}} 
+                           <a href = "{% url 'blogview' username=diary.author pk_slug=diary.slug %}">
+                           {{ diary.title }} 
                          </a>
                          {% if diary.public == True %}
                          <p class="badge bg-success">Live</p>
@@ -264,9 +264,9 @@
                          <p class="badge bg-danger">Archived</p>
                          {% endif %}
                            <br>
-                          {{diary.dateCreated}}
-                           <a href="/blogs/{{diary.pk}}/edit" role="button">Edit</a>
-                           <hr>
+                          {{ diary.dateCreated }}
+                           <a href="{% url 'updateblog' username=diary.author pk=diary.pk %}" role="button">Edit</a>
+                           <hr/>
        
                          </li>
                        </ul>

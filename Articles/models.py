@@ -25,22 +25,21 @@ class Post(models.Model):
     likes = models.ManyToManyField(User, related_name="article_likes", blank = True)
     saves = models.ManyToManyField(User, related_name="article_saves", blank = True)
 
-    def total_likes(self):
-        return self.likes.count()
-
-
-    def total_saves(self):
-        return self.saves.count()
 
     def __str__(self):
         return str(self.title)
 
+    def total_likes(self):
+        return self.likes.count()
+
+    def total_saves(self):
+        return self.saves.count()
+
     def get_absolute_url(self): #REDIRECT TO PAGE WHEN MODEL IS UPDATED
         return reverse('articleview', kwargs={'pk_slug': str(self.slug)})
-
     
     def save(self, *args, **kwargs):
-        image_resize(self.cover, 1280, 720)
+        image_resize(self.cover, 1200, 900)
         super().save(*args, **kwargs)
 
 class Comment(models.Model):
