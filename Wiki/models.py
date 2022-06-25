@@ -42,7 +42,7 @@ class Collection(models.Model):
     slug = AutoSlugField(populate_from='title', unique = True, null = True, default = None)
     description = models.CharField(max_length = 255, blank = True)
     creator = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="collectionpublisher")
-    contributors = models.ManyToManyField(User)
+    contributors = models.ManyToManyField(User, blank = True)
     resources = models.ManyToManyField(Resource)
     dateCreated = models.DateTimeField(auto_now_add = True)
     dateUpdated = models.DateTimeField(auto_now = True)

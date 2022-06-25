@@ -11,29 +11,46 @@
         <li class="breadcrumb-item active" aria-current="page">Wiki</li>
     </ol>
 
-<div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
+    <h3 style="font-family: 'Josefin Sans', sans-serif;">WM <b style="color:gray">Wiki</b></h3>
+    <p style="color:gray">The wiki is very much in development stage, but aims to serve as the primary search engine for our entire database further enabled by community contributions. Some of the additional features in addition to content search will be the provision of user-added terms and lists as well as user-added resource aggregation.</p>
+    <hr/>
+  <section class="pt-4">
+    <div class="container">
+        <div class="row">
+      <div class="col-lg-9 mx-auto text-center py-5">
+        
+          <!-- Search -->
+          <div class="row">
+            <div class="col-sm-8 col-md-6 col-lg-5 mx-auto">
+
+              <form method = POST action = "{% url 'searchterm' %}" class="input-group mt-4">
+                {% csrf_token %}
+
+                <input style="border-radius:8px 0px 0px 8px" class="form-control form-control-lg border-primary" type="search" placeholder="Enter query..." aria-label="Search" name = "searchedterm">
+                <button class="btn btn-primary btn-lg m-0" type="submit">
+                  <span class="d-none d-md-block">Search</span>
+                  <i class="d-block d-md-none bi bi-search"></i></button>
+              </form>
+
+            </div>
+          </div>
+      </div>
+    </div>
+    </div>
+</section>
 
   <div class="container-fluid" style = "height: 300px;display: flex;align-items: center;justify-content: center;">
-    <form method = POST action = "{% url 'searchterm' %}" class="d-flex">
-        {% csrf_token %}
+  
 
-      <input class="form-control me-2" type="search" placeholder="Search anything..." aria-label="Search" name = "searchedterm">
-
-      <button class="btn btn-outline-secondary" type="submit">Search</button>
-    </form>
-</div>
-
-
-<div class="row" style = "padding:10px">
-  <div class="col btn btn-primary" style = "margin-right:10px; background-image: var(--bs-gradient);">
-    <a href = "{% url 'listsview' %}" style="text-align: center"><h1 style = "color:white">BROWSE DEFINITIONS</h1></a>
-  </div>
-
-  <div class="col btn btn-primary" style = "background-image: var(--bs-gradient);">
-    <a href="{% url 'collectionsview' %}" style="text-align: center"><h1 style="color:white">BROWSE RESOURCES</h1></a>
-
-  </div>
-</div>
-
+    <div class="row" style = "padding:10px">
+      <div class="col btn btn-primary" style = "margin-right:10px; background-image: var(--bs-gradient);">
+        <a href = "{% url 'listsview' %}" style="text-align: center"><h1 style = "color:white">DEFINITIONS</h1></a>
+      </div>
+    
+      <div class="col btn btn-primary" style = "background-image: var(--bs-gradient);">
+        <a href="{% url 'collectionsview' %}" style="text-align: center"><h1 style="color:white">RESOURCES</h1></a>
+    
+      </div>
+    </div>
 </div>
 {% endblock body %}

@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'bootstrap_modal_forms',
+    'django.contrib.humanize',
     'storages',
     'taggit',
     'rest_framework',
@@ -57,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.common.BrokenLinkEmailsMiddleware',
     'axes.middleware.AxesMiddleware',
 ]
 

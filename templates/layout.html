@@ -97,7 +97,7 @@
                   </li>
     
                   <li class="nav-item mx-2">
-                    <a class="zoom nav-link" style = "color: #0a5baa" href="{% url 'blogindex' %}">BLOG
+                    <a class="zoom nav-link" style = "color: #0a5baa" href="{% url 'blogindex' %}">BLOGS
                       <i class="bi bi-paragraph"></i>
                       <sub><i class="bi bi-globe2"></i></sub>
 
@@ -118,7 +118,11 @@
                     {% if user.is_authenticated %}
                     <div class="d-grid gap-2 d-md-block">
                     <a class="zoom btn btn-info rounded-pill" href="{% url 'newterm' %}"><i class="bi bi-plus-circle"></i></a>
+                    {% if request.user.profile.is_author == True %}
                     <a class="zoom btn btn-info rounded-pill" href="{% url 'newpost' %}"><i class="bi bi-pen-fill"></i></a>
+                    {% else %}
+                    <a class="zoom btn btn-info rounded-pill" href="{% url 'newblogpost' %}"><i class="bi bi-pen-fill"></i></a>
+                    {% endif %}
                     <!--User-->
             
                     <a class="" href="/users/{{request.user.username}}">
@@ -248,7 +252,8 @@
         <!-- Copyright -->
         <!-- Copyright -->
         <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-          © 2022 Aditya Dedhia | All rights reserved
+          {% now "Y" as current_year %}
+          © {{ current_year }} Aditya Dedhia | All rights reserved
           <a href="//www.dmca.com/Protection/Status.aspx?ID=12c20b5c-7494-498d-9d92-be0686f68573" title="DMCA.com Protection Status" class="dmca-badge"> <img width = "50px" src ="https://images.dmca.com/Badges/dmca-solid-bw-simple.png?ID=12c20b5c-7494-498d-9d92-be0686f68573"  alt="DMCA.com Protection Status" /></a>  <script src="https://images.dmca.com/Badges/DMCABadgeHelper.min.js"> </script>
         </div>
       </footer>
@@ -257,6 +262,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
   </link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  
+
   </body>
 </html>

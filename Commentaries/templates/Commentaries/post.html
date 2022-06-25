@@ -8,18 +8,33 @@
   <li class="breadcrumb-item active" aria-current="page">Content Publisher</li>
 </ol>
 
+{% if request.user.profile.is_author == True %}
+
   <div class="card text-center">
     <div class="card-header">
       <ul class="nav nav-tabs card-header-tabs">
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'newpost' %}">Publish Article</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="">Publish Commentary</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'newblogpost' %}">Publish Blog</a>
-        </li>
+            <!--DEFAULT FOR NORMAL USERS-->
+            {% if request.user.profile.is_author == False %}
+            <li class="nav-item">
+              <a class="nav-link disabled" href="">Publish Article</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" href="{% url 'newbookpost' %}">Publish Commentary</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'newblogpost' %}">Publish Blog</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link active" href="">Publish Article</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'newbookpost' %}">Publish Commentary</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'newblogpost' %}">Publish Blog</a>
+            </li>
+            {% endif %}
       </ul>
     </div>
     <div class="card-body form-group">
@@ -115,6 +130,9 @@
         <button type="submit" style="float: right;" class="btn btn-primary btn-lg">SAVE</button>
 
         </form>
+        {% else %}
+        <p>Access Denied.</p>
+        {% endif %}
         </div>
     </div>
   {% endblock body %}

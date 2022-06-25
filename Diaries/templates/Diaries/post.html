@@ -2,24 +2,34 @@
 
 {% block title %}
 <title>Publish | WM</title>
-{% endblock %}
+{% endblock title %}
 {% block body %}
 
 <div class="card text-center">
     <div class="card-header">
       <ul class="nav nav-tabs card-header-tabs">
-
+        <!--DEFAULT FOR NORMAL USERS-->
+        {% if request.user.profile.is_author == False %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'newpost' %}">Publish Article</a>
+          <a class="nav-link disabled" href="">Publish Article</a>
         </li>
-
         <li class="nav-item">
-            <a class="nav-link" href="{% url 'newbookpost' %}">Publish Commentary</a>
+          <a class="nav-link disabled" href="{% url 'newbookpost' %}">Publish Commentary</a>
         </li>
-
         <li class="nav-item">
-          <a class="nav-link active" href="">Publish Blog</a>
+          <a class="nav-link active" href="{% url 'newblogpost' %}">Publish Blog</a>
         </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link active" href="">Publish Article</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'newbookpost' %}">Publish Commentary</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'newblogpost' %}">Publish Blog</a>
+        </li>
+        {% endif %}
 
       </ul>
     </div>
@@ -28,13 +38,16 @@
     <div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
         <form method = "POST" enctype="multipart/form-data">
             {% csrf_token %}
-            {{form.media}}
-            {{form.as_p}}
+            {{ form.media }}
+            {{ form.as_p }}
         <button>Publish</button>
+        </form>
     </div>
     </div>
 
 </div>
-
-
-{% endblock %} 
+<br/>
+{% if request.user.profile.is_author == False %}
+<p style="color:gray">If you are interested in becoming an author on our site, see the <a href="{% url 'opportunities' %}">opportunities page</a>.</p>
+{% endif %}
+{% endblock body %} 
