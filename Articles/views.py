@@ -6,9 +6,8 @@ from .models import Post, Comment
 from django.contrib import messages
 from django.views.generic import ListView, DetailView, UpdateView
 from .forms import PostForm, CommentForm
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from bootstrap_modal_forms.generic import BSModalDeleteView
-from django.urls import reverse_lazy
 from Users.models import Blacklist, Log
 
 from taggit.models import Tag

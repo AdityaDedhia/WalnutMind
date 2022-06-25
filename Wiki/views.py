@@ -50,7 +50,7 @@ def searchView(request):
         searchedterm = request.POST['searchedterm'] 
         #query database
         if searchedterm:
-            relatedTerms = Term.objects.filter(term__search= searchedterm)
+            relatedTerms = Term.objects.filter(term__search= searchedterm) #USING POSTGRES
             relatedResources = Resource.objects.filter(title__search=searchedterm)
         else:
             relatedTerms = None

@@ -1,12 +1,14 @@
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, UpdateView
 from .models import Post
 from .forms import PostForm
+from django.urls import reverse
 from django.contrib import messages
-from django.shortcuts import render, redirect
-from django.http import Http404
-
+from datetime import datetime
+from Users.models import Log
+from taggit.models import Tag
 
 class diariesView(ListView):
     model = Post
@@ -49,12 +51,35 @@ def newPostView(request):
             form = PostForm(request.POST, request.FILES) #Requires both request.Files, else will be left blank.
             if form.is_valid():
                 form.instance.author = request.user #Because author field from forms.py was excluded
+                title = form.instance.title
                 form.save()
-                messages.success(request, ("Blog is successfully published!"))
-                latest_id = Post.objects.latest('pk').pk #Essentially gets latest entry object based on last pk added, and then gets the pk of that entry object.
-                return redirect(f"/blog/{latest_id}")
+                username = str(request.user)
+                print(username)
+                messages.success(request, ("Blog entry is successfully published!"))
+                post_slug = Post.objects.latest('pk').slug #Essentially gets latest entry object based on last pk added, and then gets the pk of that entry object.
+                link = f"https://www.walnutmind.org/blogs/{username}/{post_slug}"
+                description = f"Published blog post: {title}"
+                logitem = Log(
+                    user = request.user,
+                    description =description,
+                    link = link,
+                    datelog = datetime.now()
+                )
+                logitem.save()
+                return HttpResponseRedirect(reverse('blogview', args =[username,str(post_slug)]))
         else:
             form = PostForm()
         return render(request, 'Diaries/post.html', {
                 'form': form
             })
+        
+class updatePostView(UpdateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'Diaries/updatepost.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(updatePostView, self).get_context_data(*args, **kwargs)
+        tags = Tag.objects.all() #return all tags
+        context['tags'] = tags
+        return context

@@ -6,7 +6,11 @@
 
 {% block body %}
 {% load static %}
+{% load humanize %}
 </link rel="stylesheet" type="text/css" href="{% static 'Articles/Article-List.css' %}">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.2/min/tiny-slider.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/tiny-slider.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.4/min/tiny-slider.js" integrity="sha512-j+F4W//4Pu39at5I8HC8q2l1BNz4OF3ju39HyWeqKQagW6ww3ZF9gFcu8rzUbyTDY7gEo/vqqzGte0UPpo65QQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
 <style>
@@ -22,7 +26,52 @@
       -webkit-text-fill-color: transparent;
       -webkit-background-clip: text;
   }
+
+  .img-container {
+    overflow: hidden;         
+  }
+  .img-container img {
+    width: 100%;
+    transition: transform 1s; 
+  }
+  .img-container:hover img {
+    transform: scale(1.3);
+    transform-origin: 50% 50%;
+}
+
+.text-hover {
+  color: #ffffff;
+}
+.text-hover:hover {
+    font-size: 45px;
+      color: #0096ff;
+      cursor: pointer;
+      font-weight: 600;
+      text-decoration: underline;
+      padding-bottom: 300px;
+      transition: all 0.35s linear;
+      background: linear-gradient(
+        to bottom,
+        rgba(#ff9900, 1) 0%,
+        rgba(#ff9900, 1) 98%
+      );
+      background-size: 0px 4px;
+      background-repeat: no-repeat;
+      background-position: left 100%;
+
+    
+    }
+
+
 </style>
+
+
+{% if user.is_authenticated %}
+
+<h5 style="color:gray">Welcome back, {{ user.first_name }}! Here is your feed:</h5>
+
+{% else %}
+
 
 <div style="text-align: center; position: relative; color: black; z-index:-1">
   <img src="{% static "Articles/home.jpg" %}" class="img-fluid" alt="Responsive image" style = "transform:translate(0,-5%)">
@@ -56,9 +105,100 @@
     </div>
   </div>
 </section>
+<hr style="border-top: 4px solid rgb(0, 0, 0)"/>
 
-<hr style="border-top: 4px solid rgb(0, 0, 0)">
+{% endif %}
 
+<div class="row">
+<!--hero-->
+			<div class="col-lg-6 col-md-12 col-sm-12">
+				<div id="hero" class="carousel slide rounded-3 overflow-hidden" data-bs-ride="true">
+          <div class="carousel-indicators">
+            <button type="button" data-bs-target="#hero" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide"></button>
+            <button type="button" data-bs-target="#hero" data-bs-slide-to="1" aria-current="true" aria-label="Slide"></button>
+            <button type="button" data-bs-target="#hero" data-bs-slide-to="2" aria-current="true" aria-label="Slide"></button>
+            <button type="button" data-bs-target="#hero" data-bs-slide-to="3" aria-current="true" aria-label="Slide"></button>
+            <button type="button" data-bs-target="#hero" data-bs-slide-to="4" aria-current="true" aria-label="Slide"></button>
+
+          </div>
+					<div class="carousel-inner img-container" style="height:500px !important;">
+            {% for post in recent %}
+						<div data-interval="10000" class="carousel-item {% if forloop.counter0 == 0 %}active{% endif %} card rounded-5" style="position:absolute; top:0; overflow:hidden;">
+              <img src="{{ post.cover.url }}" style="height:400px !important; opacity: 0.9; filter: brightness(50%);">
+							<!-- Card Image safe -->
+		          <div class="card-img-overlay align-items-center" style="p-3 p-sm-5 d-block"> 
+		            <div>
+			            <div class="col-md-10 col-lg-7">
+			            	<!-- Card category -->
+                    {% for tag in post.tags.all %}
+                    <span class="badge bg-warning mb-2" style="margin:5px">
+                      #<b>{{ tag }}</b></span>
+                    {% endfor %}
+			            	<!-- Card title -->
+			              <h4 class="display-6 text-hover"><a href="{% url 'articleview' pk_slug=post.slug %}" class="btn-link text-reset fw-normal">{{ post.title }}</a></h4>
+			              <p class="text-white">{{ post.abstract|truncatewords:10 }}...</p>
+			              <!-- Card info -->
+										<ul class="nav nav-divider text-white-force align-items-center d-none d-sm-inline-block">
+										  <li><p style="color:white">Published {{ post.dateCreated|naturaltime }}</p></li>
+										</ul>
+			            </div>
+		            </div>
+		          </div>
+						</div>
+            {% endfor %}
+            <button class="carousel-control-prev" type="button" data-bs-target="#hero" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#hero" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+					</div>
+				</div>
+			</div>
+
+<!--hero end-->
+
+<div class="col-lg-6 col-md-12 col-sm-12">
+  <h3 style="color:gray">Our Topics:</h3>
+{% for tag in tags %}
+<span class="badge bg-warning mb-2" style="margin:5px">
+  #<b>{{ tag }}</b></span>
+{% endfor %}
+</div>
+</div>
+
+
+<!--LATEST ARTICLES-->
+<section class="article-list">
+  <div class="container">
+      <div class="intro">
+          <h2 class="text-center">Our Latest Publications</h2>
+      </div>
+    </hr style="border-top: 1px solid rgb(0, 0, 0)">
+
+
+      <div class="row gy-4 articles">
+        {% for post in recent %}
+          <div class="col-sm-6 col-md-4 item zoom"><a href="{% url 'articleview' pk_slug=post.slug %}"><img class="img-fluid" src="{{ post.cover.url }}"></a>
+              <h3 class="name">{{ post.title }}</h3>
+              <p class="description">{{ post.abstract }}</p>
+              {% for tag in post.tags.all %}
+              <span class="badge rounded-pill text-bg-info">#{{ tag }}</span>
+              {% endfor %}
+          </div>
+
+          {% endfor %}
+      </div>
+  </div>
+</section>
+
+
+<hr style="border-top: 4px solid rgb(0, 0, 0)"/>
+
+
+{% if not user.is_authenticated %}
 
 <div class="min-vh-75">
   <div class="container">
@@ -97,30 +237,8 @@
   </div>
 </div>
 
-
-
-<!--LATEST ARTICLES-->
-<section class="article-list">
-  <div class="container">
-      <div class="intro">
-          <h2 class="text-center">Our Latest Publications</h2>
-      </div>
-    </hr style="border-top: 1px solid rgb(0, 0, 0)">
-
-
-      <div class="row gy-4 articles">
-        {% for post in recent %}
-          <div class="col-sm-6 col-md-4 item zoom"><a href="{% url 'articleview' pk_slug=post.slug %}"><img class="img-fluid" src="{{ post.cover.url }}"></a>
-              <h3 class="name">{{ post.title }}</h3>
-              <p class="description">{{ post.abstract }}</p>
-              {% for tag in post.tags.all %}
-              <span class="badge rounded-pill text-bg-info">#{{ tag }}</span>
-              {% endfor %}
-          </div>
-
-          {% endfor %}
-      </div>
-  </div>
-</section>
+{% endif %}
+<br/>
+<br/>
 
 {% endblock body %}

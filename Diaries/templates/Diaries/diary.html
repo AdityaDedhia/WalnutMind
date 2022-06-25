@@ -9,11 +9,25 @@
 
     <ol class="breadcrumb" style="background-color:white">
         <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'bookindex' %}">Blog</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'bookindex' %}">Blogs</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'profile' username=post.author %}">{{ post.author }}</a></li>
         <li class="breadcrumb-item active" aria-current="page">{{ post.title }}</li>
     </ol>
 
-{% if post.public == True %}
+    {% if post.author == request.user and post.public == False %}
+    <div class="alert alert-danger d-flex align-items-center" role="alert">
+      <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+      <div>
+        You are currently in DRAFT mode. Only you are able to see this post. <a href="{% url 'updateblog' username=post.author pk=post.pk %}">Edit</a> and turn on the publish live toggle to remove this message.</div>
+    </div>
+    {% endif %}
+    {% if post.author == request.user %}
+    <div style="position:absolute; left:0">
+    <a class="btn btn-primary" href="{% url 'updateblog' username=post.author pk=post.pk %}">EDIT</a>
+    </div>
+    {% endif %}
+
+{% if post.public == True or post.author == request.user %}
 
 <h1>{{ post.title }}</h1>
 </hr style="border-top: 2px solid rgb(0, 0, 0)">
@@ -29,6 +43,9 @@
 
 <p>If you require access please check again at a later date or contact the author <a href="/users/{{ post.author }}">here</a>.</p>
 
-{% endif %}
+
+
+ {% endif %}
+
 </div>
 {% endblock body %}
