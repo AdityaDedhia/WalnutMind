@@ -14,6 +14,17 @@
   <li class="breadcrumb-item active" aria-current="page">{{ user.username }}</li>
 </ol>
 
+{% if request.user == user and is_public == False %}
+<div class="alert alert-danger d-flex align-items-center" role="alert">
+  <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+  <div>
+    Your profile is private. This affects search engine indexing and can inhibit potential followers from viewing your publications.<a href="{% url 'editprofile' username=user %}">Edit</a> your profile to change this setting.</div>
+</div>
+{% endif %}
+
+
+
+
 <!--PROFILE COVER-->
 <section class="h-100">
   <div class="container py-5 h-100">
@@ -48,7 +59,7 @@
                 <div style="white-space:nowrap">
                 {% if request.user == user %}
                 <a class="btn btn-outline-dark" href="{% url 'editprofile' username=user.username %}">Edit Profile</a>
-                {% else %}
+                {% elif is_public == True %}
                   {% if isFollowing %}
                 <a style="display: inline-block" class="btn btn-dark" href="{% url 'followprofile' username=user.username %}"><span class="unfollowlabel"></span></a>
                   {% else %}
@@ -68,6 +79,11 @@
             </div>
           </div>
 
+          {% if is_public == False %}
+
+          <p>This user's profile information has been redacted because they have marked their profile as private.</p>
+
+          {% else %}
 
           <div class="row" style = "margin-top: -175px;">
           <!--SIDE PANEL-->
@@ -187,7 +203,7 @@
                     </div>
                     {% else %}
                     {% endif %}
-                
+       
                    <h3 id="publicationsmanager">Manage Your Publications:</h3>
                    <br>
                    <div id="masonry" class="row" data-masonry='{"percentPosition": true }'>
@@ -277,6 +293,7 @@
                    </div>
        
                  </div>
+                   {% endif %}
                    {% endif %}
 
   </div>

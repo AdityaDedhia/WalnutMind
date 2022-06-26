@@ -7,12 +7,14 @@ from .forms import PostForm
 from django.urls import reverse
 from django.contrib import messages
 from datetime import datetime
-from Users.models import Log
+from Users.models import Profile, Log
 from taggit.models import Tag
 
-class diariesView(ListView):
-    model = Post
-    template_name = 'Diaries/index.html'
+def diariesView(request):
+    profiles = Profile.objects.filter(is_public = True)
+    return render(request, 'Diaries/index.html', {
+        'profiles':profiles}
+        )
 
 class diaryView(DetailView):
     model = Post

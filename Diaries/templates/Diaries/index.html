@@ -12,28 +12,20 @@
 
     <h3 style="font-family: 'Josefin Sans', sans-serif;">WM <b style="color:gray">Blogs</b></h3>
 
-
     <cap>
-        This section covers the more personal aspects of the development of this project. It aims to preserve creative authenticity, and much like a diary, this blog documents my journey in this project and its nuances, if you are interested. Further links are provided at the bottom of the page.
+        You may access blogs by clicking on the username (only users who have made their profile public are shown).
     </cap>
     <hr style="border-top: 2px solid rgb(0, 0, 0)">
 
-    <br>
-
     <ul>
-    {% for post in object_list %}
-    <div class="row">
-        <li class="list-group-item"><a href="/blogs/{{ post.author }}/{{ post.slug }}">{{ post.title }}</a>
-        </br>
-            <strong>Published: {{ post.dateCreated }}</strong>
-            <div class="scroll-left">
-                <p>{{ post.content|truncatewords:30|safe }}</p>
-            </div>
-        </li>
-    </div>
-</br>
-    {% endfor %}
+        {% for profile in profiles %}
+          <li><h3><a href="/users/{{ profile }}">{{ profile|upper }}</a></h3></li>
+        {% endfor %}
     </ul>
+
+
+
+    <br>
 
     <style>
         .scroll-left {

@@ -7,13 +7,12 @@ from .forms import NewTermForm
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from isbnlib import meta, cover,doi
-from isbnlib.registry import bibformatters
+from django.contrib.postgres.search import SearchQuery, SearchVector, SearchRank #Support full-text search
 
 SERVICE = "goob"
 
 def wikiView(request):
     return render(request, 'Wiki/index.html')
-
 
 def resourceView(request, pk):
     resource = Resource.objects.get(pk = pk)
@@ -45,22 +44,41 @@ def listsView(request):
         'terms':terms, 'lists':lists, 'listsCount': listsCount
     })
 
+#FULL-TEXT SEARCH FUNCTION
 def searchView(request):
     if request.method == "POST":
         searchedterm = request.POST['searchedterm'] 
+        query = SearchQuery(searchedterm) #USED FOR POSTGRES SEARCH INDEX
         #query database
         if searchedterm:
-            relatedTerms = Term.objects.filter(term__search= searchedterm) #USING POSTGRES
-            relatedResources = Resource.objects.filter(title__search=searchedterm)
-        else:
-            relatedTerms = None
-            relatedResources = None
+            #FULLTEXT SEARCH #1: TERMS & LISTS
+            relatedLists = List.objects.filter(title__search= searchedterm) #LIST
+            termvector = SearchVector('term','definition') #TERMS
+            relatedTerms = Term.objects.annotate(search=termvector).filter(search=query)
+
+            #FULLTEXT SEARCH #2: RESOURCES & COLLECTIONS
+            relatedCollections = Collection.objects.filter(title__search= searchedterm) #COLLECTIONS
+            resourcevector = SearchVector('title','description') #RESOURCES
+            relatedResources = Resource.objects.annotate(priority=SearchRank(resourcevector, query)).filter(priority__gte=0.001).order_by('-priority')
+
 
         return render(request, 'Wiki/search.html', {
             'query': searchedterm, 'terms': relatedTerms, 'resources': relatedResources
         })
     else:
         return render(request, 'Wiki/search.html')
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class definitionView(DetailView):
