@@ -34,11 +34,11 @@ class UpdateUserForm(forms.ModelForm):
 class UpdateProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['avatar','banner', 'interests', 'bio']
+        fields = ['avatar','banner', 'interests', 'bio', 'blog','is_public']
 
     def __init__(self, *args, **kwargs):
         super(UpdateProfileForm, self).__init__(*args, **kwargs)
-        self.fields['avatar'].help_text = "Your avatar will be automatically scaled down to 200x200 pixels. You agree that you are the legal owner of the image uploaded."
+        self.fields['avatar'].help_text = "Your avatar will be automatically scaled down to 200x200 pixels. You agree that you are the owner of the image uploaded."
         self.fields['banner'].help_text = "Your banner will be automatically scaled down to 1200x600 pixels. You agree that you have legal permission from the owner to use the image uploaded."
         self.fields['avatar'].widget.attrs['class'] = 'form-control'
         self.fields['banner'].widget.attrs['class'] = 'form-control'
@@ -46,4 +46,6 @@ class UpdateProfileForm(forms.ModelForm):
         self.fields['interests'].help_text = "Maximum characters: 75"
         self.fields['bio'].widget.attrs['class'] = 'form-control'
         self.fields['bio'].help_text = "Maximum characters: 300"
-
+        self.fields['blog'].widget.attrs['class'] = 'form-control'
+        self.fields['blog'].help_text = "An optional field that may be helpful for viewers to understand what your blog is about."
+        self.fields['is_public'].widget.attrs['class'] = 'form-check-input'

@@ -170,31 +170,6 @@
 </div>
 
 
-<!--LATEST ARTICLES-->
-<section class="article-list">
-  <div class="container">
-      <div class="intro">
-          <h2 class="text-center">Our Latest Publications</h2>
-      </div>
-    </hr style="border-top: 1px solid rgb(0, 0, 0)">
-
-
-      <div class="row gy-4 articles">
-        {% for post in recent %}
-          <div class="col-sm-6 col-md-4 item zoom"><a href="{% url 'articleview' pk_slug=post.slug %}"><img class="img-fluid" src="{{ post.cover.url }}"></a>
-              <h3 class="name">{{ post.title }}</h3>
-              <p class="description">{{ post.abstract }}</p>
-              {% for tag in post.tags.all %}
-              <span class="badge rounded-pill text-bg-info">#{{ tag }}</span>
-              {% endfor %}
-          </div>
-
-          {% endfor %}
-      </div>
-  </div>
-</section>
-
-
 <hr style="border-top: 4px solid rgb(0, 0, 0)"/>
 
 

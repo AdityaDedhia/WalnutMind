@@ -5,6 +5,8 @@
 {% endblock title %}
 
 {% block body %}
+{% load static %}
+
 
 {% if form.errors %}
 <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -45,6 +47,18 @@
                 <b>Interests:</b>
                 {{ p_form.interests }}
                 {{ p_form.interests.help_text }}
+                <br/>
+                <b>Blog Description:</b>
+                {{ p_form.blog }}
+                {{ p_form.blog.help_text }}
+                <br/><br/><br/>
+                <div class="form-check form-switch" id="public" style="float:left">
+                    <label class="form-check-label" for="public">
+                      {{ p_form.is_public }}
+                      <i class="bi bi-eye-fill"></i>
+                      <b style="color:green" data-toggle="tooltip" data-placement="right" title="This setting only applies to personal content (your profile page AND your blog entries). This will not affect any articles or commentaries you may have published. To make those private, archive them individually."> Make profile public?</b>
+                    </label>
+                  </div>
             </div>
             <div class="col-md-8">
                 <b>Description:</b>
@@ -83,4 +97,11 @@
     <!--<a class = "btn btn-danger" href = "/users/{{user.username}}/edit">DEACTIVATE ACCOUNT</a>-->
 
 <br><br>
+
+<script>
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+  </script>
+
 {% endblock body %}

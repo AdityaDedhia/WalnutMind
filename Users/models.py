@@ -14,7 +14,9 @@ class Profile(models.Model):
     location = CountryField(null = True)
     interests = models.CharField(max_length = 75, null = True, blank = True)
     bio = models.TextField(max_length=300, null = True, blank = True)
+    blog = models.CharField(max_length=255, null = True, blank = True)
     following = models.ManyToManyField(User, related_name="following", blank = True)
+    is_public = models.BooleanField(default=False)
     is_author = models.BooleanField(default = False)
 
     def __str__(self):
