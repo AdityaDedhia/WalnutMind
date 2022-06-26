@@ -7,7 +7,7 @@ from pathlib import Path
 
 #PRODUCTION SETTINGS ---------------------------------------------------
 DEBUG = False
-ALLOWED_HOSTS = ['127.0.0.1', 'www.walnutmind.org', 'walnutmind.org']
+ALLOWED_HOSTS = ['127.0.0.1', 'walnutmind.org']
 SERVER_EMAIL = 'support@walnutmind.org'
 ADMINS = [
     ('Aditya Dedhia', 'aditya23dedhia@gmail.com'),
