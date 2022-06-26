@@ -32,7 +32,7 @@
 <!--COVER-->
 <figure>
     <img style = "height: 300px; display: block; margin-left: auto; margin-right: auto;" src = "{{ post.cover.url }}">
-    <figcaption>Source: <a href = "{{ post.coverURL }}">{{ post.coverSrc }}</a></figcaption>
+    <figcaption>Source: <a href = "{{ post.coverURL }}" target="_blank" rel="noopener noreferrer">{{ post.coverSrc }}</a></figcaption>
 </figure> 
 
 <style>
@@ -98,16 +98,14 @@
                    <p style="text-align:center">{{ post.total_likes }}</p>
                    </div>
 
-
-
                    <br><br>
 
                    {% if user.is_authenticated %}
                    <!--ADD COMMENT-->
-                   <form action = {% url 'newcomment' post.pk %} method = "POST">
+                   <form action = "{% url 'newcomment' post.pk %}" method = "post">
                     {% csrf_token %}
                     <input type = "text" class = "container" name = "comment">
-                    <input type = "hidden" name = "pk" value = {{post.pk}}>
+                    <input type = "hidden" name = "pk" value = {{ post.pk }}>
                     <br><br>
                     <button type= "submit" class="btn btn-primary">Post Comment</button>
                     </form>

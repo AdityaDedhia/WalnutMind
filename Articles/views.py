@@ -7,7 +7,6 @@ from django.contrib import messages
 from django.views.generic import ListView, DetailView, UpdateView
 from .forms import PostForm, CommentForm
 from django.urls import reverse, reverse_lazy
-from bootstrap_modal_forms.generic import BSModalDeleteView
 from Users.models import Blacklist, Log
 
 from taggit.models import Tag
@@ -200,21 +199,21 @@ def newPostView(request):
                 'form': form
             })
 
-@login_required(login_url='/users/login')
 def newCommentView(request, pk):
     form = CommentForm()
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
+            post = Post.objects.get(pk=pk)
             comment = Comment.objects.create(
-                post = Post.objects.get(pk=pk),
+                post = post,
                 content = form.cleaned_data['content'],
                 author = request.user,
                 dateCreated = date.today(),
                 dateUpdated = date.today(),
             )
             comment.save()
-            return HttpResponseRedirect(reverse('articleview', args =[str(pk)]))
+            return HttpResponseRedirect(reverse('articleview', args =[str(post.slug)]))
 
         else:
             return render(request, "Articles/article.html")
@@ -230,10 +229,3 @@ class updatePostView(UpdateView):
         tags = Tag.objects.all() #return all tags
         context['tags'] = tags
         return context
-
-
-class deletePostView(BSModalDeleteView):
-    model = Post
-    template_name = 'Articles/deletepost.html'
-    success_message = 'Post was successfully deleted.'
-    success_url = reverse_lazy('index')

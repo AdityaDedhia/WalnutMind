@@ -5,6 +5,7 @@
 {% endblock title %}
 
 {% block body %}
+{% load static %}
 <div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
 
     <ol class="breadcrumb" style="background-color:white">
@@ -24,7 +25,14 @@
     {% if post.author == request.user %}
     <div style="position:absolute; left:0">
     <a class="btn btn-primary" href="{% url 'updateblog' username=post.author pk=post.pk %}">EDIT</a>
+    <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content"></div>
+        </div>
+      </div>
+
     </div>
+    
     {% endif %}
 
 {% if post.public == True or post.author == request.user %}
@@ -32,6 +40,9 @@
 <h1>{{ post.title }}</h1>
 </hr style="border-top: 2px solid rgb(0, 0, 0)">
 <strong>Published on {{ post.dateCreated }} by {{ post.author }}</strong></br>
+<img src=" {{ post.cover.url }}" style="width:100%; height:auto; "/>
+<br/>
+<figcaption>Source: <a href="{{ post.coverURL }}" target="_blank" rel="noopener noreferrer">{{ post.coverSrc }}</a></figcaption>
 <p>{{ post.content|safe }}</p>
 
 </br>
@@ -43,9 +54,9 @@
 
 <p>If you require access please check again at a later date or contact the author <a href="/users/{{ post.author }}">here</a>.</p>
 
-
-
  {% endif %}
 
 </div>
+      
+
 {% endblock body %}

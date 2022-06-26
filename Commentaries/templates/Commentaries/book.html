@@ -56,9 +56,9 @@
         </div>
     </div>
     <div class="card-body">
-        <i>{{ post.headquote }}</i>
+        <i>{{ post.abstract }}</i>
     </br>
-      <h5 class="card-title">{{ post.headline }}</h5>
+      <h5 class="card-title">{{ post.abstract }}</h5>
     </div>
 </div>
 
@@ -116,7 +116,7 @@
   <h1>Commentary</h1>
 </hr style="border-top: 2px solid rgb(0, 0, 0)">
 
-  <p>{{ post.body|safe }}</p>
+  <p>{{ post.content|safe }}</p>
 </br>
   <h1 id="resources">Resources</h1>
 </hr style="border-top: 2px solid rgb(0, 0, 0)">

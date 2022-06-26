@@ -2,6 +2,7 @@ from django.db import models
 from autoslug import AutoSlugField
 from django.contrib.auth.models import User
 from taggit.managers import TaggableManager
+from embed_video.fields import EmbedVideoField
 
 class Term(models.Model):
     term = models.CharField(max_length=128, blank = False)
@@ -27,9 +28,10 @@ class List(models.Model):
 class Resource(models.Model):
     title = models.CharField(max_length=100, blank = False)
     creator = models.ForeignKey(User, on_delete=models.DO_NOTHING, null = True, blank = True)
+    source = models.CharField(max_length = 50, blank = False)
     isbnlink = models.CharField(null = True, blank = True, max_length=13)
     weblink = models.URLField(null = True, blank = True)
-    videolink = models.URLField(null = True, blank = True)
+    videolink = EmbedVideoField(null = True, blank = True)
     filelink = models.FileField(upload_to = 'Wiki/Resources', null = True, blank = True)
     description = models.CharField(max_length = 255, blank = True)
     dateCreated = models.DateTimeField(auto_now_add = True)

@@ -7,7 +7,10 @@ from .forms import NewTermForm
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from isbnlib import meta, cover,doi
-from django.contrib.postgres.search import SearchQuery, SearchVector, SearchRank #Support full-text search
+from django.contrib.postgres.search import SearchQuery, SearchVector, SearchRank, SearchHeadline #Support full-text search
+from Articles.views import Post as ArticlesPost
+from Commentaries.views import Post as BooksPost
+from Diaries.views import Post as BlogPost
 
 SERVICE = "goob"
 
@@ -49,34 +52,40 @@ def searchView(request):
     if request.method == "POST":
         searchedterm = request.POST['searchedterm'] 
         query = SearchQuery(searchedterm) #USED FOR POSTGRES SEARCH INDEX
+        search_headline =  SearchHeadline('content', query, config=None,start_sel = '<mark>',stop_sel = '</mark>',max_words=40, min_words=10, short_word=3,highlight_all=False)
         #query database
         if searchedterm:
             #FULLTEXT SEARCH #1: TERMS & LISTS
             relatedLists = List.objects.filter(title__search= searchedterm) #LIST
             termvector = SearchVector('term','definition') #TERMS
-            relatedTerms = Term.objects.annotate(search=termvector).filter(search=query)
+            relatedTerms = Term.objects.annotate(priority=SearchRank(termvector, query)).annotate().filter(priority__gte=0.001).order_by('-priority')
 
             #FULLTEXT SEARCH #2: RESOURCES & COLLECTIONS
             relatedCollections = Collection.objects.filter(title__search= searchedterm) #COLLECTIONS
             resourcevector = SearchVector('title','description') #RESOURCES
-            relatedResources = Resource.objects.annotate(priority=SearchRank(resourcevector, query)).filter(priority__gte=0.001).order_by('-priority')
+            relatedResources = Resource.objects.annotate(priority=SearchRank(resourcevector, query)).annotate().filter(priority__gte=0.001).order_by('-priority')
+
+            #FULLTEXT SEARCH #3: ARTICLES
+            articlevector = SearchVector('title','abstract','content') #ARTICLES
+
+            relatedArticles = ArticlesPost.objects.annotate(priority=SearchRank(articlevector, query)).annotate(headline=search_headline).filter(priority__gte=0.001).order_by('-priority')
+
+            #FULLTEXT SEARCH #4: BOOKS
+            bookvector = SearchVector('title','abstract','summary','content') #BOOKS
+
+            relatedBooks = BooksPost.objects.annotate(priority=SearchRank(bookvector, query)).annotate(headline=search_headline).filter(priority__gte=0.001).order_by('-priority')
+
+            #FULLTEXT SEARCH #5: BLOG
+            blogvector = SearchVector('title', 'content') #BLOG
+
+            relatedBlog = BlogPost.objects.annotate(priority=SearchRank(blogvector, query)).annotate(headline=search_headline).filter(priority__gte=0.001).order_by('-priority')
 
 
         return render(request, 'Wiki/search.html', {
-            'query': searchedterm, 'terms': relatedTerms, 'resources': relatedResources
+            'query': searchedterm, 'lists': relatedLists, 'terms': relatedTerms, 'collections':relatedCollections, 'resources': relatedResources, 'articles': relatedArticles, 'books': relatedBooks, 'blogs': relatedBlog
         })
     else:
         return render(request, 'Wiki/search.html')
-
-
-
-
-
-
-
-
-
-
 
 
 

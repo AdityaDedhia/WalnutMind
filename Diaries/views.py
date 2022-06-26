@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, UpdateView
 from .models import Post
 from .forms import PostForm
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from datetime import datetime
 from Users.models import Profile, Log

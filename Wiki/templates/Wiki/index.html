@@ -12,8 +12,79 @@
     </ol>
 
     <h3 style="font-family: 'Josefin Sans', sans-serif;">WM <b style="color:gray">Wiki</b></h3>
-    <p style="color:gray">The wiki is very much in development stage, but aims to serve as the primary search engine for our entire database further enabled by the capabilities of the Postgres vector-based search and community contributions. Some of the additional features in addition to content search will be the provision of user-added terms and lists as well as user-added resource aggregation.</p>
+    <p style="color:gray">The wiki is very much in development stage. It aims to serve as the primary search engine for our entire publications database, further enabled by the capabilities of Postgres vector-based full-text search queries and community-driven content contributions. Querying analyzes various parameters across dozens of stored publications metadata such as key word clusters, positioning, and linguistic patterns to name a few. Some of the additional features in development are a personalised dashboard that serves to show you the most relevant information you are looking for.</p>
+
     <hr/>
+
+    <section class="position-relative pt-0">
+      <div class="container">
+        <div class="row">
+
+          <div class="col-6">
+            <div class="card btn mb-4">
+              <h3>WM Authors</h3>
+            </div>
+
+          <div class="row">
+
+          <!-- Card item START -->
+          <div class="col-6">
+            <a class="card btn btn-info mb-4" href="{% url 'articleindex' %}">
+              <h5>Articles</h5>
+            </a>
+          </div>
+          <!--CARD ITEM END-->
+            <!-- Card item START -->
+            <div class="col-6">
+              <a class="card btn btn-info mb-4" href="{% url 'bookindex' %}">
+                <h5>Books</h5>
+              </a>
+            </div>
+            <!--CARD ITEM END-->
+
+            </div>
+          </div>
+        
+            <!-- Card item START -->
+            <div class="col-6">
+              <div class="card btn mb-4">
+                <h3>WM Community</h3>
+              </div>
+
+              <div class="row">
+
+                <div class="col-4">
+                  <a class="card btn btn-info mb-4" href="{% url 'blogindex' %}">
+                    <h5>Blogs</h5>
+                  </a>
+                </div>
+
+              <div class="col-4">
+                <a class="card btn btn-info mb-4" href="{% url 'listsview' %}">
+                  <h5>Lists</h5>
+                </a>
+              </div>
+              <div class="col-4">
+                <a class="card btn btn-info mb-4" href="{% url 'collectionsview' %}">
+                  <h5>Collections</h5>
+                </a>
+              </div>
+
+            </div>
+
+
+     
+
+
+            <!--CARD ITEM END-->
+        </div>
+      </div>
+    </section>
+
+
+
+
+
   <section class="pt-4">
     <div class="container">
         <div class="row">
@@ -26,7 +97,7 @@
               <form method = POST action = "{% url 'searchterm' %}" class="input-group mt-4">
                 {% csrf_token %}
 
-                <input style="border-radius:8px 0px 0px 8px" class="form-control form-control-lg border-primary" type="search" placeholder="Enter query..." aria-label="Search" name = "searchedterm">
+                <input style="border-radius:8px 0px 0px 8px" class="form-control form-control-lg border-primary" type="search" placeholder="Search anything..." aria-label="Search" name = "searchedterm">
                 <button class="btn btn-primary btn-lg m-0" type="submit">
                   <span class="d-none d-md-block">Search</span>
                   <i class="d-block d-md-none bi bi-search"></i></button>
@@ -34,23 +105,21 @@
 
             </div>
           </div>
+
       </div>
     </div>
     </div>
 </section>
 
-  <div class="container-fluid" style = "height: 300px;display: flex;align-items: center;justify-content: center;">
-  
+<br/>
+<br/>
 
-    <div class="row" style = "padding:10px">
-      <div class="col btn btn-primary" style = "margin-right:10px; background-image: var(--bs-gradient);">
-        <a href = "{% url 'listsview' %}" style="text-align: center"><h1 style = "color:white">DEFINITIONS</h1></a>
-      </div>
-    
-      <div class="col btn btn-primary" style = "background-image: var(--bs-gradient);">
-        <a href="{% url 'collectionsview' %}" style="text-align: center"><h1 style="color:white">RESOURCES</h1></a>
-    
-      </div>
-    </div>
-</div>
+<p>
+  You may notice that search results exclude certain content, namely quotes and resources. This is primarily for two reasons: 1) We only scan original content, not citations or references. 2) If we were to scan everything, querying would become severly taxing on our servers. This extends to our dedicated resource aggregation tool in which only user-added titles and descriptions are indexed.
+</p>
+
+<p style="font-size:12px">
+  At Walnut Mind we take plagiarism very seriously. All content is reviewed by a team of volunteers who are responsible for ensuring that the content available is legal, safe, appropriately credited.
+  <b style="text-decoration:underline">By default, all WM publications (articles, commentaries, blogs), term definitions, and user-uploaded resource files, belong to the rightful members of Walnut Mind unless explicitly stated otherwise.</b> If you have any questions or concerns, do not hesitate to contact us at <a href="mailto:support@walnutmind.org">support@walnutmind.org</a>.
+</p>
 {% endblock body %}
