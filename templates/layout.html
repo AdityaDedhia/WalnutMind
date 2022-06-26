@@ -81,7 +81,7 @@
                   <img src="{% static 'Articles/logo.png' %}" width="45" height= "45" class="d-inline-block">
                 </a>
               </a>
-              <cap><b style="font-family: 'Josefin Sans', sans-serif;">WALNUT</b>MIND</cap>|<sub style = "white-space: nowrap; text-overflow: ellipsis;"><i>Where ideas click.</i></sub>
+              <cap><b style="font-family: 'Josefin Sans', sans-serif;">WALNUT&nbsp;</b>MIND</cap>&nbsp;|&nbsp;<sub style = "white-space: nowrap; text-overflow: ellipsis;"><i>Where ideas click.</i></sub>
 
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -111,14 +111,25 @@
 
                     </a>
                   </li>
-
+                  <!--
                   <li class="nav-item mx-2">
                     <a class="zoom nav-link" style = "color: #0a5baa" href="{% url 'wikiindex' %}">WIKI
                       <i class="bi bi-body-text"></i>
                       <sub><i class="bi bi-globe2"></i></sub>
                     </a>
-                  </li>
+                  </li>-->
 
+                  <li class="nav-item mx-2">
+
+                  <form method = POST action = "{% url 'searchterm' %}" class="input-group form-inline my-2 my-lg-0">
+                    {% csrf_token %}
+
+                    <input style="border-radius:16px 0px 0px 16px; z-index:0" class="form-control mr-sm-0 border-none" type="search" placeholder="Powered by WM Wiki" aria-label="Search" name = "searchedterm">
+                    <button class="btn btn-cool-blues btn-sm m-0" style="z-index:0; border-radius:0px 16px 16px 0px;" type="submit">
+                      <span class="d-none d-md-block"><i class="bi bi-search"></i></span>
+                      <i class="d-block d-md-none bi bi-search"></i></button>
+                  </form>
+                </li>
                 </ul>
     
                 <ul class="navbar-nav d-lg-block d-none">

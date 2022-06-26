@@ -99,9 +99,9 @@
                   <ul>
                 {% for item in log %}
                 <li>
-                {{ item.datelog|naturaltime }} -
+                <b>{{ item.datelog|naturaltime }}</b> -
                 {% if item.link %}
-                <a href="{{ item.link }}">{{ item.description }}</a>
+                <a style="color: gray;" href="{{ item.link }}">{{ item.description }}</a>
                 {% else %}
                 <p>{{ item.description }}</p>
                 {% endif %}

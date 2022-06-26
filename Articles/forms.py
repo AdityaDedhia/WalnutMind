@@ -18,7 +18,3 @@ class PostForm(forms.ModelForm):
             'public': forms.CheckboxInput(attrs = {'class': 'form-check-input'}),
 
         }
-
-class CommentForm(forms.Form):
-    content = forms.CharField()
-    pk = forms.IntegerField()

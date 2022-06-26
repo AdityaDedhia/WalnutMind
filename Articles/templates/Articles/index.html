@@ -69,6 +69,7 @@
 {% if user.is_authenticated %}
 
 <h5 style="color:gray">Welcome back, {{ user.first_name }}! Here is your feed:</h5>
+<br/>
 
 {% else %}
 
@@ -167,6 +168,7 @@
   #<b>{{ tag }}</b></span>
 {% endfor %}
 </div>
+
 </div>
 
 
