@@ -14,14 +14,25 @@
         <li class="breadcrumb-item active" aria-current="page">Search</li>
     </ol>
 
+    <h3 style="font-family: 'Josefin Sans', sans-serif;">WM <b style="color:gray">Wiki</b></h3>
+    <p style="color:gray">The wiki is very much in development stage. It aims to serve as the primary search engine for our entire publications database, further enabled by the capabilities of Postgres vector-based full-text search queries and community-driven content contributions. Querying analyzes various parameters across dozens of stored publications metadata such as key word clusters, positioning, and linguistic patterns to name a few. Some of the additional features in development are a personalised dashboard that serves to show you the most relevant information you are looking for.</p>
+
+    <hr/>
 
     <section class="pt-4">
         <div class="container">
             <div class="row">
           <div class="col-lg-9 mx-auto text-center py-5">
+            {% if noinput == True %}
+            <span>Search results for</span>
+            <h2 class="display-4"><i class="bi bi-question-lg"></i></h2>
+            <span class="lead">Try searching for something next time...</span>
+
+            {% else %}
               <span>Search results for</span>
               <h2 class="display-4">{{ query|capfirst }}</h2>
               <span class="lead">{{ terms.count|add:lists.count|add:resources.count|add:collections.count|add:articles.count|add:books.count|add:blogs.count }} results found</span>
+            {% endif %}
               <!-- Search -->
               <div class="row">
                 <div class="col-sm-8 col-md-6 col-lg-5 mx-auto">
@@ -171,6 +182,17 @@
             </ul>
             <br/>
             {% endif %}
+
+            <br/>
+
+<p>
+  You may notice that search results exclude certain content, namely quotes and resources. This is primarily for two reasons: 1) We only scan original content, not citations or references. 2) If we were to scan everything, querying would become severly taxing on our servers. This extends to our dedicated resource aggregation tool in which only user-added titles and descriptions are indexed.
+</p>
+
+<p style="font-size:12px">
+  At Walnut Mind we take plagiarism very seriously. All content is reviewed by a team of volunteers who are responsible for ensuring that the content available is legal, safe, appropriately credited.
+  <b style="text-decoration:underline">By default, all WM publications (articles, commentaries, blogs), term definitions, and user-uploaded resource files, belong to the rightful members of Walnut Mind unless explicitly stated otherwise.</b> If you have any questions or concerns, do not hesitate to contact us at <a href="mailto:support@walnutmind.org">support@walnutmind.org</a>.
+</p>
             </div>
 		</div>
 	</div>

@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from .models import Term, List, Resource, Collection
 from django.views.generic import DetailView
 from django.http import Http404
@@ -50,11 +49,11 @@ def listsView(request):
 #FULL-TEXT SEARCH FUNCTION
 def searchView(request):
     if request.method == "POST":
-        searchedterm = request.POST['searchedterm'] 
+        searchedterm = request.POST['searchedterm'] #Get the searched term
         query = SearchQuery(searchedterm) #USED FOR POSTGRES SEARCH INDEX
         search_headline =  SearchHeadline('content', query, config=None,start_sel = '<mark>',stop_sel = '</mark>',max_words=40, min_words=10, short_word=3,highlight_all=False)
         #query database
-        if searchedterm:
+        if searchedterm and len(searchedterm)>=2:
             #FULLTEXT SEARCH #1: TERMS & LISTS
             relatedLists = List.objects.filter(title__search= searchedterm) #LIST
             termvector = SearchVector('term','definition') #TERMS
@@ -81,13 +80,16 @@ def searchView(request):
             relatedBlog = BlogPost.objects.annotate(priority=SearchRank(blogvector, query)).annotate(headline=search_headline).filter(priority__gte=0.001).order_by('-priority')
 
 
+            return render(request, 'Wiki/search.html', {
+                'query': searchedterm, 'lists': relatedLists, 'terms': relatedTerms, 'collections':relatedCollections, 'resources': relatedResources, 'articles': relatedArticles, 'books': relatedBooks, 'blogs': relatedBlog
+        })
         return render(request, 'Wiki/search.html', {
-            'query': searchedterm, 'lists': relatedLists, 'terms': relatedTerms, 'collections':relatedCollections, 'resources': relatedResources, 'articles': relatedArticles, 'books': relatedBooks, 'blogs': relatedBlog
+            'noinput': True
         })
     else:
-        return render(request, 'Wiki/search.html')
-
-
+        return render(request, 'Wiki/search.html', {
+            'noinput': False}
+            )
 
 
 class definitionView(DetailView):

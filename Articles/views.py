@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Post, Comment
 from django.contrib import messages
 from django.views.generic import ListView, DetailView, UpdateView
-from .forms import PostForm, CommentForm
+from .forms import PostForm
 from django.urls import reverse, reverse_lazy
 from Users.models import Blacklist, Log
 
@@ -200,23 +200,30 @@ def newPostView(request):
             })
 
 def newCommentView(request, pk):
-    form = CommentForm()
     if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            post = Post.objects.get(pk=pk)
-            comment = Comment.objects.create(
-                post = post,
-                content = form.cleaned_data['content'],
-                author = request.user,
-                dateCreated = date.today(),
-                dateUpdated = date.today(),
-            )
-            comment.save()
-            return HttpResponseRedirect(reverse('articleview', args =[str(post.slug)]))
+        content = request.POST.get('content')
+        post = Post.objects.get(pk=pk)
 
-        else:
-            return render(request, "Articles/article.html")
+        comment = Comment.objects.create(
+            post = post,
+            content = content,
+            author = request.user,
+            dateCreated = date.today(),
+            dateUpdated = date.today(),
+        )
+        comment.save()
+        title = post.title
+        post_slug = post.slug
+        link = f"https://www.walnutmind.org/articles/{post_slug}"
+        description = f"Posted comment on '{title}'"
+        logitem = Log(
+            user = request.user,
+            description =description,
+            link = link,
+            datelog = datetime.now()
+        )
+        logitem.save()
+        return HttpResponseRedirect(reverse('articleview', args =[str(post.slug)]))
     return render(request, "Articles/article.html")
 
 class updatePostView(UpdateView):
