@@ -5,7 +5,8 @@
 {% endblock title %}
 
 {% block body %}
-
+<h3>Publications Editor / <a href = "{% url 'blogview' username=post.author pk_slug=post.slug %}" style="color:gray">Editing Blog Post Key {{ post.pk }}</a></h3>
+<hr/>
     <div class="card-body form-group">
         <form method = "POST" enctype="multipart/form-data">
             {% csrf_token %}
@@ -59,5 +60,7 @@
     </div>
 
 </div>
+
+
 <br/>
 {% endblock body %} 

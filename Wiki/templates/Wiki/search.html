@@ -6,6 +6,7 @@
 
 {% block body %}
 {% load static %}
+{% load embed_video_tags %}
 
     <ol class="breadcrumb" style = "background-color:white">
         <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
@@ -19,8 +20,8 @@
             <div class="row">
           <div class="col-lg-9 mx-auto text-center py-5">
               <span>Search results for</span>
-              <h2 class="display-5">{{ query|capfirst }}</h2>
-              <span class="lead">{{ terms.count|add:resources.count }} results found</span>
+              <h2 class="display-4">{{ query|capfirst }}</h2>
+              <span class="lead">{{ terms.count|add:lists.count|add:resources.count|add:collections.count|add:articles.count|add:books.count|add:blogs.count }} results found</span>
               <!-- Search -->
               <div class="row">
                 <div class="col-sm-8 col-md-6 col-lg-5 mx-auto">
@@ -28,8 +29,8 @@
                   <form method = POST action = "{% url 'searchterm' %}" class="input-group mt-4">
                     {% csrf_token %}
 
-                    <input style="border-radius:8px 0px 0px 8px" class="form-control form-control-lg border-primary" type="search" placeholder="Enter query..." aria-label="Search" name = "searchedterm">
-                    <button class="btn btn-primary btn-lg m-0" type="submit">
+                    <input style="border-radius:8px 0px 0px 8px; z-index:0" class="form-control form-control-lg border-primary" type="search" placeholder="Search for anything..." aria-label="Search" name = "searchedterm">
+                    <button class="btn btn-primary btn-lg m-0" style="z-index:0" type="submit">
                       <span class="d-none d-md-block">Search</span>
                       <i class="d-block d-md-none bi bi-search"></i></button>
                   </form>
@@ -48,10 +49,9 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-9 mx-auto">
-
-            <h5>Related Terms</h5>
+            {% if terms %}
+            <h5 class="display-6">Related Terms</h5>
             <hr/>
-
             <ul>
             {% for term in terms %}
             <li>
@@ -60,42 +60,120 @@
                 <br>
             {% endfor %}
             </ul>
-
-            <h5>Related Resources</h5>
+            <br/>
+            {% endif %}
+            {% if lists %}
+            <h5 class="display-6">Related Lists</h5>
             <hr/>
             <ul>
-                <div class="list-group">
-                {% for resource in resources %}
-            
-                <div class="list-group-item list-group-item-action card border rounded-3 p-4 mb-4">
-                <h4 class="btn-link">{{ resource.title }}</h4>
-                Relevance: {{ resource.priority|floatformat:3 }}
-                <a href="#" class="badge bg-danger mb-2">Tags</a>
-                <a href="#" class="badge bg-dark mb-2">Tags</a>
+            {% for list in lists %}
+                <li>
+                    {{ list.title }}<br/>
+                    {{ list.headline|safe }}
+                </li>
+            {% endfor %}
+            </ul>
+            <br/>
+            {% endif %}
+                {% if collections %}
+                <h5 class="display-6">Related Collections</h5>
                 <hr/>
-                Description: {{ resource.description }}
+                <ul>
+                {% for collection in collections %}
+                <li>
+                    <a href = "{% url 'collectionview' pk_slug=collection.slug %}">{{ collection.title }}</a>
+                </li>
+                    <br>
+                {% endfor %}
+                </ul>
                 <br/>
-                Attachments: 
-                {% if resource.weblink %}
-                <i class="bi bi-filetype-html"> </i><a href="{{ resource.weblink }}" target="_blank" rel="noopener noreferrer">{{ resource.weblink }}</a>
                 {% endif %}
-                {% if resource.videolink %}
-                <i class="bi bi-file-earmark-play"> </i><a href="{{ resource.videolink }}" target="_blank" rel="noopener noreferrer">{{ resource.videolink }}</a>
-                {% endif %}
+                {% if resources %}
+                <h5 class="display-6">Related Resources</h5>
+                <hr/>
+                <ul>
+
+                <div class="row">
+                {% for resource in resources %}
+                <div class="col" style="width:auto; height:auto;">
+
+                <!--PRIORITY 1 - FILES-->
                 {% if resource.filelink %}
-                <i class="bi bi-file-earmark-text"> </i><a href="{{ resource.filelink }}" target="_blank" rel="noopener noreferrer">Files</a>
+                <div style="height:auto; width:auto; border-style: solid; border-radius:10px; border-width:thick; overflow:hidden">
+                <embed src="{{ resource.filelink.url }}" type="application/pdf" height="700px" width="500px"/>
+                <br/>
+                <h6>{{ resource.title }} | <i style="color:gray">Relevance: {{ resource.priority|floatformat:3 }}</i> </h6><hr/>
+                <p>{{ resource.description }}</p>
+                    {% if resource.weblink %}
+                    <br/>
+                    <i class="bi bi-filetype-html"> </i><a href="{{ resource.weblink }}" target="_blank" rel="noopener noreferrer">{{ resource.weblink }}</a>
+                    {% endif %}
+                </div>
+                <!--PRIORITY 2 - VIDEOS-->
+                {% elif resource.videolink %}
+                <div style="height:auto; width:426px; border-style: solid; border-radius:25px; border-width:thick; overflow:hidden">
+                {% video resource.videolink '426x240' %}
+                <br/>
+                <h6>{{ resource.title }} | <i style="color:gray">Relevance: {{ resource.priority|floatformat:3 }}</i> </h6><hr/>
+                <p>{{ resource.description }}</p>
+                    {% if resource.weblink %}
+                    <br/>
+                    <i class="bi bi-filetype-html"> </i><a href="{{ resource.weblink }}" target="_blank" rel="noopener noreferrer">{{ resource.weblink }}</a>
+                    {% endif %}
+                </div>
+                <!--PRIORITY 3 - WEBSITES-->
+                {% elif resource.weblink %}
+                <!--TRY TO GENERATE WEB LINK PREVIEW-->
                 {% endif %}
+                <br/>
                 </div>
                 {% endfor %}
             </div>
             </ul>
             <br/>
-
+            {% endif %}
+            {% if articles %}
+            <h5 class="display-6">Related Articles</h5>
+            <hr/>
+            <ul>
+            {% for article in articles %}
+                <li>
+                    {{ article.title }}<br/>
+                    {{ article.headline|safe }}
+                </li>
+            {% endfor %}
+            </ul>
+            <br/>
+            {% endif %}
+            {% if books %}
+            <h5 class="display-6">Related Commentaries</h5>
+            <hr/>
+            <ul>
+            {% for book in books %}
+                <li>
+                    {{ book.title }}<br/>
+                    {{ book.headline|safe }}
+                </li>
+            {% endfor %}
+            </ul>
+            <br/>
+            {% endif %}
+            {% if blogs %}
+            <h5 class="display-6">Related Blogs</h5>
+            <hr/>
+            <ul>
+            {% for blog in blogs %}
+                <li>
+                    {{ blog.title }}<br/>
+                    {{ blog.headline|safe }}
+                </li>
+            {% endfor %}
+            </ul>
+            <br/>
+            {% endif %}
             </div>
 		</div>
 	</div>
 </section>
-
-
 
 {% endblock body %}

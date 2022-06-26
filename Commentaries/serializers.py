@@ -7,4 +7,4 @@ class CommentarySerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
     class Meta:
         model = Post
-        fields = ('id', 'slug', 'title', 'cover', 'headquote','headline', 'tags')
+        fields = ('id', 'slug', 'title', 'cover', 'headquote','abstract', 'tags')
