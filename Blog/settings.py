@@ -2,12 +2,14 @@ import os
 import dotenv
 from pathlib import Path
 
+from requests import Session
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 #PRODUCTION SETTINGS ---------------------------------------------------
 DEBUG = False
-ALLOWED_HOSTS = ['127.0.0.1', 'walnutmind.org']
+ALLOWED_HOSTS = ['127.0.0.1', 'www.walnutmind.org', 'walnutmind.org']
 SERVER_EMAIL = 'support@walnutmind.org'
 ADMINS = [
     ('Aditya Dedhia', 'aditya23dedhia@gmail.com'),
@@ -48,6 +50,10 @@ INSTALLED_APPS = [
     'Diaries',
     'Wiki',
 ]
+
+CSRF_COOKIE_SECURE = True #Prevent CSRF cookie from being sent over HTTP
+SESSION_COOKIE_SECURE = True #Prevent session cookie from being sent over HTTP
+SECURE_SSL_REDIRECT = True #Redirect all non-HTTPS requests to HTTPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
