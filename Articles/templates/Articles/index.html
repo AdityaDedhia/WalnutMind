@@ -79,6 +79,66 @@
       <strong class="title" style="font-size: 2.2vw; opacity: 0.85; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -40%);">Liberate Your Learning Shell<br></strong><h4 style = "font-size: 1.4vw; opacity: 0.85; position: absolute; top: 50%; left: 50%; transform: translate(-50%, 110%);">A curated content-publishing platform.</h4>
 </div>
 
+<section class="position-relative pt-0">
+  <div class="container">
+    <div class="row">
+
+      <div class="col-6">
+        <div class="card btn mb-4">
+          <h3>WM Authors</h3>
+
+      <div class="row">
+
+      <!-- Card item START -->
+      <div class="col-6">
+        <a class="card btn btn-info mb-4" href="{% url 'articleindex' %}">
+          <h5>Articles</h5>
+        </a>
+      </div>
+      <!--CARD ITEM END-->
+        <!-- Card item START -->
+        <div class="col-6">
+          <a class="card btn btn-info mb-4" href="{% url 'bookindex' %}">
+            <h5>Books</h5>
+          </a>
+        </div>
+        <!--CARD ITEM END-->
+        </div>
+
+      </div>
+    </div>
+
+        <!-- Card item START -->
+        <div class="col-6">
+          <div class="card btn btn-sm mb-4">
+            <h3>WM Community</h3>
+          <div class="row">
+
+            <div class="col-4">
+              <a class="card btn btn-info mb-4" href="{% url 'blogindex' %}">
+                <h5>Blogs</h5>
+              </a>
+            </div>
+
+          <div class="col-4">
+            <a class="card btn btn-info mb-4" href="{% url 'listsview' %}">
+              <h5>Lists</h5>
+            </a>
+          </div>
+          <div class="col-4">
+            <a class="card btn btn-info mb-4" href="{% url 'collectionsview' %}">
+              <h5>Collections</h5>
+            </a>
+          </div>
+        </div>
+      </div>
+
+
+        <!--CARD ITEM END-->
+    </div>
+  </div>
+</section>
+
 <section class="py-6">
   <div class="container">
     <div class="row">
@@ -147,14 +207,14 @@
 		          </div>
 						</div>
             {% endfor %}
-            <button class="carousel-control-prev" type="button" data-bs-target="#hero" data-bs-slide="prev">
+            <!--<button style="top:-80px" class="carousel-control-prev" type="button" data-bs-target="#hero" data-bs-slide="prev">
               <span class="carousel-control-prev-icon" aria-hidden="true"></span>
               <span class="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#hero" data-bs-slide="next">
+            <button style="top:-80px" class="carousel-control-next" type="button" data-bs-target="#hero" data-bs-slide="next">
               <span class="carousel-control-next-icon" aria-hidden="true"></span>
               <span class="visually-hidden">Next</span>
-            </button>
+            </button>-->
 					</div>
 				</div>
 			</div>

@@ -2,7 +2,7 @@ from .models import Term, List, Resource, Collection
 from django.views.generic import DetailView
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
-from .forms import NewTermForm
+from .forms import NewTermForm, NewListForm
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect
 from isbnlib import meta, cover,doi
@@ -41,11 +41,48 @@ def collectionsView(request):
 
 def listsView(request):
     terms = Term.objects.all()
-    lists = List.objects.all()
+    lists = List.objects.filter(public = True)
     listsCount = lists.count()
     return render(request, 'Wiki/lists.html', {
         'terms':terms, 'lists':lists, 'listsCount': listsCount
     })
+
+class listView(DetailView):
+    model = List
+    slug_url_kwarg = 'pk_slug'
+    template_name = 'Wiki/list.html'
+    def get_context_data(self, *args, **kwargs):
+        context = super(listView, self).get_context_data(*args, **kwargs)
+        terms = Term.objects.filter(list = self.object)
+        context['terms'] = terms
+        return context
+
+    def get_object(self, queryset = None):
+        if queryset is None:
+            queryset = self.get_queryset()
+
+        pk_slug = self.kwargs.get(self.slug_url_kwarg)
+
+        if pk_slug is not None and pk_slug.isdigit():
+            queryset = queryset.filter(pk=pk_slug)
+        
+        elif pk_slug is not None:
+            slug_field = self.get_slug_field()
+            queryset = queryset.filter(**{slug_field: pk_slug})
+
+        
+        if pk_slug is None:
+            raise AttributeError(
+                "Generic detail view %s must be called with an object "
+                "pk_slug in the URLconf." % self.__class__.__name__
+            )
+
+        try:
+            obj = queryset.get()
+        except queryset.model.DoesNotExist:
+            raise Http404(("No %(verbose_name)s found matching the query") %
+                          {'verbose_name': queryset.model._meta.verbose_name})
+        return obj
 
 def tagView(request, tag):
     print(tag)
@@ -170,15 +207,40 @@ class collectionView(DetailView):
 
 @login_required(login_url='/users/login')
 def newTermView(request):
-        if request.method == 'POST':
-            form = NewTermForm(request.POST)
-            if form.is_valid():
-                form.save()
-                messages.success(request, ("Term was successfully published!"))
-                latest_id = Term.objects.latest('pk').pk #Essentially gets latest entry object based on last pk added, and then gets the pk of that entry object.
-                return redirect(f"/wiki/define-{latest_id}")
+    if request.method == 'POST':
+        form = NewTermForm(request.POST)
+
+        if form.is_valid():
+            #If publisher is author, terms are verified by default:
+            if request.user.profile.is_author:
+                form.instance.verified = True
+            form.save()
+            messages.success(request, ("Terms were successfully published."))
+            latest_id = Term.objects.latest('pk').pk #Essentially gets latest entry object based on last pk added, and then gets the pk of that entry object.
+            return redirect(f"/wiki/define-{latest_id}")
         else:
-            form = NewTermForm()
-        return render(request, 'Wiki/newterm.html', {
-                'form': form
-            })
+            messages.success(request, ("Integrity validation failed. This term may already exist."))
+
+    form = NewTermForm(request.POST)
+    return render(request, 'Wiki/newterm.html', {
+        'form': form
+    })
+
+@login_required(login_url='/users/login')
+def newListView(request):
+    if request.method == 'POST':
+        form = NewListForm(request.POST)
+
+        if form.is_valid():
+            form.instance.creator = request.user #Because author field from forms.py was excluded
+            form.save()
+            messages.success(request, ("Terms list was successfully created."))
+            latest_id = List.objects.latest('pk').slug #Essentially gets latest entry object based on last pk added, and then gets the pk of that entry object.
+            return redirect(f"/wiki/lists/{latest_id}")
+        else:
+            messages.success(request, ("Integrity validation failed. You have attempted to manipulate non-editable fields."))
+
+    form = NewListForm(request.POST, instance = request.user)
+    return render(request, 'Wiki/newlist.html', {
+        'form': form,
+    })

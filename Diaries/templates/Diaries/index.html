@@ -22,9 +22,9 @@
         {% for profile in profiles %}
         <li>
             <div style="white-space: nowrap;">
-            <a href="{% url 'profile' username=request.user.username %}">
-                {% if request.user.profile.avatar %}
-                <img style="display: inline; width: 40px; height: 40px; border: 1px solid black; margin-right: 4px"  src="{{ request.user.profile.avatar.url }}">
+            <a href="{% url 'profile' username=profile %}">
+                {% if profile.avatar %}
+                <img style="display: inline; width: 40px; height: 40px; border: 1px solid black; margin-right: 4px"  src="{{ profile.avatar.url }}">
                 {% else %}
                 <img style="width: 40px; height: 40px; border: 3px solid #14a2b8; margin-right: 4px"  src="{% static 'Users/def_avatar.png' %}">
                 {% endif %}

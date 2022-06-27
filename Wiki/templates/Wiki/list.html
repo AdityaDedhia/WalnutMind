@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block title %}
+<title>New List | WM</title>
+{% endblock title %}
+
+{% block body %}
+<ol class="breadcrumb" style = "background-color:white">
+    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'wikiindex' %}">Wiki</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'listsview' %}">Lists</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ list.title }}</li>
+</ol>
+
+{{ list.title }}
+
+<ul>
+{% for term in terms %}
+<li>
+<a href="/wiki/define-{{ term.slug }}">{{ term.term }}</a>
+</li>
+{% endfor %}
+</ul>
+
+{% endblock body %}

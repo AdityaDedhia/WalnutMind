@@ -5,10 +5,11 @@ from taggit.managers import TaggableManager
 from embed_video.fields import EmbedVideoField
 
 class Term(models.Model):
-    term = models.CharField(max_length=128, blank = False)
+    term = models.CharField(max_length=128, blank = False, unique=True)
     slug = AutoSlugField(populate_from='term', unique = True, null = True, default = None)
     definition = models.TextField(blank = False, max_length=300)
     dateUpdated = models.DateTimeField(auto_now = True)
+    verified = models.BooleanField(default = False)
 
     def __str__(self):
         return str(self.term)
@@ -17,10 +18,11 @@ class List(models.Model):
     title = models.CharField(max_length=128, blank = False)
     slug = AutoSlugField(populate_from='title', unique = True, null = True, default = None)
     creator = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="listpublisher")
+    description = models.CharField(max_length = 255, null = True, blank = True)
+    terms = models.ManyToManyField(Term)
+    public = models.BooleanField(default = True)
     dateCreated = models.DateTimeField(auto_now_add = True)
     dateUpdated = models.DateTimeField(auto_now = True)
-    terms = models.ManyToManyField(Term)
-    tags = TaggableManager(related_name="listtags")
 
     def __str__(self):
         return str(self.title)
@@ -42,13 +44,14 @@ class Resource(models.Model):
 class Collection(models.Model):
     title = models.CharField(max_length=128, blank = False)
     slug = AutoSlugField(populate_from='title', unique = True, null = True, default = None)
-    description = models.CharField(max_length = 255, blank = True)
+    description = models.CharField(max_length = 255, null = True, blank = True)
     creator = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="collectionpublisher")
     contributors = models.ManyToManyField(User, blank = True)
     resources = models.ManyToManyField(Resource)
+    public = models.BooleanField(default = True)
     dateCreated = models.DateTimeField(auto_now_add = True)
     dateUpdated = models.DateTimeField(auto_now = True)
-    tags = TaggableManager(related_name="collectiontags")
+
 
     def __str__(self):
         return str(self.title)

@@ -79,7 +79,7 @@
             <ul>
             {% for list in lists %}
                 <li>
-                    {{ list.title }}<br/>
+                    <a href = "/wiki/lists/{{ list.slug }}">{{ list.title }}</a></br>
                     {{ list.headline|safe }}
                 </li>
             {% endfor %}
