@@ -114,7 +114,7 @@
 <!--hero-->
 			<div class="col-lg-6 col-md-12 col-sm-12">
 				<div id="hero" class="carousel slide rounded-3 overflow-hidden" data-bs-ride="true">
-          <div class="carousel-indicators">
+          <div class="carousel-indicators" style="top:370px">
             <button type="button" data-bs-target="#hero" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide"></button>
             <button type="button" data-bs-target="#hero" data-bs-slide-to="1" aria-current="true" aria-label="Slide"></button>
             <button type="button" data-bs-target="#hero" data-bs-slide-to="2" aria-current="true" aria-label="Slide"></button>
@@ -137,10 +137,10 @@
                     {% endfor %}
 			            	<!-- Card title -->
 			              <h4 class="display-6 text-hover"><a href="{% url 'articleview' pk_slug=post.slug %}" class="btn-link text-reset fw-normal">{{ post.title }}</a></h4>
-			              <p class="text-white">{{ post.abstract|truncatewords:10 }}...</p>
+			              <p style="color: #d6d6d6">{{ post.abstract|truncatewords:10 }}...</p>
 			              <!-- Card info -->
 										<ul class="nav nav-divider text-white-force align-items-center d-none d-sm-inline-block">
-										  <li><p style="color:white">Published {{ post.dateCreated|naturaltime }}</p></li>
+                      <li><b style="color:white">By {{ post.author.first_name }} {{ post.author.last_name }}, {{ post.dateCreated|naturaltime }}.</b></li>
 										</ul>
 			            </div>
 		            </div>
@@ -162,15 +162,17 @@
 <!--hero end-->
 
 <div class="col-lg-6 col-md-12 col-sm-12">
-  <h3 style="color:gray">Our Topics:</h3>
+  <h3 style="color:gray">Browse Our Catalog by Topic:</h3>
 {% for tag in tags %}
-<span class="badge bg-warning mb-2" style="margin:5px">
-  #<b>{{ tag }}</b></span>
+<span class="btn btn-warning mb-4" style="margin:5px; border-radius:12px">
+  <a style="text-decoration: none; color:white" href="{% url 'tagview' tag=tag|lower %}">#<b>{{ tag }}</b></a>
+</span>
 {% endfor %}
+<h3 style="color:gray">Want more?</h3>
+<h6>Peform a full-text search on anything and everything in our catalog and <b>beyond</b> using <a href="{% url 'wikiindex' %}">WM Wiki</a>.</h6>
 </div>
 
 </div>
-
 
 {% if not user.is_authenticated %}
 
@@ -183,7 +185,7 @@
         <p class="lead">Interested in what we do? Whether you are a casual reader, bibliophile, blogger, or notetaker, we have something for you.</p>
         <p class="lead">Got something to share? Get started today and find out more about publishing on our site.</p>
         <div class="buttons">
-          <a class="btn btn-primary" href = "{% url 'registerr' %}">GET STARTED</a>
+          <a class="btn btn-primary" href = "{% url 'opportunities' %}">GET STARTED</a>
           <a class="btn btn-secondary" href = "{% url 'about' %}">OUR STORY</a>
         </div>
         <br>
@@ -210,6 +212,22 @@
     </div>
   </div>
 </div>
+
+{% else %}
+<h3 class="display-6">Saved for Later: </h3>
+{% if saved_articles %}
+<h5>Articles</h5><hr/>
+<div>
+  <ul>
+{% for post in saved_articles %}
+<li><a href="{% url 'articleview' pk_slug=post.slug %}">{{ post.title }}</a></li>
+{% endfor %}
+  </ul>
+</div>
+{% else %}
+You do not have anything saved yet...
+{% endif %}
+
 
 {% endif %}
 <br/>

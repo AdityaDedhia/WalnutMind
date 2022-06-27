@@ -5,6 +5,7 @@
 {% endblock title %}
 
 {% block body %}
+{% load static %}
     <ol class="breadcrumb" style = "background-color:white">
         <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
         <li class="breadcrumb-item active" aria-current="page">Blog</li>
@@ -19,7 +20,20 @@
 
     <ul>
         {% for profile in profiles %}
-          <li><h3><a href="/users/{{ profile }}">{{ profile|upper }}</a></h3></li>
+        <li>
+            <div style="white-space: nowrap;">
+            <a href="{% url 'profile' username=request.user.username %}">
+                {% if request.user.profile.avatar %}
+                <img style="display: inline; width: 40px; height: 40px; border: 1px solid black; margin-right: 4px"  src="{{ request.user.profile.avatar.url }}">
+                {% else %}
+                <img style="width: 40px; height: 40px; border: 3px solid #14a2b8; margin-right: 4px"  src="{% static 'Users/def_avatar.png' %}">
+                {% endif %}
+              </a>
+            <h3 style="display:inline"><a style="color:black" href="/users/{{ profile }}">{{ profile|upper }}</a></h3>
+            </div>
+            <p>About: {{ profile.blog }}</p>
+        
+        </li>
         {% endfor %}
     </ul>
 

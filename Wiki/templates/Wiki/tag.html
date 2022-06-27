@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}
+<title>Search | WM</title>
+{% endblock title %}
+
+{% block body %}
+{% load static %}
+{% load embed_video_tags %}
+
+    <ol class="breadcrumb" style = "background-color:white">
+        <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'wikiindex' %}">Wiki</a></li>
+        <li class="breadcrumb-item"><a href="#">Publications</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ topic }}</li>
+    </ol>
+
+    <h3 style="font-family: 'Josefin Sans', sans-serif;">WM <b style="color:gray">Publications</b></h3>
+    <hr/>
+    <h4 class="display-5">We found the following publications for <b style="color:#b59528">#{{ topic|lower }}</b> </h4>
+{% if articles %}
+<h2 class="display-6">Articles: </h2>
+<ul>
+{% for article in articles %}
+<li><a href="{% url 'articleview' pk_slug=article.slug %}">{{ article.title }}</a></li>
+{% endfor %}
+</ul>
+{% endif %}
+{% if books %}
+<hr/>
+<h2 class="display-6">Books: </h2>
+<ul>
+{% for book in books %}
+<li><a href="{% url 'bookview' pk_slug=book.slug %}">{{ book.title }}</a></li>
+{% endfor %}
+</ul>
+{% endif %}
+{% if blogs %}
+<hr/>
+<h2 class="display-6">Blogs: </h2>
+<ul>
+{% for blog in blogs %}
+<li><a href="{% url 'blogview' username=blog.author pk_slug=blog.slug %}">{{ blog.title }}</a></li>
+{% endfor %}
+</ul>
+{% endif %}
+
+<br/>
+{% endblock body %}

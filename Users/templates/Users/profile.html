@@ -244,19 +244,6 @@
 
                    {% if request.user == user %}
                    <div class="bg-light" style = "margin-top:50px; padding: 30px">
-
-                    {% if saved_articles %}
-                    <h3 class="display-6">Saved for Later: </h3>
-                    <h5>Articles</h5><hr/>
-                    <div>
-                      <ul>
-                    {% for post in saved_articles %}
-                    <li><a href="{% url 'articleview' pk_slug=post.slug %}">{{ post.title }}</a></li>
-                    {% endfor %}
-                      </ul>
-                    </div>
-                    {% else %}
-                    {% endif %}
        
                    <h3 class="display-6" id="publicationsmanager">Manage Your Publications:</h3>
                    <br>
