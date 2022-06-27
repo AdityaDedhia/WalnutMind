@@ -156,7 +156,7 @@
     
                 <ul class="navbar-nav d-lg-block d-none">
                   <li class="nav-item">
-                    {% if user.is_authenticated %}
+                    {% if request.user.is_authenticated %}
                     <div class="d-grid gap-2 d-md-block">
                     <a class="zoom btn btn-info rounded-pill" href="{% url 'newterm' %}"><i class="bi bi-plus-circle"></i></a>
                     {% if request.user.profile.is_author == True %}
