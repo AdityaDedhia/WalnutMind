@@ -4,9 +4,10 @@ from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from .forms import NewTermForm
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from isbnlib import meta, cover,doi
 from django.contrib.postgres.search import SearchQuery, SearchVector, SearchRank, SearchHeadline #Support full-text search
+from taggit.models import Tag
 from Articles.views import Post as ArticlesPost
 from Commentaries.views import Post as BooksPost
 from Diaries.views import Post as BlogPost
@@ -44,6 +45,16 @@ def listsView(request):
     listsCount = lists.count()
     return render(request, 'Wiki/lists.html', {
         'terms':terms, 'lists':lists, 'listsCount': listsCount
+    })
+
+def tagView(request, tag):
+    print(tag)
+    tag = get_object_or_404(Tag, slug=tag)
+    articles = ArticlesPost.objects.filter(tags=tag) #No need for referencing taggable manager
+    books = BooksPost.objects.filter(tags=tag)
+    blogs = BlogPost.objects.filter(tags=tag)
+    return render(request, 'Wiki/tag.html', {
+        'topic': tag, 'articles': articles, 'books': books, 'blogs': blogs
     })
 
 #FULL-TEXT SEARCH FUNCTION

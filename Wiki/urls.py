@@ -11,6 +11,7 @@ urlpatterns = [
     path('resource-<int:pk>',views.resourceView, name = "resourceview"),
     path('collections', views.collectionsView, name = "collectionsview"),
     path('collections/<slug:pk_slug>', collectionView.as_view(), name = "collectionview"),
-    path('search-term', views.searchView, name = "searchterm"),
+    path('topics/<tag>', views.tagView, name = "tagview"),
+    path('search', views.searchView, name = "search"),
     path('terms/new', views.newTermView, name = "newterm"),
 ] + static(settings.STATIC_URL, document_root = settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

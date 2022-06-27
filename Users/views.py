@@ -235,11 +235,10 @@ def profileView(request, username):
         commentaries = requestedUser.commentarypublisher.all()
         diaries = requestedUser.diarypublisher.all()
         highlights = Highlight.objects.filter(author = requestedUser)
-        saved_articles = requestedUser.article_saves.all()
         log = Log.objects.filter(user = requestedUser).order_by('-datelog')[:6] #Descending order limited to last 6 items.
         is_public = requestedUser.profile.is_public
         return render(request, 'Users/profile.html', {
-            'user': requestedUser,'isFollowing':isFollowing,'followers':followers, 'articles':articles, 'commentaries': commentaries, 'diaries': diaries, 'highlights': highlights, 'saved_articles': saved_articles, 'log': log, 'is_public':is_public
+            'user': requestedUser,'isFollowing':isFollowing,'followers':followers, 'articles':articles, 'commentaries': commentaries, 'diaries': diaries, 'highlights': highlights, 'log': log, 'is_public':is_public
         })
     else:
         messages.success(request, ("It appears that this user does not exist."))

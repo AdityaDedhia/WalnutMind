@@ -7,15 +7,16 @@ from pathlib import Path
 
 #PRODUCTION SETTINGS ---------------------------------------------------
 DEBUG = False
+SECURE_SSL_REDIRECT = True #Redirect all non-HTTPS requests to HTTPS
+
+CSRF_COOKIE_SECURE = True #Prevent CSRF cookie from being sent over HTTP
+SESSION_COOKIE_SECURE = True #Prevent session cookie from being sent over HTTP
+
 ALLOWED_HOSTS = ['127.0.0.1', 'www.walnutmind.org', 'walnutmind.org']
 SERVER_EMAIL = 'support@walnutmind.org'
 ADMINS = [
     ('Aditya Dedhia', 'aditya23dedhia@gmail.com'),
 ]
-
-CSRF_COOKIE_SECURE = True #Prevent CSRF cookie from being sent over HTTP
-SESSION_COOKIE_SECURE = True #Prevent session cookie from being sent over HTTP
-SECURE_SSL_REDIRECT = True #Redirect all non-HTTPS requests to HTTPS
 
 
 

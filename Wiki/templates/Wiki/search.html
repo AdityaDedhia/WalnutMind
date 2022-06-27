@@ -37,7 +37,7 @@
               <div class="row">
                 <div class="col-sm-8 col-md-6 col-lg-5 mx-auto">
 
-                  <form method = POST action = "{% url 'searchterm' %}" class="input-group mt-4">
+                  <form method = POST action = "{% url 'search' %}" class="input-group mt-4">
                     {% csrf_token %}
 
                     <input style="border-radius:8px 0px 0px 8px; z-index:0" class="form-control form-control-lg border-primary" type="search" placeholder="Search for anything..." aria-label="Search" name = "searchedterm">
@@ -134,6 +134,9 @@
                 </div>
                 <!--PRIORITY 3 - WEBSITES-->
                 {% elif resource.weblink %}
+                <h6>{{ resource.title }} | <i style="color:gray">Relevance: {{ resource.priority|floatformat:3 }}</i> </h6><hr/>
+                {{ resource.weblink }}: 
+                {{ resource.description}}
                 <!--TRY TO GENERATE WEB LINK PREVIEW-->
                 {% endif %}
                 <br/>
@@ -149,7 +152,8 @@
             <ul>
             {% for article in articles %}
                 <li>
-                    {{ article.title }}<br/>
+                    <a href="{% url 'articleview' pk_slug=article.slug %}"><b>{{ article.title }}</b></a>
+                    <br/>
                     {{ article.headline|safe }}
                 </li>
             {% endfor %}
@@ -162,7 +166,8 @@
             <ul>
             {% for book in books %}
                 <li>
-                    {{ book.title }}<br/>
+                    <a href="{% url 'bookview' pk_slug=book.slug %}"><b>{{ book.title }} Commentary</b></a>
+                    <br/>
                     {{ book.headline|safe }}
                 </li>
             {% endfor %}
@@ -175,7 +180,8 @@
             <ul>
             {% for blog in blogs %}
                 <li>
-                    {{ blog.title }}<br/>
+                    <a href="{% url 'blogview' username=blog.author pk_slug=blog.slug %}"><b>{{ blog.title }}</b></a>
+                    <br/>
                     {{ blog.headline|safe }}
                 </li>
             {% endfor %}

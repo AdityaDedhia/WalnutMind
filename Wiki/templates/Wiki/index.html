@@ -13,9 +13,7 @@
 
     <h3 style="font-family: 'Josefin Sans', sans-serif;">WM <b style="color:gray">Wiki</b></h3>
     <p style="color:gray">The wiki is very much in development stage. It aims to serve as the primary search engine for our entire publications database, further enabled by the capabilities of Postgres vector-based full-text search queries and community-driven content contributions. Querying analyzes various parameters across dozens of stored publications metadata such as key word clusters, positioning, and linguistic patterns to name a few. Some of the additional features in development are a personalised dashboard that serves to show you the most relevant information you are looking for.</p>
-
     <hr/>
-
     <section class="position-relative pt-0">
       <div class="container">
         <div class="row">
@@ -72,10 +70,6 @@
 
             </div>
 
-
-     
-
-
             <!--CARD ITEM END-->
         </div>
       </div>
@@ -94,10 +88,10 @@
           <div class="row">
             <div class="col-sm-8 col-md-6 col-lg-5 mx-auto">
 
-              <form method = POST action = "{% url 'searchterm' %}" class="input-group mt-4">
+              <form method = POST action = "{% url 'search' %}" class="input-group mt-4">
                 {% csrf_token %}
 
-                <input style="border-radius:8px 0px 0px 8px" class="form-control form-control-lg border-primary" type="search" placeholder="Search anything..." aria-label="Search" name = "searchedterm">
+                <input style="border-radius:8px 0px 0px 8px" class="form-control form-control-lg border-primary" type="search" placeholder="Enter query..." aria-label="Search" name = "searchedterm">
                 <button class="btn btn-primary btn-lg m-0" type="submit">
                   <span class="d-none d-md-block">Search</span>
                   <i class="d-block d-md-none bi bi-search"></i></button>

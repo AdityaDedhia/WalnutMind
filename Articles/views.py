@@ -1,14 +1,13 @@
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, render
-from datetime import datetime, timedelta, date
+from datetime import datetime, date
 from django.contrib.auth.decorators import login_required
 from .models import Post, Comment
 from django.contrib import messages
 from django.views.generic import ListView, DetailView, UpdateView
 from .forms import PostForm
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 from Users.models import Blacklist, Log
-
 from taggit.models import Tag
 from .serializers import ArticleSerializer
 from rest_framework.generics import ListAPIView
@@ -25,17 +24,17 @@ def indexView(request):
         logout(request)
         return render(request, "blacklist.html")
 
-    #fix does not work atm
-    today = datetime.today()
-    one_week_ago = datetime.today() - timedelta(days=7)
-
-    recentArticles = Post.objects.filter(dateCreated__range = [today, one_week_ago])
-
-    recent = Post.objects.filter(public = True)
-
+    recent = Post.objects.filter(public = True).order_by('-dateCreated')[:5] #Get last 5 entries
     tags = Tag.objects.all() #return all tags
+
+    if request.user.is_authenticated: #Send custom feed to logged in users:
+        user = request.user
+        saved_articles = user.article_saves.all()
+    else:
+        saved_articles = None
+
     return render(request, 'Articles/index.html', {
-        'recent': recent, 'tags': tags
+        'recent': recent, 'tags': tags, 'saved_articles': saved_articles
     })
 
 def aboutView(request):
@@ -171,7 +170,6 @@ def articleupvote(request, pk):
     messages.success(request, ("Article liked, thank you for your feedback."))
     return HttpResponseRedirect(reverse('articleview', args =[str(post.slug)]))
 
-
 #---------------------------------------------------------------------------------  
 @login_required(login_url='/users/login')
 def newPostView(request):
@@ -198,7 +196,7 @@ def newPostView(request):
         return render(request, 'Articles/post.html', {
                 'form': form
             })
-
+@login_required(login_url='/users/login')
 def newCommentView(request, pk):
     if request.method == 'POST':
         content = request.POST.get('content')

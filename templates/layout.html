@@ -81,7 +81,7 @@
                   <img src="{% static 'Articles/logo.png' %}" width="45" height= "45" class="d-inline-block">
                 </a>
               </a>
-              <cap><b style="font-family: 'Josefin Sans', sans-serif;">WALNUT&nbsp;</b>MIND</cap>&nbsp;|&nbsp;<sub style = "white-space: nowrap; text-overflow: ellipsis;"><i>Where ideas click.</i></sub>
+              <cap><b style="font-family: 'Josefin Sans', sans-serif;">WALNUT&nbsp;</b>MIND</cap>&nbsp;|&nbsp;<sub style = "white-space: nowrap; text-overflow: ellipsis;"><i style = "color: #2f1971">Where ideas click.</i></sub>
 
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -91,14 +91,14 @@
                 <ul class="navbar-nav navbar-nav-hover mx-auto">
 
                   <li class="nav-item mx-2">
-                    <a class="zoom nav-link" style = "color: #2f1971" href="{% url 'articleindex' %}">ARTICLES
+                    <a class="zoom nav-link" style = "color: #0a5baa" href="{% url 'articleindex' %}">ARTICLES
                       <i class="bi bi-newspaper"></i>
 
                     </a>
                   </li>
     
                   <li class="nav-item mx-2">
-                    <a class="zoom nav-link" style = "color: #2f1971" href="{% url 'bookindex' %}">BOOKS
+                    <a class="zoom nav-link" style = "color: #0a5baa" href="{% url 'bookindex' %}">BOOKS
                       <i class="bi bi-book-half"></i>
 
                     </a>
@@ -119,9 +119,31 @@
                     </a>
                   </li>-->
 
+                  <style>
+                    ::-webkit-input-placeholder {
+                      font-style: italic;
+                      font-weight: bold;
+                   }
+                   :-moz-placeholder {
+                      font-style: italic;  
+                      font-weight: bold;
+
+                   }
+                   ::-moz-placeholder {
+                      font-style: italic;  
+                      font-weight: bold;
+
+                   }
+                   :-ms-input-placeholder {  
+                      font-style: italic; 
+                      font-weight: bold;
+
+                   }
+                  </style>
+
                   <li class="nav-item mx-2">
 
-                  <form method = POST action = "{% url 'searchterm' %}" class="input-group form-inline my-2 my-lg-0">
+                  <form method = POST action = "{% url 'search' %}" class="input-group form-inline my-2 my-lg-0">
                     {% csrf_token %}
 
                     <input style="border-radius:16px 0px 0px 16px; z-index:0" class="form-control mr-sm-0 border-none" type="search" placeholder="Powered by WM Wiki" aria-label="Search" name = "searchedterm">
@@ -144,11 +166,11 @@
                     {% endif %}
                     <!--User-->
             
-                    <a class="" href="/users/{{request.user.username}}">
+                    <a href="{% url 'profile' username=request.user.username %}">
                       {% if request.user.profile.avatar %}
-                      <img style = "width: 40px; height: 40px; border-radius: 50%; border: 3px solid #14a2b8; margin-right: 4px" class = "zoom float-md-start" src = "{{ request.user.profile.avatar.url }}">
+                      <img style="width: 40px; height: 40px; border-radius: 50%; border: 3px solid #14a2b8; margin-right: 4px" class="zoom float-md-start" src="{{ request.user.profile.avatar.url }}">
                       {% else %}
-                      <img style="width: 40px; height: 40px; border-radius: 50%; border: 3px solid #14a2b8; margin-right: 4px" class = "zoom float-md-start" src = "{% static 'Users/def_avatar.png' %}">
+                      <img style="width: 40px; height: 40px; border-radius: 50%; border: 3px solid #14a2b8; margin-right: 4px" class="zoom float-md-start" src="{% static 'Users/def_avatar.png' %}">
                       {% endif %}
                     </a>
             
