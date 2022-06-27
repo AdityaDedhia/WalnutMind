@@ -216,7 +216,6 @@ def logoutView(request):
     messages.success(request, ("You have successfully signed out."))
     return redirect('index')
 
-
 # dont know how secure this is- public/private may be able to be changed.
 def profileView(request, username):    
     if User.objects.filter(username = username).exists():
