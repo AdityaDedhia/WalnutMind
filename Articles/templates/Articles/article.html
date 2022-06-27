@@ -102,7 +102,7 @@
                     <button class="btn btn-primary m-0" style="z-index:0; border-radius:0px 8px 8px 0px;" type="submit">
                       <i class="bi bi-send-fill"></i>
                     </button>
-                    <input type="hidden" name="post" value = {{ post.pk }}>
+                    <input type="hidden" name="post" value={{ post.pk }}>
                     <br/><br/>
                     </form>
                 {% endif %}
@@ -113,14 +113,14 @@
                         <div style = "float:right;">
                         <form action = {% url 'article_save' post.pk %} method = "POST">
                             {% csrf_token %}
-                            <button type = "submit" class = "btn btn-dark" name = "post_id" value = "{{ post.pk }}"><i class="bi bi-star-fill"></i></button>
+                            <button type="submit" class = "btn btn-dark" name="post_id" value="{{ post.pk }}"><i class="bi bi-star-fill"></i></button>
                         </form>
                         <!--<p style="text-align:center">{{ post.total_saves }}</p>-->
                         </div>
                         <div style = "float:right; margin-right:8px">
                             <form action = {% url 'article_upvote' post.pk %} method = "POST">
                             {% csrf_token %}
-                            <button type = "submit", class = "btn btn-primary", name = "post_id", value = "{{ post.pk }}"><i class="bi bi-hand-thumbs-up-fill"></i></button>
+                            <button type="submit", class="btn btn-primary", name="post_id", value="{{ post.pk }}"><i class="bi bi-hand-thumbs-up-fill"></i></button>
                         </form>
                         <!--<p style="text-align:center">{{ post.total_likes }}</p>-->
                         </div>
@@ -146,7 +146,7 @@
 
 <p>The author may currently be updating the post or it may have been archived.</p>
 
-<p>If you require access please check again at a later date or contact the author <a href = "{% url 'profile' username=post.author %}">here</a>.</p>
+<p>If you require access please check again at a later date or contact the author <a href="{% url 'profile' username=post.author %}">here</a>.</p>
 
  {% endif %}
 
