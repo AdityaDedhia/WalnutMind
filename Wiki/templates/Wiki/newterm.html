@@ -5,15 +5,49 @@
 {% endblock title %}
 
 {% block body %}
-<form method="post">
-    {% csrf_token %}
-    {{ form.media }}
 
-    {{ form.term }}
-    {{ form.definition }}
+<div class="card text-center">
+    <div class="card-header">
+      <ul class="nav nav-tabs card-header-tabs">
+            <!--DEFAULT FOR NORMAL USERS-->
+            <li class="nav-item">
+              <a class="nav-link active" href="">Define Term</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'newlist' %}">Create Term List</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" href="">Add Resource</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" href="">Create Resource Collection</a>
+            </li>
+      </ul>
+    </div>
+    <div class="card-body form-group">
 
-    <button class="btn btn-primary btn-lg">Publish</button>
+      <form method="post">
+          {% csrf_token %}
+          {{ form.media }}
 
-</form>
+          <!--ROW 1-->
+          <div class="row">
+            <div class="col-md-2" id="title">
+              <label style="float: left;" for="title">Term</label>
+              {{ form.term }}
+            </div>
+            <div class="col-md-10" id = "definition">
+              <label style = "float: left;" for="definition">Definition</label>
+              {{ form.definition }}
+            </div>
+          </div>
+  
+        <br/>
+
+        <button type="submit" style="float: right;" class="btn btn-primary btn-lg">SUBMIT</button>
+        </form>
+
+        </div>
+    </div>
 
 {% endblock body %}

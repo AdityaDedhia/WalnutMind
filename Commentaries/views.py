@@ -15,8 +15,6 @@ from taggit.models import Tag
 from .serializers import CommentarySerializer
 from rest_framework.generics import ListAPIView
 
-
-
 class booksView(ListView):
     model = Post
     template_name = 'Commentaries/index.html'

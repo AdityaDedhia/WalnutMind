@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+
+{% block title %}
+<title>New List | WM</title>
+{% endblock title %}
+
+{% block body %}
+
+<div class="card text-center">
+    <div class="card-header">
+      <ul class="nav nav-tabs card-header-tabs">
+            <!--DEFAULT FOR NORMAL USERS-->
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'newterm' %}">Define Term</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="">Create Term List</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" href="">Add Resource</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" href="">Create Resource Collection</a>
+            </li>
+      </ul>
+    </div>
+    <div class="card-body form-group">
+
+      <form  method="post">
+          {% csrf_token %}
+          {{ form.media }}
+
+          <div class="row">
+
+            <div class="col-md-6">
+
+            <div id="title">
+                <label style="float: left;" for="title">Title</label>
+                {{ form.title }}
+            </div>
+
+            <div id="description">
+              <label style="float: left;" for="description">Description (Optional)</label>
+              {{ form.description }}
+            </div>
+
+          </div>
+
+          <div class="col-md-6" id = "terms">
+            <label style = "float: left;" for="terms">Select Terms</label>
+            {{ form.terms }}
+        </div>
+
+
+        </div>
+
+        <br/>
+
+        <button type="submit" style="float: right;" class="btn btn-primary btn-lg">SUBMIT</button>
+        </form>
+
+        </div>
+    </div>
+
+{% endblock body %}

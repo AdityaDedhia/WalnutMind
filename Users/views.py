@@ -33,7 +33,7 @@ class EmailThread(threading.Thread):
 
 def send_activation_email(user, request):
     current_site = get_current_site(request)
-    email_subject = 'WalnutMind Account Registration'
+    email_subject = 'Walnut Mind Account Registration'
     email_body = render_to_string('Users/activation.html', {
         'user': user,
         'domain': current_site,

@@ -15,14 +15,52 @@
 
 <h1 style="color:gray">Walnut <i>Define</i></h1>
 <p>Lists Count: {{ listsCount }}</p>
+<p style="color:gray">Terms displayed with<i style="color:green" class="bi bi-check2-circle"></i> are verified by WM authors. We cannot guarantee the correctness of terms not displaying this symbol and should be used with your own judgmnent.</p>
 
-<ul>
-    {% for term in terms %}
-    <li>
-    <a href = "define-{{ term.slug }}">{{ term.term }}</a>
-    </li>
+<div class="row">
+
+    <div class="col-md-3" style="height:500px;border:1px solid #ccc; border-radius: 10px; overflow:auto;">
+      <br/>
+
+      <ul>
+        {% for term in terms %}
+        <li>
+        <a href = "define-{{ term.slug }}">{{ term.term }}</a>
+        {% if term.verified %}
+        <i style="color:green" class="bi bi-check2-circle"></i>
+        {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+
+    </div>
+
+
+
+  <div class="col-md-9" style="height:500px;overflow:auto">
+    <br/>
+  <ul>
+    <div class="list-group">
+        {% for list in lists %}
+
+    <a href="{% url 'listview' pk_slug=list.slug %}" class="list-group-item list-group-item-action">
+      <b>{{ list.title }} | {{ list.creator }}</b>
+      <br/>
+      {% if list.description %}
+      Description: {{ list.description }}
+      {% endif %}
+    </a>
     {% endfor %}
-</ul>
+  </div>
+  </ul>
+  </div>
 
+</div>
+
+
+
+
+</div>
+</div>
 </div>
 {% endblock body %}
