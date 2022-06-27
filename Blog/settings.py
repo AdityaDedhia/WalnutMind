@@ -6,8 +6,8 @@ from pathlib import Path
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 #PRODUCTION SETTINGS ---------------------------------------------------
-DEBUG = True
-SECURE_SSL_REDIRECT = False #Redirect all non-HTTPS requests to HTTPS
+DEBUG = False
+SECURE_SSL_REDIRECT = True #Redirect all non-HTTPS requests to HTTPS
 
 CSRF_COOKIE_SECURE = True #Prevent CSRF cookie from being sent over HTTP
 SESSION_COOKIE_SECURE = True #Prevent session cookie from being sent over HTTP
