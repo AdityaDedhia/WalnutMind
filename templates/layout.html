@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-  </meta charset="utf-8">
-  </meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  </meta name="author" content="Aditya Dedhia">
-  </meta name="description" content="WalnutMind is an academic content publishing platform">
-  </meta name="keywords" content="Economics, Management, Productivity, Philosophy">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1, user-scalable=no"/>
+  <meta name="description" content="Walnut Mind is a curated academic content management and publishing platform."/>
+  <meta name="keywords" content="Academia, Articles, Books, Commentaries, Blogs, Definitions, Resources"/>
 
-  <!--LINKS-->
   {% load static %}
+  <!--LINKS-->
   <link rel="icon" href="{% static 'Articles/logo.png' %}" type="image/x-icon"/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700"/>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora"/>
@@ -48,6 +47,15 @@
       @import url('https://fonts.googleapis.com/css2?family=Nuosu+SIL&display=swap');
       @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Nuosu+SIL&display=swap');
 
+      html,body
+      {
+          width: 100%;
+          height: 100%;
+          margin: 0px;
+          padding: 0px;
+          overflow-x: hidden; 
+      }
+
       .btn-cool-blues {
         background: #2193b0;  /* fallback for old browsers */
         background: -webkit-linear-gradient(to right, #6dd5ed, #2193b0);  /* Chrome 10-25, Safari 5.1-6 */
@@ -63,6 +71,7 @@
         color: #fff;
         border: 3px solid #eee;
         }
+
 
       </style>
 
@@ -123,21 +132,25 @@
                     ::-webkit-input-placeholder {
                       font-style: italic;
                       font-weight: bold;
+                      font-size: 14px;
                    }
                    :-moz-placeholder {
                       font-style: italic;  
                       font-weight: bold;
+                      font-size: 14px;
 
                    }
                    ::-moz-placeholder {
                       font-style: italic;  
                       font-weight: bold;
+                      font-size: 14px;
 
                    }
                    :-ms-input-placeholder {  
                       font-style: italic; 
                       font-weight: bold;
-
+                      font-size: 14px;
+                      
                    }
                   </style>
 
