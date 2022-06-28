@@ -1,7 +1,14 @@
 {% extends "layout.html" %}
 
 {% block title %}
-<title> {{ user.username }}'s Profile | WM</title>
+<title> 
+  {% if is_public == True %}
+  {{ user.first_name }} {{ user.last_name }}'s Profile | WM
+  {% else %}
+  {{ user.username }}'s Profile | WM
+  {% endif %}
+
+</title>
 {% endblock title %}
 
 {% block body %}
@@ -73,9 +80,14 @@
             </div>
             <!--PROFILE META-->
             <div class="ms-3" style="margin-top: 100px;">
+              {% if is_public == True %}
+              <h5>{{ user.first_name }} {{ user.last_name }}</h5>
+              {% else %}
               <h5>{{ user.username }}</h5>
-              Location: {{ user.profile.location.name }} <img src="{{ user.profile.location.flag }}"><br/>
-              Interests: {{ user.profile.interests }}
+              {% endif %}
+
+              <b>Location:</b> {{ user.profile.location.name }} <img src="{{ user.profile.location.flag }}"><br/>
+              <b>Interests:</b> {{ user.profile.interests }}
             </div>
           </div>
 
