@@ -56,7 +56,7 @@
 
                         </span> <a href="{% url 'profile' username=post.author %}">{{ post.author.first_name }} {{ post.author.last_name }}</a>
                         <span class="date">
-                         Published {{ post.dateCreated }} | <b>{{ readEST }} minute read</b>.
+                         Published {{ post.dateCreated }}| <b>{{ readEST }} minute read</b>.
                         </span></p>
                         {% for tag in post.tags.all %}
                         <span class="badge rounded-pill text-bg-warning">#{{ tag }}</span>
