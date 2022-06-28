@@ -64,8 +64,10 @@
                  </div>
                  <div class="text">
                     {{ post.content|safe }}
+                    {% if post.resources %}
                     <hr style="border-top: 4px solid rgb(0, 0, 0)"/>
                     {{ post.resources|safe }}
+                    {% endif %}
                  </div>
 
                  <br/>
