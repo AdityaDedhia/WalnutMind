@@ -43,9 +43,9 @@ class Post(models.Model):
         super().save(*args, **kwargs)
 
 class Comment(models.Model):
-    post = models.ForeignKey(Post, related_name = "comments", on_delete= models.CASCADE)
+    post = models.ForeignKey(Post, related_name = "articlecomments", on_delete= models.CASCADE)
     content = models.CharField(max_length=255)
-    author = models.ForeignKey(User, on_delete= models.CASCADE)
+    author = models.ForeignKey(User, on_delete= models.CASCADE, related_name="articlecommentauthor")
     dateCreated = models.DateTimeField(auto_now_add = True)
     dateUpdated = models.DateTimeField(auto_now = True)
 
