@@ -4,6 +4,18 @@
 <title>Publish | WM</title>
 {% endblock title %}
 {% block body %}
+<ol class="breadcrumb" style = "background-color:white">
+  <li class="breadcrumb-item">
+    <a href="{% url 'index' %}">Home</a>
+  </li>
+  <li class="breadcrumb-item">
+    <a href="{% url 'profile' username=request.user %}">Profile</a>
+  </li>
+  <li class="breadcrumb-item">
+    <a href="/users/{{ request.user }}/#publicationsmanager">Publications Manager</a>
+  </li>
+  <li class="breadcrumb-item active" aria-current="page">Content Publisher</li>
+</ol>
 
 <div class="card text-center">
     <div class="card-header">
