@@ -29,6 +29,8 @@ class Post(models.Model):
     dateCreated = models.DateTimeField(auto_now_add = True)
     dateUpdated = models.DateTimeField(auto_now = True)
     public = models.BooleanField(default = False)
+    likes = models.ManyToManyField(User, related_name="commentary_likes", blank = True)
+    saves = models.ManyToManyField(User, related_name="commentary_saves", blank = True)
 
     #RATINGS
     One = 'Not recommended'
@@ -47,6 +49,12 @@ class Post(models.Model):
 
     def __str__(self):
         return str(self.title)
+
+    def total_likes(self):
+        return self.likes.count()
+
+    def total_saves(self):
+        return self.saves.count()
     
     def get_absolute_url(self):
         return reverse('bookview', kwargs={'pk_slug': str(self.slug)})
@@ -54,3 +62,13 @@ class Post(models.Model):
     def save(self, *args, **kwargs):
         image_resize(self.cover, 625, 1000)
         super().save(*args, **kwargs)
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, related_name = "commentarycomments", on_delete= models.CASCADE)
+    content = models.CharField(max_length=255)
+    author = models.ForeignKey(User, on_delete= models.CASCADE, related_name="commentarycommentauthor")
+    dateCreated = models.DateTimeField(auto_now_add = True)
+    dateUpdated = models.DateTimeField(auto_now = True)
+
+    def __str__(self):
+        return str(self.author)

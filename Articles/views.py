@@ -32,11 +32,13 @@ def indexView(request):
     if request.user.is_authenticated: #Send custom feed to logged in users:
         user = request.user
         saved_articles = user.article_saves.all()
+        saved_commentaries = user.commentary_saves.all()
     else:
         saved_articles = None
+        saved_commentaries = None
 
     return render(request, 'Articles/index.html', {
-        'recent': recent, 'tags': tags, 'saved_articles': saved_articles
+        'recent': recent, 'tags': tags, 'saved_articles': saved_articles, 'saved_commentaries': saved_commentaries
     })
 
 def aboutView(request):

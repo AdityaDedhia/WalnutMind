@@ -1,8 +1,8 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime
 from django.views.generic import ListView,DetailView, UpdateView
-from .models import Post
+from .models import Post, Comment
 from django.http import HttpResponseRedirect, JsonResponse, Http404
 from django.contrib import messages
 from .forms import PostForm
@@ -11,7 +11,7 @@ from django.contrib.auth import logout
 from isbnlib import is_isbn13
 from django.urls import reverse
 import readtime
-
+from datetime import datetime, date
 from taggit.models import Tag
 from .serializers import CommentarySerializer
 from rest_framework.generics import ListAPIView
@@ -95,6 +95,87 @@ class bookView(DetailView):
 def post_json(request):
     data = list(Post.objects.values())
     return JsonResponse(data, safe = False)
+
+#---------------------------------------------------------------------------------
+@login_required(login_url='/users/login')
+def commentarysave(request, pk):
+    post = get_object_or_404(Post, id = pk)
+    if request.user in post.saves.all():
+        post.saves.remove(request.user)
+        messages.success(request, ("Commentary removed from your list."))
+        return HttpResponseRedirect(reverse('bookview', args =[str(post.slug)]))
+
+    post.saves.add(request.user)
+    link = f"https://www.walnutmind.org/books/{post.slug}"
+    description = f"Saved commentary: {post.title}"
+    logitem = Log(
+        user = request.user,
+        description =description,
+        link = link,
+        datelog = datetime.now()
+    )
+    logitem.save()
+    messages.success(request, ("Commentary saved to your list."))
+    return HttpResponseRedirect(reverse('bookview', args =[str(post.slug)]))
+
+@login_required(login_url='/users/login')
+def commentaryupvote(request, pk):
+    post = get_object_or_404(Post, id = pk)
+    if request.user in post.likes.all():
+        post.likes.remove(request.user)
+        messages.success(request, ("Commentary unliked."))
+        return HttpResponseRedirect(reverse('bookview', args =[str(post.slug)]))
+    post.likes.add(request.user)
+    link = f"https://www.walnutmind.org/books/{post.slug}"
+    description = f"Liked commentary: {post.title}"
+    logitem = Log(
+        user = request.user,
+        description = description,
+        link = link,
+        datelog = datetime.now()
+    )
+    logitem.save()
+    messages.success(request, ("Commentary liked, thank you for your feedback."))
+    return HttpResponseRedirect(reverse('bookview', args =[str(post.slug)]))
+
+
+#---------------------------------------------------------------------------------
+
+
+@login_required(login_url='/users/login')
+def newCommentView(request, pk):
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        post = Post.objects.get(pk=pk)
+
+        comment = Comment.objects.create(
+            post = post,
+            content = content,
+            author = request.user,
+            dateCreated = date.today(),
+            dateUpdated = date.today(),
+        )
+        comment.save()
+        title = post.title
+        post_slug = post.slug
+        link = f"https://www.walnutmind.org/books/{post_slug}"
+        description = f"Posted comment on '{title}'"
+        logitem = Log(
+            user = request.user,
+            description =description,
+            link = link,
+            datelog = datetime.now()
+        )
+        logitem.save()
+        return HttpResponseRedirect(reverse('bookview', args =[str(post.slug)]))
+    return render(request, "Commentaries/book.html")
+
+
+
+
+
+
+
 
 @login_required(login_url='/users/login')
 def newPostView(request):

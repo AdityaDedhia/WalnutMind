@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -14,22 +13,21 @@
 </head>
 
 
-<body style = "background-color:black">
+<body>
 
-<div style = "margin:0; position: absolute;top: 50%;left: 50%;transform: translate(0%, -50%);">
-
-
-    <h1 class="display-1" style = "color:white">HTTP 404</h1>
-    <h2 class="display-2" style = "color:white">WALNUT NOT FOUND</h2>
-    <h5 style = "color:white">Unfortunately, we have lost what you were looking formor it has been moved to a different location.</h5>
+<div style="margin: 0; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+    <h1 class="display-1" style = "color:black">HTTP 404</h1>
+    <h2 class="display-2" style = "color:black"> <img style="width: 90px; margin-bottom:15px" src ="{% static 'Articles/logo.png' %}">
+        NOT FOUND</h2>
+        <hr/>
+    <h5 style = "color:black">We apologise for the inconvenience but it seems that we have lost what you were looking for or that it has been moved to a different location. Try entering your search again.</h5>
 
     <div class="d-grid mx-auto">
-        <a href = "/" class="btn btn-primary btn-lg" type="button">RETURN TO BASE</a>
+        <a href = "{% url 'wikiindex' %}" class="btn btn-primary btn-lg" type="button">SEARCH QUERY</a>
+        <a href = "/" class="btn btn-secondary btn-lg" type="button">RETURN HOME</a>
+
     </div>
-
 </div>
-
-<img style = "width: 200px; position: absolute;top: 50%;left: 15%;transform: translate(0%, -50%);" src ="{% static 'Articles/logo.png' %}">
 
 
 </body>
