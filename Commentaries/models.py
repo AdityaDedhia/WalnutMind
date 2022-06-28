@@ -23,7 +23,7 @@ class Post(models.Model):
     abstract = models.CharField(max_length=128)
     quotes = models.TextField(blank = False)
     takeaways = models.TextField(max_length = 512, blank = False)
-    summary = models.TextField(max_length = 512, blank = False)
+    summary = models.TextField(max_length = 1024, blank = False)
     content = RichTextUploadingField(blank = False)
     resources = RichTextField(blank = False)
     dateCreated = models.DateTimeField(auto_now_add = True)
