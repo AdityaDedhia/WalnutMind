@@ -176,7 +176,7 @@
 
 </div>
 <ul>
-{% for comment in post.comments.all %}
+{% for comment in post.commentarycomments.all %}
 <li>
 <strong>{{ comment.author }} |  {{ comment.dateCreated }}</strong><br/>
 {{ comment.content }}<br/>

@@ -7,7 +7,7 @@ from pathlib import Path
 
 #PRODUCTION SETTINGS ---------------------------------------------------
 DEBUG = False
-SECURE_SSL_REDIRECT = False #Redirect all non-HTTPS requests to HTTPS
+SECURE_SSL_REDIRECT = True #Redirect all non-HTTPS requests to HTTPS
 
 CSRF_COOKIE_SECURE = True #Prevent CSRF cookie from being sent over HTTP
 SESSION_COOKIE_SECURE = True #Prevent session cookie from being sent over HTTP
