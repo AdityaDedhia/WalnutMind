@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-     <title>{{ post.title }} | WM</title>
+     <title>{{ post.title }} Commentary | WM</title>
 {% endblock title %}
 
 {% block body %}
@@ -11,7 +11,7 @@
 <ol class="breadcrumb" style="background-color:white">
     <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
     <li class="breadcrumb-item"><a href="{% url 'bookindex' %}">Books</a></li>
-    <li class="breadcrumb-item active" aria-current="page">{{ post.title }}</li>
+    <li class="breadcrumb-item active" aria-current="page">{{ post.title }} Commentary</li>
 </ol>
 
 <div id = "spinner-box" class = "text-center mt-3">
@@ -47,7 +47,11 @@
         <p>Author: {{ post.author }}</p>
         <p>Year Published: {{ post.year }}</p>
         <p>Page Count: {{ post.pages }}</p>
-        <p>Genre:</p>
+        <p>Genre:
+          {% for tag in post.tags.all %}
+          <span class="badge rounded-pill text-bg-warning">#{{ tag }}</span>
+          {% endfor %}
+        </p>
         <p>Rating: {{ post.rating }}</p>
         </div>
     </div>

@@ -76,7 +76,7 @@
 
 <div style="text-align: center; position: relative; color: black; z-index:-1">
   <img src="{% static "Articles/home.jpg" %}" class="img-fluid" alt="Responsive image" style = "transform:translate(0,-5%)">
-      <strong class="title" style="font-size: 2.2vw; opacity: 0.85; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -40%);">Liberate Your Learning Shell<br></strong><h4 style = "font-size: 1.4vw; opacity: 0.85; position: absolute; top: 50%; left: 50%; transform: translate(-50%, 110%);">A curated content-publishing platform.</h4>
+      <strong class="title" style="font-size: 2.2vw; opacity: 0.85; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -40%);">Liberate Your Learning Shell<br></strong><h4 style="font-size: 1.4vw; opacity: 0.85; position: absolute; top: 50%; left: 50%; transform: translate(-50%, 110%);">A curated content-publishing platform.</h4>
 </div>
 
 <section class="position-relative pt-0">
@@ -84,22 +84,22 @@
     <div class="row">
 
       <div class="col-6">
-        <div class="card btn mb-4">
-          <h3>WM Authors</h3>
+        <div class="card btn mb-2" style="color:#424242; background-color:#efd8fb">
+          <h3 style="font-size: 1.6vw;">WM Authors</h3>
 
       <div class="row">
 
       <!-- Card item START -->
       <div class="col-6">
-        <a class="card btn btn-info mb-4" href="{% url 'articleindex' %}">
-          <h5>Articles</h5>
+        <a class="card btn btn-info mb-2" href="{% url 'articleindex' %}">
+          <h6 style="font-size: 1.2vw;">Articles</h6>
         </a>
       </div>
       <!--CARD ITEM END-->
         <!-- Card item START -->
         <div class="col-6">
-          <a class="card btn btn-info mb-4" href="{% url 'bookindex' %}">
-            <h5>Books</h5>
+          <a class="card btn btn-info mb-2" href="{% url 'bookindex' %}">
+            <h6 style="font-size: 1.2vw;">Books</h6>
           </a>
         </div>
         <!--CARD ITEM END-->
@@ -110,24 +110,24 @@
 
         <!-- Card item START -->
         <div class="col-6">
-          <div class="card btn btn-sm mb-4">
-            <h3>WM Community</h3>
+          <div class="card btn btn-sm mb-2" style="color:#424242; background-color:#b7f9c2">
+            <h3 style="font-size: 1.6vw;">WM Community</h3>
           <div class="row">
 
-            <div class="col-4">
-              <a class="card btn btn-info mb-4" href="{% url 'blogindex' %}">
-                <h5>Blogs</h5>
+            <div class="col-sm-4 col-md-4">
+              <a class="card btn btn-info mb-2" href="{% url 'blogindex' %}">
+                <h6 style="font-size: 1.2vw;">Blogs</h6>
               </a>
             </div>
 
-          <div class="col-4">
-            <a class="card btn btn-info mb-4" href="{% url 'listsview' %}">
-              <h5>Lists</h5>
+          <div class="col-sm-4 col-md-4">
+            <a class="card btn btn-info mb-2" href="{% url 'listsview' %}">
+              <h6 style="font-size: 1.2vw;">Lists</h6>
             </a>
           </div>
-          <div class="col-4">
-            <a class="card btn btn-info mb-4" href="{% url 'collectionsview' %}">
-              <h5>Collections</h5>
+          <div class="col-sm-4 col-md-4">
+            <a class="card btn btn-info mb-2" href="{% url 'collectionsview' %}">
+              <h6 style="font-size: 1.2vw;">Collections</h6>
             </a>
           </div>
         </div>
