@@ -2,7 +2,9 @@
   color: #56585b;
   background-color: #fff;
   font-family: 'Lora', serif;
-  font-size: 14px;
+  font-size: 18px;
+  line-height: 1.6;
+
 }
 
 .article-clean .intro {
@@ -10,7 +12,7 @@
   margin: 0 auto 30px;
 }
 
-.article-clean .intro h1 {
+.article-clean .text h1 {
   font-size: 32px;
   margin-bottom: 15px;
   padding-top: 20px;
