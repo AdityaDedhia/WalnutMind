@@ -12,6 +12,8 @@ from taggit.models import Tag
 from .serializers import ArticleSerializer
 from rest_framework.generics import ListAPIView
 from django.contrib.auth import logout
+import readtime
+
 
 def indexView(request):
     #GET USER LOCATION and RUN through Blacklisted IPs.
@@ -88,6 +90,12 @@ class articleView(DetailView):
     slug_url_kwarg = 'pk_slug'
     template_name = 'Articles/article.html'
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(articleView, self).get_context_data(*args, **kwargs)
+        content = self.object.content
+        readEST = readtime.of_text(content).minutes + 1 #Get reading time of text.
+        context['readEST'] = readEST
+        return context
 
     def get_object(self, queryset = None):
         if queryset is None:

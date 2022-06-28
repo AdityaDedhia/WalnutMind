@@ -10,6 +10,7 @@ from Users.models import Blacklist, Log
 from django.contrib.auth import logout
 from isbnlib import is_isbn13
 from django.urls import reverse
+import readtime
 
 from taggit.models import Tag
 from .serializers import CommentarySerializer
@@ -46,6 +47,12 @@ class bookView(DetailView):
     model = Post
     slug_url_kwarg = 'pk_slug'
     template_name = 'Commentaries/book.html'
+    def get_context_data(self, *args, **kwargs):
+        context = super(bookView, self).get_context_data(*args, **kwargs)
+        content = self.object.content
+        readEST = readtime.of_text(content).minutes + 4 #Get reading time of text.
+        context['readEST'] = readEST
+        return context
 
     def get_object(self, queryset = None):
         if queryset is None:

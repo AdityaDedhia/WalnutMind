@@ -35,14 +35,6 @@
     <figcaption>Source: <a href = "{{ post.coverURL }}" target="_blank" rel="noopener noreferrer">{{ post.coverSrc }}</a></figcaption>
 </figure> 
 
-<style>
-    figcaption {
-        color: grey;
-        font-style: italic;
-        padding: 2px;
-        text-align: center;
-      }
-</style>  
 
 <section class="article-clean">
      <div class="container">
@@ -64,7 +56,7 @@
 
                         </span> <a href="{% url 'profile' username=post.author %}">{{ post.author.first_name }} {{ post.author.last_name }}</a>
                         <span class="date">
-                         Published {{ post.dateCreated }}
+                         Published {{ post.dateCreated }} | <b>{{ readEST }} minute read</b>.
                         </span></p>
                         {% for tag in post.tags.all %}
                         <span class="badge rounded-pill text-bg-warning">#{{ tag }}</span>
