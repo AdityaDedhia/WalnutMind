@@ -25,7 +25,7 @@ class Profile(models.Model):
 
     def save(self, *args, **kwargs):
         if self.banner:
-            image_resize(self.banner, 1200, 600)
+            image_resize(self.banner, 2000, 1400)
         if self.avatar:
             image_resize(self.avatar, 200, 200)
         super().save(*args, **kwargs)
