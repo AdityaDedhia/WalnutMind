@@ -40,7 +40,7 @@ class Blacklist(models.Model):
 
 class Highlight(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    content = models.CharField(max_length=128, blank = False)
+    content = models.CharField(max_length=255, blank = False)
     sourcename = models.CharField(max_length=255, blank = False)
     sourcelink = models.URLField()
     tags = TaggableManager(related_name="highlighttags")
