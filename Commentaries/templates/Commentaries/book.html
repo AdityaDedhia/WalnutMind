@@ -179,7 +179,11 @@
 {% for comment in post.commentarycomments.all %}
 <li>
 <strong>{{ comment.author }} |  {{ comment.dateCreated }}</strong><br/>
-{{ comment.content }}<br/>
+{{ comment.content }}
+{% if comment.author == request.user %}
+<a href="{% url 'deletecommentarycomment' pk=post.pk id=comment.pk %}" class="btn btn-sm btn-danger">Delete</a>
+{% endif %}
+<br/>
 </li>
 {% endfor %}
 </ul>

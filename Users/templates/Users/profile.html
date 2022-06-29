@@ -176,14 +176,25 @@
 
             <!--MAIN PANEL-->
             <div class="col-lg-9 col-sm-8" style="padding: 30px">  
+
+              {% if user.profile.meta %}
+              <h3 class="display-6">📄 Meta: </h3>
+              <hr/>
+              {{ user.profile.meta|safe }}
+              {% endif %}
+
               <h3 class="display-6">✍️ Blog:</h3>
               <hr/>
+              <ul>
               {% for diary in diaries %}
+              <li>
               {{ diary.dateCreated|date:"jS \o\f F" }} - <a href="{% url 'blogview' username=diary.author pk_slug=diary.slug %}">{{ diary.title }}</a><br/>
               <div class="scroll-left">
               <p>{{ diary.content|safe|truncatewords:30 }}</p><br/>
               </div>
+            </li>
               {% endfor %}
+            </ul>
 
               <h3 class="display-6">🚀 Highlights:</h3>
               <hr/>
@@ -266,8 +277,8 @@
                         <a style="margin-left:5px" href="{% url 'newpost' %}" role="button"><i class="bi bi-plus-circle-fill"></i>
                         </a>
                        </h5>
-                       {% for article in articles %}
                        <ul>
+                        {% for article in articles %}
                          <li>
                            <a href = "{% url 'articleview' pk_slug=article.slug %}">
                            {{ article.title }} 
@@ -284,17 +295,17 @@
                            <hr>
        
                          </li>
+                         {% endfor %}
                        </ul>
        
-                       {% endfor %}
                      </div>
                      <div class="col-4">
                        <h5>Books
                         <a style="margin-left:5px" href="{% url 'newbookpost' %}" role="button"><i class="bi bi-plus-circle-fill"></i>
                         </a>
                        </h5>
-                       {% for commentary in commentaries %}
                        <ul>
+                       {% for commentary in commentaries %}
                          <li>
                            <a href = "{% url 'bookview' pk_slug=commentary.slug %}">
                            {{ commentary.title }} Commentary
@@ -311,9 +322,9 @@
                            <hr>
        
                          </li>
+                         {% endfor %}
                        </ul>
        
-                       {% endfor %}
        
                      </div>
                      <div class="col-4">
@@ -321,8 +332,8 @@
                         <a style="margin-left:5px" href="{% url 'newblogpost' %}" role="button"><i class="bi bi-plus-circle-fill"></i>
                         </a>
                        </h5>
-                       {% for diary in diaries %}
                        <ul>
+                       {% for diary in diaries %}
                          <li>
                            <a href = "{% url 'blogview' username=diary.author pk_slug=diary.slug %}">
                            {{ diary.title }} 
@@ -337,10 +348,9 @@
                            <a href="{% url 'updateblog' username=diary.author pk=diary.pk %}" role="button">Edit</a>
                            <hr/>
        
-                         </li>
-                       </ul>
-       
+                         </li>       
                        {% endfor %}
+                      </ul>
                      </div>
        
                    </div>

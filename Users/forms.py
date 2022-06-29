@@ -34,7 +34,7 @@ class UpdateUserForm(forms.ModelForm):
 class UpdateProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['avatar','banner', 'interests', 'bio', 'blog','is_public']
+        fields = ['avatar','banner', 'interests', 'bio', 'meta', 'blog','is_public']
 
     def __init__(self, *args, **kwargs):
         super(UpdateProfileForm, self).__init__(*args, **kwargs)
@@ -46,6 +46,8 @@ class UpdateProfileForm(forms.ModelForm):
         self.fields['interests'].help_text = "Maximum characters: 75"
         self.fields['bio'].widget.attrs['class'] = 'form-control'
         self.fields['bio'].help_text = "Maximum characters: 300"
+        self.fields['meta'].widget.attrs['class'] = 'form-control'
+        self.fields['meta'].help_text = "A place to add additional context to your profile. You may also embed widgets such as from Goodreads, Twitter, or other social media accounts."
         self.fields['blog'].widget.attrs['class'] = 'form-control'
         self.fields['blog'].help_text = "An optional field that may be helpful for viewers to understand what your blog is about."
         self.fields['is_public'].widget.attrs['class'] = 'form-check-input'

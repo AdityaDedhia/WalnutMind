@@ -126,7 +126,11 @@
                 {% for comment in post.articlecomments.all %}
                 <li>
                 <strong>{{ comment.author }} |  {{ comment.dateCreated }}</strong><br/>
-                {{ comment.content }}<br/>
+                {{ comment.content }}
+                {% if comment.author == request.user %}
+                <a href="{% url 'deletecomment' pk=post.pk id=comment.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                {% endif %}
+                <br/>
                 </li>
                 {% endfor %}
             </ul>

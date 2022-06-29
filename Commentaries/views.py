@@ -170,10 +170,17 @@ def newCommentView(request, pk):
         return HttpResponseRedirect(reverse('bookview', args =[str(post.slug)]))
     return render(request, "Commentaries/book.html")
 
-
-
-
-
+@login_required(login_url='/users/login')
+def deleteCommentView(request, pk, id):
+    comment = Comment.objects.get(pk=id)
+    post = Post.objects.get(pk=pk)
+    if request.user == comment.author and comment.post == post: #IF AND ONLY IF user is the author of the comment, and the post is the same as the comment's post, then delete the comment.
+        comment.delete()
+        messages.success(request, ("Comment succesfully deleted."))
+        return HttpResponseRedirect(reverse('bookview', args =[str(post.slug)]))
+    else:
+        messages.success(request, ("An unknown error occured attempting to delete your comment."))
+        return HttpResponseRedirect(reverse('bookindex'))
 
 
 
@@ -209,6 +216,7 @@ def newPostView(request):
             })
 
 class updatePostView(UpdateView):
+    login_required = True
     model = Post
     form_class = PostForm
     template_name = 'Commentaries/updatepost.html'

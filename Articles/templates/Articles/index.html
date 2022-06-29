@@ -325,7 +325,7 @@
 
 {% else %}
 <h3 class="display-6">Saved for Later: </h3>
-{% if not saved_articles and not saved_commentaries %}
+{% if not saved_articles and not saved_commentaries and not saved_diaries %}
 <p style="color:gray">You have not saved anything yet. Start saving by clicking the star button below any publication.</p>
 {% endif %}
 
@@ -350,6 +350,18 @@
   </ul>
 </div>
 {% endif %}
+
+{% if saved_diaries %}
+<h5>Blog Posts</h5><hr/>
+<div>
+  <ul>
+{% for post in saved_diaries %}
+<li><a href="{% url 'blogview' username=post.author pk_slug=post.slug %}">{{ post.title }}</a></li>
+{% endfor %}
+  </ul>
+</div>
+{% endif %}
+
 
 
 {% endif %}

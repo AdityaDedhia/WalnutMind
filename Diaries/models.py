@@ -6,7 +6,6 @@ from taggit.managers import TaggableManager
 from Blog.utils import image_resize
 from django.urls import reverse
 
-
 class Post(models.Model):
     title = models.CharField(max_length=128, blank = False) #Blank=false for required fields
     slug = AutoSlugField(populate_from='title', unique = False, null = True, default = None)
@@ -36,3 +35,17 @@ class Post(models.Model):
     def save(self, *args, **kwargs):
         image_resize(self.cover, 1200, 900)
         super().save(*args, **kwargs)
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, related_name = "diarycomments", on_delete= models.CASCADE)
+    content = models.CharField(max_length=255)
+    author = models.ForeignKey(User, on_delete= models.CASCADE, related_name="diarycommentauthor")
+    dateCreated = models.DateTimeField(auto_now_add = True)
+    dateUpdated = models.DateTimeField(auto_now = True)
+
+    class Meta:
+        ordering = ['-dateCreated']
+
+    def __str__(self):
+        return str(self.author)
