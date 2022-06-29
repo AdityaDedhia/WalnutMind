@@ -84,7 +84,7 @@
     <div class="row">
 
       <div class="col-6">
-        <div class="card btn mb-2" style="color:#424242; background-color:#efd8fb">
+        <div class="card btn mb-2" style="color:#424242; background-color:#efd8fb;">
           <h3 style="font-size: 1.6vw;">WM Authors</h3>
 
       <div class="row">
@@ -251,16 +251,72 @@
         <br>
       </div>
       <div class="col-lg-8 ps-5 pe-0">
-        <h2 class="display-6">WM For Readers and Hobbyists:</h2>
-        We cover a broad range of topics across a broad range of publication formats that suit your interests.
-        <br/><br/>
 
-        <h2 class="display-6">WM for Writers and Bloggers:</h2>
-        We offer a suite of powerful content publishing tools to authors with complete rich-text editing functionality, plugins, previewing, and forms that cater towards the publication of academic content.
-        <br/><br/>
-        <h2 class="display-6">WM for Students and Researchers:</h2>
-        In addition to our publications, we provide additional tools to find and keep track of resources curated by the WM community that save themselves to a personalised dashboard for additional review.
-        <br/><br/>
+
+        <!--POLYMORPHISM-->
+
+        <style>
+          .polycards {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+          }
+
+          .polycards .card {
+            position: relative;
+            background-color: #fffaf2;
+            padding: 15px;
+            width: 220px;
+            height: 380px;
+            margin: 20px;
+            box-shadow: 20px 20px 50px rgba(0,0,0,0.5);
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-top: 1px solid rgba(255,255,255,0.5);
+            border-left: 1px solid rgba(255,255,255,0.5);
+            filter: blur(1px);
+
+          }
+
+          .polycards .card:hover {
+            filter: blur(0px);
+          }
+
+        </style>
+        <div class="polycards">
+        <div class="card zoom">
+          <div class="content">
+            <h3>Readers and Hobbyists:</h3>
+            <p>Covers a broad range of topics across a broad range of publication formats that suit your interests.</p>
+            <a href="{% url 'articleindex' %}">Read More</a>
+          </div>
+        </div>
+
+        <div class="card zoom">
+          <div class="content">
+            <h3 class="line">Students and Researchers</h3>
+            <p>Personalised and provide additional tools to help find and keep track of resources curated by the WM community.
+            </p>
+            <a href="{% url 'wikiindex' %}">Explore</a>
+          </div>
+        </div>
+  
+        <div class="card zoom">
+          <div class="content">
+            <h3>Writers and Bloggers</h3>
+            <p>A suite of powerful content publishing tools with complete rich-text editing functionality and plugins that cater towards the publication of academic content.</p>
+            <a href="{% url 'registerr' %}">Start Writing</a>
+
+          </div>
+        </div>
+
+      </div>
 
       </div>
     </div>
