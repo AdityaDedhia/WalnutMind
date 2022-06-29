@@ -99,7 +99,7 @@ def searchView(request):
     if request.method == "POST":
         searchedterm = request.POST['searchedterm'] #Get the searched term
         query = SearchQuery(searchedterm) #USED FOR POSTGRES SEARCH INDEX
-        search_headline =  SearchHeadline('content', query, config=None,start_sel = '<mark>',stop_sel = '</mark>',max_words=40, min_words=10, short_word=3,highlight_all=False)
+        search_headline =  SearchHeadline('content', query, config=None,start_sel = '<mark>',stop_sel = '</mark>',max_words=40, min_words=8, short_word=3,highlight_all=False)
         #query database
         if searchedterm and len(searchedterm)>=2:
             #FULLTEXT SEARCH #1: TERMS & LISTS
