@@ -6,11 +6,10 @@
 
 {% block body %}
 {% load static %}
-<div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
 
     <ol class="breadcrumb" style="background-color:white">
         <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'bookindex' %}">Blogs</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'blogindex' %}">Blogs</a></li>
         <li class="breadcrumb-item"><a href="{% url 'profile' username=post.author %}">{{ post.author }}</a></li>
         <li class="breadcrumb-item active" aria-current="page">{{ post.title }}</li>
     </ol>
@@ -22,32 +21,53 @@
         You are currently in DRAFT mode. Only you are able to see this post. <a href="{% url 'updateblog' username=post.author pk=post.pk %}">Edit</a> and turn on the publish live toggle to remove this message.</div>
     </div>
     {% endif %}
-    {% if post.author == request.user %}
-    <div style="position:absolute; left:0">
-    <a class="btn btn-primary" href="{% url 'updateblog' username=post.author pk=post.pk %}">EDIT</a>
-    <div class="modal fade" tabindex="-1" role="dialog" id="modal">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content"></div>
-        </div>
-      </div>
 
-    </div>
-    
-    {% endif %}
+
+  <style>
+    figcaption {
+      color: grey;
+      font-style: italic;
+      padding: 2px;
+      text-align: center;
+      }
+
+      .scrollable{
+        overflow-y: scroll;
+        height: 200px;
+        background: #f8d0e6;
+        padding: 40px;
+      }
+
+  </style>
+
+
 
 {% if post.public == True or post.author == request.user %}
 
-<h1>{{ post.title }}</h1>
-</hr style="border-top: 2px solid rgb(0, 0, 0)">
-<strong>Published on {{ post.dateCreated }} by {{ post.author }}</strong></br>
-<img src=" {{ post.cover.url }}" style="width:100%; height:auto; "/>
-<br/>
-<figcaption>Source: <a href="{{ post.coverURL }}" target="_blank" rel="noopener noreferrer">{{ post.coverSrc }}</a></figcaption>
-<p>{{ post.content|safe }}</p>
+<section>
+	<div class="container position-relative" data-sticky-container>
+		<div class="row">
+			<!-- Main Content START -->
+			<div class="col-lg-8 mb-5">
+        {% for tag in post.tags.all %}
+      <span class="badge rounded-pill text-bg-warning">#{{ tag }}</span>
+      {% endfor %}
+				<span class="ms-2 small">Published {{ post.dateCreated }}
+          {% if post.author == request.user %}
+          <a class="btn btn-primary btn-sm" href="{% url 'updateblog' username=post.author pk=post.pk %}">EDIT</a>
+          {% endif %}
+        </span>
+				<h1 class="display-5">{{ post.title }}</h1>
+        <figure>
+          <img src=" {{ post.cover.url }}" style="width:100%; height:auto; "/>
+          <br/>
+          <figcaption>Source: <a href="{{ post.coverURL }}" target="_blank" rel="noopener noreferrer">{{ post.coverSrc }}</a></figcaption>
+          </figure>
+        {{ post.content|safe }}
 
-<hr/>
- <!--PLUGINS-->
- <h3>Comments</h3>
+          <br/>
+        <!--PLUGINS-->
+ <h3 class="display-6">Comments</h3>
  <hr style="border-top: 2px solid rgb(0, 0, 0)"/>
  
  <div class="row">
@@ -109,6 +129,58 @@
   </ul>
   <br/>
 
+      </div>
+
+      			<!-- Main Content END -->
+			<!-- Right sidebar START -->
+			<div class="col-lg-4">
+				<div data-sticky data-margin-top="80" data-sticky-for="991">
+	      	<!-- About me -->
+					<div class="bg-light rounded p-3 p-md-4">
+            <div class="d-flex mb-3">
+              <!-- Avatar -->
+              <a class="flex-shrink-0" href="#">
+                {% if post.author.profile.avatar %}
+                <img style = "position: relative; top:22px; width: 40px; height: 40px; border-radius: 50%;" src = "{{post.author.profile.avatar.url}}">
+                {% else %}
+                <img style = "position: relative; top:22px; width: 40px; height: 40px; border-radius: 50%;" src = "{% static 'Users/def_avatar.png' %}">
+                {% endif %}
+              </a>
+              <div class="flex-grow-1 ms-3">
+                <span>Hello, I'm </span>
+                <h3 class="mb-0">{{ post.author.first_name }} {{ post.author.last_name }}</h3>
+                <p>
+                  {% if post.author.profile.is_author == True %}
+                  A writer at WM
+                  {% else %}
+                  A blogger at WM
+                  {% endif %}
+                </p>
+              </div>
+            </div>
+            <p>{{ post.author.profile.bio }}</p>
+            <a href="{% url 'profile' username=post.author %}" class="btn btn-danger-soft btn-sm ">View Profile</a>
+          </div>
+					
+          <!-- Most read -->
+          <div>
+            {% if relatedBlogs %}
+            <h5 class="mt-5 mb-3">Other Publications</h5>
+            {% for post in relatedBlogs %}
+            <div class="d-flex position-relative mb-3">
+              <span class="me-3 fa-fw fw-bold fs-3 opacity-5">0</span>
+              <h6><a href="#" class="stretched-link">{{ post.title }}</a></h6>
+            </div>
+            {% endfor %}
+            {% endif %}
+          </div>
+				</div>
+			</div>
+			<!-- Right sidebar END -->
+
+<hr/>
+ 
+
 {% else %}
 <p>We apologoize for the inconvenience but the entry '{{ post.title }}' has been redacted by the author.</p>
 
@@ -117,8 +189,9 @@
 <p>If you require access please check again at a later date or contact the author <a href="/users/{{ post.author }}">here</a>.</p>
 
  {% endif %}
-
-</div>
       
+</div>
+</div>
+</section>
 <br/>
 {% endblock body %}

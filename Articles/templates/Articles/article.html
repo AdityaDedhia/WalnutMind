@@ -31,8 +31,8 @@
 {% if post.public == True or post.author == request.user %}
 <!--COVER-->
 <figure>
-    <img style = "height: 300px; display: block; margin-left: auto; margin-right: auto;" src = "{{ post.cover.url }}">
-    <figcaption>Source: <a href = "{{ post.coverURL }}" target="_blank" rel="noopener noreferrer">{{ post.coverSrc }}</a></figcaption>
+    <img style="height: 300px; display: block; margin-left: auto; margin-right: auto;" src = "{{ post.cover.url }}">
+    <figcaption>Source: <a href="{{ post.coverURL }}" target="_blank" rel="noopener noreferrer">{{ post.coverSrc }}</a></figcaption>
 </figure> 
 
 
@@ -46,7 +46,6 @@
                      <p class="text-center">
                         <span class="by">by 
 
-                            {% load static %}
                             {% if post.author.profile.avatar %}
                             <img style = "position: relative; top:-12px; width: 40px; height: 40px; border-radius: 50%;" src = "{{post.author.profile.avatar.url}}">
                             {% else %}

@@ -22,6 +22,13 @@ class diaryView(DetailView):
     slug_url_kwarg = 'pk_slug'
     template_name = 'Diaries/diary.html'
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(diaryView, self).get_context_data(*args, **kwargs)
+        relatedBlogs = Post.objects.filter(title__search = self.object.tags)
+        
+        context['relatedBlogs'] = relatedBlogs
+        return context
+
     def get_object(self, queryset = None):
         if queryset is None:
             queryset = self.get_queryset()
