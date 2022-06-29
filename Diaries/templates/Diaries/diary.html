@@ -45,7 +45,69 @@
 <figcaption>Source: <a href="{{ post.coverURL }}" target="_blank" rel="noopener noreferrer">{{ post.coverSrc }}</a></figcaption>
 <p>{{ post.content|safe }}</p>
 
-</br>
+<hr/>
+ <!--PLUGINS-->
+ <h3>Comments</h3>
+ <hr style="border-top: 2px solid rgb(0, 0, 0)"/>
+ 
+ <div class="row">
+<!--COMMENT FORM-->
+<div class="col-md-10 col-sm-9" style="padding:5px">
+
+{% if not user.is_authenticated %}
+<strong>Please <a href="{% url 'loginn' %}">login</a> or <a href = "{% url 'registerr' %}">register</a> to join the discussion.</strong>
+
+{% else %}
+    {% if not post.diarycomments.all %}
+    <strong>This place looks empty, start a discussion!</strong>
+    {% endif %}
+   <!--ADD COMMENT FORM-->
+
+   <form class="input-group" action = "{% url 'newdiarycomment' username=post.author pk=post.pk %}" method="post">
+    {% csrf_token %}
+
+    <input style="border-radius:8px 0px 0px 8px; z-index:0" class="form-control" type="text" placeholder="Click or press enter to post a new comment." name="content">
+    <button class="btn btn-primary m-0" style="z-index:0; border-radius:0px 8px 8px 0px;" type="submit">
+      <i class="bi bi-send-fill"></i>
+    </button>
+    <input type="hidden" name="post" value={{ post.pk }}>
+    <br/><br/>
+    </form>
+{% endif %}
+</div>
+<!--END COMMENT FORM-->
+    <!--BUTTONS-->
+    <div class="col-md-2 col-sm-3" style="padding:5px">
+      <div style="float:right;">
+      <form action = {% url 'diary_save' username=post.author pk=post.pk %} method="POST">
+          {% csrf_token %}
+          <button type="submit" class = "btn btn-dark" name="post_id" value="{{ post.pk }}"><i class="bi bi-star-fill"></i></button>
+      </form>
+      <!--<p style="text-align:center">{{ post.total_saves }}</p>-->
+      </div>
+      <div style = "float:right; margin-right:8px">
+          <form action = {% url 'diary_upvote' username=post.author pk=post.pk %} method="POST">
+          {% csrf_token %}
+          <button type="submit", class="btn btn-primary", name="post_id", value="{{ post.pk }}"><i class="bi bi-hand-thumbs-up-fill"></i></button>
+      </form>
+      <!--<p style="text-align:center">{{ post.total_likes }}</p>-->
+      </div>
+  </div>
+<!--END BUTTONS-->
+</div>
+<ul>
+  {% for comment in post.diarycomments.all %}
+  <li>
+  <strong>{{ comment.author }} |  {{ comment.dateCreated }}</strong><br/>
+  {{ comment.content }}
+  {% if comment.author == request.user %}
+  <a href="{% url 'deletediarycomment' username=post.author pk=post.pk id=comment.pk %}" class="btn btn-sm btn-danger">Delete</a>
+  {% endif %}
+  <br/>
+  </li>
+  {% endfor %}
+  </ul>
+  <br/>
 
 {% else %}
 <p>We apologoize for the inconvenience but the entry '{{ post.title }}' has been redacted by the author.</p>
@@ -58,5 +120,5 @@
 
 </div>
       
-
+<br/>
 {% endblock body %}

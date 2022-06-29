@@ -4,9 +4,9 @@ from datetime import datetime, date
 from django.contrib.auth.decorators import login_required
 from .models import Post, Comment
 from django.contrib import messages
-from django.views.generic import ListView, DetailView, UpdateView
+from django.views.generic import ListView, DetailView, UpdateView, DeleteView
 from .forms import PostForm
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from Users.models import Blacklist, Log
 from taggit.models import Tag
 from .serializers import ArticleSerializer
@@ -33,12 +33,14 @@ def indexView(request):
         user = request.user
         saved_articles = user.article_saves.all()
         saved_commentaries = user.commentary_saves.all()
+        saved_diaries = user.diary_saves.all()
     else:
         saved_articles = None
         saved_commentaries = None
+        saved_diaries = None
 
     return render(request, 'Articles/index.html', {
-        'recent': recent, 'tags': tags, 'saved_articles': saved_articles, 'saved_commentaries': saved_commentaries
+        'recent': recent, 'tags': tags, 'saved_articles': saved_articles, 'saved_commentaries': saved_commentaries, 'saved_diaries': saved_diaries
     })
 
 def aboutView(request):
@@ -235,6 +237,7 @@ def newCommentView(request, pk):
     return render(request, "Articles/article.html")
 
 class updatePostView(UpdateView):
+    login_required = True
     model = Post
     form_class = PostForm
     template_name = 'Articles/updatepost.html'
@@ -244,3 +247,22 @@ class updatePostView(UpdateView):
         tags = Tag.objects.all() #return all tags
         context['tags'] = tags
         return context
+
+
+class deletePostView(DeleteView):
+    login_required = True
+    model = Post
+    template_name = 'Articles/deletepost.html'
+    success_url = reverse_lazy('index')
+
+@login_required(login_url='/users/login')
+def deleteCommentView(request, pk, id):
+    comment = Comment.objects.get(pk=id)
+    post = Post.objects.get(pk=pk)
+    if request.user == comment.author and comment.post == post: #IF AND ONLY IF user is the author of the comment, and the post is the same as the comment's post, then delete the comment.
+        comment.delete()
+        messages.success(request, ("Comment succesfully deleted."))
+        return HttpResponseRedirect(reverse('articleview', args =[str(post.slug)]))
+    else:
+        messages.success(request, ("An unknown error occured attempting to delete your comment."))
+        return HttpResponseRedirect(reverse('articleindex'))
