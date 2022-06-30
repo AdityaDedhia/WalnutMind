@@ -6,6 +6,7 @@
 
 {% block body %}
 {% load static %}
+{% load humanize %}
     <ol class="breadcrumb" style = "background-color:white">
         <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
         <li class="breadcrumb-item active" aria-current="page">Blog</li>
@@ -13,34 +14,116 @@
 
     <h3 style="font-family: 'Josefin Sans', sans-serif;">WM <b style="color:gray">Blogs</b></h3>
 
-    <cap>
-        You may access blogs by clicking on the username (only users who have made their profile public are shown).
-    </cap>
     <hr style="border-top: 2px solid rgb(0, 0, 0)">
 
-    <ul>
-        {% for profile in profiles %}
-        <li>
-            <div style="white-space: nowrap;">
-            <a href="{% url 'profile' username=profile %}">
-                {% if profile.avatar %}
-                <img style="display: inline; width: 40px; height: 40px; border: 1px solid black; margin-right: 4px"  src="{{ profile.avatar.url }}">
-                {% else %}
-                <img style="width: 40px; height: 40px; border: 3px solid #14a2b8; margin-right: 4px"  src="{% static 'Users/def_avatar.png' %}">
-                {% endif %}
-              </a>
-            <h3 style="display:inline"><a style="color:black" href="/users/{{ profile }}">{{ profile|upper }}</a></h3>
+    <!--RECENTS-->
+    <section class="position-relative pt-0">
+        <div class="container">
+            <div class="row filter-container overflow-hidden">
+                {% for post in recents %}
+
+                <!-- Card item START -->
+        <div class="col-sm-4 col-lg-3 grid-item">
+            <div class="card mb-4" style="background-color:#e4e4e4;">
+                <!-- Card img -->
+                <div class="card position-relative zoom" style="overflow: hidden;">
+                    <img style="opacity: 0.9; filter: brightness(50%);" class="card-img" src="{{ post.cover.url }}" alt="Card image">
+                    <div class="card-img-overlay align-items-center" style="p-3 p-sm-5 d-block"> 
+                        <div style="
+                        overflow: hidden;
+                        text-overflow: ellipsis;">
+                            <div class="col-md-10 col-lg-7">
+                                <!-- Card category -->
+                        {% for tag in post.tags.all %}
+                        <span class="badge bg-warning mb-1" style="margin:5px">
+                          #<b>{{ tag }}</b></span>
+                        {% endfor %}
+                        </div>
+                        <h6 style="color:white;" class="card-title"><a href="post-single-6.html" class="btn-link text-reset stretched-link fw-bold"><b>{{ post.title|truncatewords:10 }}</b></a></h6>
+                    </div>
+                </div>
+                </div>
+
+                    <!-- Card info -->
+                    <ul class="nav nav-divider align-items-center text-uppercase small">
+                        <li class="nav-item">
+                            <a href="{% url 'profile' username=post.author %}" class="nav-link text-reset btn-link">{{ post.author.first_name }} {{ post.author.last_name }}</a>
+                        </li>
+                        <li class="nav-item" style="font-size:12px">{{ post.dateCreated|naturaltime }} </li>
+                    </ul>
             </div>
-            <p>About: {{ profile.blog }}</p>
-        
-        </li>
+        </div>
+        <!-- Card item END -->
+
         {% endfor %}
-    </ul>
+            </div>
+        </div>
+    </section>
+
+
+<section class="position-relative pt-0">
+    <div class="container"
+        x-data="{tag: 'All', posts: []}"
+        x-init="posts = await (await fetch('profile-list')).json()">
+
+
+<div class="row">
+
+    <div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
+        <cap style="color:gray; font-size:12px">
+            <i>Only users who have made their profile public are shown.</i>
+        </cap><br/><br/>
+
+    <template x-for="post in posts.filter(f => tag === 'All' || f.tags.includes(tag))">
+        <div>
+            <div style="white-space:nowrap;">
+                <img :src = "post.avatar" style="display: inline; width: 40px; height: 40px; border: 1px solid black; margin-right: 4px" class="card-img" alt="Card image" id="image">
+               <a :href="'/users/'+post.user" class="text-reset fw-bold" style="text-transform: uppercase;"><b x-text="post.user"></b></a>
+
+            <template x-for="tag in post.tags">
+                <span class="badge bg-warning mb-2" style="margin:5px">
+                        #<b x-text="tag"></b>
+                </span>
+            </template>
+
+            </div>
+
+             <div class="card-body" style="padding:15px">
+
+                 <i class="card-text" style="font-size: 13px; text-align: justify; text-justify: inter-word;" x-text="post.blog"></i>
+                 <hr/>
+             </div>
+            </div>
+ </template>
 
 
 
-    <br>
+    </div>
 
 
+    <div class="col">
+
+        <div class="mb-2" style="background-color: #ebebeb; border-radius:15px; padding:10px;">
+            <button type="button"
+            class="btn btn-dark"
+            @click = "tag = $el.textContent
+            "><b>All</b></button>
+        
+            {% for tag in tags %}
+            <button style="margin:3px" type="button"
+                    class="btn btn-dark"
+                    @click="tag = $el.textContent
+                    ">{{ tag }}</button>
+            {% endfor %}
+
+
+    </div>
+
+</div>
+</div>
+
+</div>
+
+<br/>
         
 {% endblock body %}

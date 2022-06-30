@@ -13,12 +13,17 @@ class Profile(models.Model):
     ip = models.GenericIPAddressField(null = True, blank = True, max_length = 32)
     location = CountryField(null = True)
     interests = models.CharField(max_length = 75, null = True, blank = True)
+    tags = TaggableManager(related_name="profiletags")
     bio = models.TextField(max_length=300, null = True, blank = True)
     blog = models.CharField(max_length=255, null = True, blank = True)
     meta = RichTextField(null = True, blank = True)
     following = models.ManyToManyField(User, related_name="following", blank = True)
     is_public = models.BooleanField(default=False)
     is_author = models.BooleanField(default = False)
+
+
+    def __unicode__(self):
+        return str(self.user)
 
     def __str__(self):
         return str(self.user)

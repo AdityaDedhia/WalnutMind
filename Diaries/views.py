@@ -10,12 +10,19 @@ from datetime import datetime
 from Users.models import Profile, Log
 from taggit.models import Tag
 from datetime import datetime, date
+from Users.serializers import ProfileSerializer
+from rest_framework.generics import ListAPIView
+
 
 def diariesView(request):
+    recents = Post.objects.filter(public = True).order_by('-dateCreated')[:5]
     profiles = Profile.objects.filter(is_public = True)
+
+    tags = Tag.objects.all() #return all tags
+
     return render(request, 'Diaries/index.html', {
-        'profiles':profiles}
-        )
+        'profiles':profiles, 'tags': tags, 'recents':recents
+        })
 
 class diaryView(DetailView):
     model = Post
@@ -55,6 +62,10 @@ class diaryView(DetailView):
                           {'verbose_name': queryset.model._meta.verbose_name})
         return obj
 
+class ProfileListAPIView(ListAPIView):
+    queryset = Profile.objects.filter(is_public = True)
+    serializer_class = ProfileSerializer
+
 @login_required(login_url='/users/login')
 def newPostView(request):
         if request.method == 'POST':
@@ -83,7 +94,6 @@ def newPostView(request):
                 'form': form
             })
         
-
 
 #---------------------------------------------------------------------------------
 @login_required(login_url='/users/login')

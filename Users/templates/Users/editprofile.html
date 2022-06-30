@@ -46,17 +46,15 @@
                 {{ p_form.interests }}
                 {{ p_form.interests.help_text }}
                 <br/>
+                <b>Tags:</b>
+                {{ p_form.tags }}
+                {{ p_form.tags.help_text }}
+                <br/>
                 <b>Blog Description:</b>
                 {{ p_form.blog }}
                 {{ p_form.blog.help_text }}
                 <br/><br/><br/>
-                <div class="form-check form-switch" id="public" style="float:left">
-                    <label class="form-check-label" for="public">
-                      {{ p_form.is_public }}
-                      <i class="bi bi-eye-fill"></i>
-                      <b style="color:green" data-toggle="tooltip" data-placement="right" title="Any personally identifiable information such as your full name, profile metadata, and blog posts will be redacted. This will not affect any articles or commentaries you may have published. To make those private, archive them individually."> Make profile public?</b>
-                    </label>
-                  </div>
+
             </div>
             <div class="col-md-8">
                 <b>Description:</b>
@@ -70,6 +68,14 @@
             {{ p_form.meta }}
             {{ p_form.meta.help_text }}
         </div>
+        <br/>
+        <div class="form-check form-switch" id="public" style="float:right">
+            <label class="form-check-label" for="public">
+              {{ p_form.is_public }}
+              <i class="bi bi-eye-fill"></i>
+              <b style="color:green" data-toggle="tooltip" data-placement="right" title="Any personally identifiable information such as your full name, profile metadata, and blog posts will be redacted. This will not affect any articles or commentaries you may have published. To make those private, archive them individually."> Make profile public?</b>
+            </label>
+          </div>
         <br/>
         <!--USER SETTINGS-->
         <h2>User Settings</h2>

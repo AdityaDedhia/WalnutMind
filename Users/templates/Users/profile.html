@@ -144,36 +144,6 @@
               {% endif %}
           </div>
 
-
-          <style>
-            .scroll-left {
-             height: 50px;	
-             overflow: hidden;
-             position: relative;
-            }
-            .scroll-left p {
-             position: absolute;
-             width: 100%;
-             height: 100%;
-             margin: 0;
-             line-height: 50px;
-             text-align: center;
-             /* Starting position */
-             transform:translateX(100%);
-             /* Apply animation to this element */
-             animation: scroll-left 15s linear infinite;
-            }
-            /* Move it (define the animation) */
-            @keyframes scroll-left {
-             0%   {
-             transform: translateX(100%); 		
-             }
-             100% {
-             transform: translateX(-100%); 
-             }
-            }
-        </style>
-
             <!--MAIN PANEL-->
             <div class="col-lg-9 col-sm-8" style="padding: 30px">  
 
@@ -183,28 +153,30 @@
               {{ user.profile.meta|safe }}
               {% endif %}
 
-              <h3 class="display-6">✍️ Blog:</h3>
-              <hr/>
-              <ul>
-              {% for diary in diaries %}
-              <li>
-              {{ diary.dateCreated|date:"jS \o\f F" }} - <a href="{% url 'blogview' username=diary.author pk_slug=diary.slug %}">{{ diary.title }}</a><br/>
-              <div class="scroll-left">
-              <p>{{ diary.content|safe|truncatewords:30 }}</p><br/>
-              </div>
-            </li>
-              {% endfor %}
-            </ul>
-
               <h3 class="display-6">🚀 Highlights:</h3>
               <hr/>
-              <div>
+              <div style="padding:30px; height: 400px; -moz-box-shadow: 2px 4px 8px rgba(0,0,0,.5);
+              -webkit-box-shadow: 2px 4px 8px rgba(0,0,0,.5);
+              box-shadow: 2px 4px 8px rgba(0,0,0,.5); scroll-behavior: smooth; overflow:scroll;">
                 {% for highlight in highlights %}
                 <b><i>"{{ highlight.content }}"</i></b>
                 <p>Source: <a href="{{ highlight.sourcelink }}">{{ highlight.sourcename }}</a></p>
                 {% endfor %}
+              </div>
+              
                 <br/>
 
+                <h3 class="display-6">✍️ Blog:</h3>
+                <hr/>
+                <ul>
+                {% for diary in diaries %}
+                <li>
+                {{ diary.dateCreated|date:"jS \o\f F" }} - <a href="{% url 'blogview' username=diary.author pk_slug=diary.slug %}">{{ diary.title }}</a><br/>
+                <p>{{ diary.content|safe|truncatewords:30 }}</p><br/>
+              </li>
+                {% endfor %}
+              </ul>
+  
               </div>
             <h3 class="display-6">🕥 Recent Publications:</h3>
             <hr/>
@@ -351,6 +323,7 @@
                          </li>       
                        {% endfor %}
                       </ul>
+
                      </div>
        
                    </div>
