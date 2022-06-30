@@ -74,6 +74,7 @@ def activate_user(request, uidb64, token):
         location = location,
         interests = 'None',
         bio = "Hello, I'm new to Walnut Mind!",
+        avatar = 'Users/profile_covers/def_avatar.png',
         is_email_verified = True,
         )
         profile.save()

@@ -68,8 +68,9 @@
 
 {% if user.is_authenticated %}
 
-<h5 style="color:gray">Welcome back, {{ user.first_name }}! Here is your feed:</h5>
-<br/>
+<h5 style="color:#3a2c46">Welcome back, {{ user.first_name }}! Here is your feed:</h5>
+<b style = "color:gray">Member since: {{ user.date_joined|naturalday }}</b>
+<br/><br/>
 
 {% else %}
 
@@ -185,7 +186,7 @@
 					<div class="carousel-inner img-container" style="height:500px !important;">
             {% for post in recent %}
 						<div data-interval="10000" class="carousel-item {% if forloop.counter0 == 0 %}active{% endif %} card rounded-5" style="position:absolute; top:0; overflow:hidden;">
-              <img src="{{ post.cover.url }}" style="height:400px !important; opacity: 0.9; filter: brightness(50%);">
+              <img src="{{ post.cover.url }}" style="width: 100%; object-fit:cover; height:400px; opacity: 0.9; filter: brightness(50%);">
 							<!-- Card Image safe -->
 		          <div class="card-img-overlay align-items-center" style="p-3 p-sm-5 d-block"> 
 		            <div>
@@ -222,7 +223,7 @@
 <!--hero end-->
 
 <div class="col-lg-6 col-md-12 col-sm-12">
-  <h3 style="color:gray">Browse Our Catalog by Topic:</h3>
+  <h3 style="color:gray">Browse our entire catalog by topic:</h3>
 {% for tag in tags %}
 <span class="btn btn-warning mb-4" style="margin:5px; border-radius:12px">
   <a style="text-decoration: none; color:white" href="{% url 'tagview' tag=tag|lower %}">#<b>{{ tag }}</b></a>
@@ -280,19 +281,21 @@
             align-items: center;
             border-top: 1px solid rgba(255,255,255,0.5);
             border-left: 1px solid rgba(255,255,255,0.5);
-            filter: blur(1px);
+            filter: blur(0.3px);
 
           }
 
           .polycards .card:hover {
             filter: blur(0px);
+            background-color: #1b1b1b;
+            color: white;
           }
 
         </style>
         <div class="polycards">
         <div class="card zoom">
           <div class="content">
-            <h3>Readers and Hobbyists:</h3>
+            <h3>Readers and Hobbyists</h3>
             <p>Covers a broad range of topics across a broad range of publication formats that suit your interests.</p>
             <a href="{% url 'articleindex' %}">Read More</a>
           </div>
@@ -326,7 +329,8 @@
 {% else %}
 <h3 class="display-6">Saved for Later: </h3>
 {% if not saved_articles and not saved_commentaries and not saved_diaries %}
-<p style="color:gray">You have not saved anything yet. Start saving by clicking the star button below any publication.</p>
+<p style="color:gray">This place looks empty. You have not saved anything yet. Start saving by clicking the star button below any publication.</p>
+<img src="{% static "Articles/skybirds.png" %}" class="img-fluid" alt="Responsive image" style = "">
 {% endif %}
 
 {% if saved_articles %}
