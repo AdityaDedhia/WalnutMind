@@ -8,7 +8,7 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'Commentaries/commentary.css' %}"/>
 
-<ol class="breadcrumb" style="background-color:white">
+<ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
     <li class="breadcrumb-item"><a href="{% url 'bookindex' %}">Books</a></li>
     <li class="breadcrumb-item active" aria-current="page">{{ post.title }} Commentary</li>
@@ -18,7 +18,12 @@
   <div class="spinner-border text-info" role="status"></div>
 </div>
   
-
+<style>
+  .body {
+      height: 100%;
+      overflow: hidden;
+    }
+</style>
 
 {% if post.publisher == request.user and post.public == False %}
 <div class="alert alert-danger d-flex align-items-center" role="alert">
@@ -91,7 +96,6 @@
 
 <!--MAIN COLUMN-->
 <div class="col-lg-8 col-md-7 col-sm-12 commentary-clean">
-
   <ul>
   <li>
     Author:
@@ -132,6 +136,7 @@
  <div class="row">
 <!--COMMENT FORM-->
 <div class="col-md-10 col-sm-9" style="padding:5px">
+
 
 {% if not user.is_authenticated %}
 <strong>Please <a href="{% url 'loginn' %}">login</a> or <a href = "{% url 'registerr' %}">register</a> to join the discussion.</strong>
@@ -191,6 +196,20 @@
 </div>
 </div>
 
+
+{% if not user.is_authenticated %}
+{% if pubs_left <= 0 %}
+ <div class="position-sticky" style="position:absolute; bottom:0; width:100%; height:400px; background-color:#1f1f1f; border-radius:20px 20px 0px 0px; box-shadow: 5px 6px gray;">
+    <h1 class="display-6" style="color:white; text-align:center">We apologise for the inconvenience. You are out of publications to view. Please <a href="{% url 'loginn' %}">login</a> or <a href="{% url 'registerr' %}">register</a> for a free <a href="https://www.walnutmind.org">walnutmind.org</a> account to continue uninterrupted service access and functionality.</h1>
+ </div>
+ {% else %}
+ <div class="position-sticky alert alert-dismissible fade show" role="alert" style="position:absolute; bottom:0; width:100%; height:auto; background-color:#d6d6d6; border-radius:20px 20px 0px 0px; box-shadow: 5px 6px gray;">
+    <h6 style="padding:20px; color:gray; text-align:center">You have <b>{{ pubs_left|add:"-1" }}</b> more publications left to view. Consider <a href="{% url 'loginn' %}">logging in</a> or <a href="{% url 'registerr' %}">registering</a> for a free <a href="https://www.walnutmind.org">walnutmind.org</a> account to continue uninterrupted service access and functionality.</h6>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+ </div>
+ {% endif %}
+
+{% endif %}
 </div>
 </div>
 </div>
@@ -201,6 +220,16 @@
 
 <p>If you require access please check again at a later date or contact the author <a href="/users/{{ post.publisher }}">here</a>.</p>
 {% endif %}
+
+
+<script>
+  var pubs_left = {{ pubs_left }};
+
+if (pubs_left <= 0){
+    setTimeout($('body').addClass('body'), 100)
+    setInterval(function(){$('body').addClass('blockbody'),$("body").css("overflow", "hidden")}, 1000);
+  }
+</script>
 
 <script type="text/javascript">
 const spinnerBox = document.getElementById('spinner-box')
@@ -215,7 +244,7 @@ $.ajax({
       console.log('response',response)
       dataBox.classList.remove('not-visible')
 
-    }, 300)
+    }, 800)
 
   },
   error: function(error){

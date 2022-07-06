@@ -5,7 +5,7 @@
 {% endblock title %}
 
 {% block body %}
-<ol class="breadcrumb" style = "background-color:white">
+<ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
     <li class="breadcrumb-item"><a href="{% url 'wikiindex' %}">Wiki</a></li>
     <li class="breadcrumb-item active" aria-current="page">Lists</li>
@@ -43,13 +43,20 @@
     <div class="list-group">
         {% for list in lists %}
 
-    <a href="{% url 'listview' pk_slug=list.slug %}" class="list-group-item list-group-item-action">
-      <b>{{ list.title }} | {{ list.creator }}</b>
+    <div class="list-group-item list-group-item-action">
+      {% if list.creator.profile.is_public %}
+      <b style="display:inline"><a href="{% url 'listview' pk_slug=list.slug %}">{{ list.title }}</a> | <a href="{% url 'profile' username=list.creator %}">{{ list.creator.first_name }} {{ list.creator.last_name }}</a></b>
+
+      {% else %}
+
+      <b>{{ list.title }} | <a href="{% url 'profile' username=list.creator %}">{{ list.creator }}</a></b>
+      {% endif %}
+
       <br/>
       {% if list.description %}
       Description: {{ list.description }}
       {% endif %}
-    </a>
+    </div>
     {% endfor %}
   </div>
   </ul>

@@ -37,9 +37,6 @@
     </section>
 
 
- 
-
-
   <section class="pt-4">
     <div class="container">
         <div class="row">
@@ -52,7 +49,7 @@
               <form method = "post" action="{% url 'search' %}" class="input-group mt-4">
                 {% csrf_token %}
 
-                <input style="border-radius:8px 0px 0px 8px" class="form-control form-control-lg border-primary" type="search" placeholder="Enter query..." aria-label="Search" name = "searchedterm">
+                <input style="border-radius:8px 0px 0px 8px" class="form-control form-control-lg border-primary" type="search" placeholder="Enter query..." aria-label="Search" name="searchedterm">
                 <button class="btn btn-primary btn-lg m-0" type="submit">
                   <span class="d-none d-md-block">Search</span>
                   <i class="d-block d-md-none bi bi-search"></i></button>

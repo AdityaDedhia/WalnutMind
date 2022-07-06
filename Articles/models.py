@@ -1,4 +1,3 @@
-from enum import unique
 from django.db import models
 from django.contrib.auth.models import User
 from ckeditor.fields import RichTextField
@@ -22,6 +21,7 @@ class Post(models.Model):
     dateCreated = models.DateTimeField(auto_now_add = True)
     dateUpdated = models.DateTimeField(auto_now = True)
     public = models.BooleanField(default = False)
+    was_public = models.BooleanField(default = False)
     likes = models.ManyToManyField(User, related_name="article_likes", blank = True)
     saves = models.ManyToManyField(User, related_name="article_saves", blank = True)
 

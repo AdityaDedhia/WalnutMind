@@ -17,7 +17,7 @@
               <a class="nav-link" href="{% url 'newlist' %}">Create Term List</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link disabled" href="">Add Resource</a>
+              <a class="nav-link" href="{% url 'newresource' %}">Add Resource</a>
             </li>
             <li class="nav-item">
               <a class="nav-link disabled" href="">Create Resource Collection</a>
@@ -26,17 +26,35 @@
     </div>
     <div class="card-body form-group">
 
-      <form method="post">
+      <form method="post" enctype="multipart/form-data">
           {% csrf_token %}
           {{ form.media }}
 
           <!--ROW 1-->
           <div class="row">
-            <div class="col-md-2" id="title">
-              <label style="float: left;" for="title">Term</label>
+            <div class="col-md-4">
+            <div class="row" id="term">
+              <label style="float: left;" for="term">Term</label>
               {{ form.term }}
+            </div><br/>
+            <p>Optional but recommended</p>
+            <hr/>
+            <div class="row" id="cover">
+              <label style="float: left;" for="cover">Cover</label>
+              {{ form.cover }}
             </div>
-            <div class="col-md-10" id = "definition">
+            <div class="row" id="coverSrc">
+              <label style="float: left;" for="coverSrc">Source</label>
+              {{ form.coverSrc }}
+            </div>
+            <div class="row" id="coverURL">
+              <label style="float: left;" for="coverURL">Source Link</label>
+              {{ form.coverURL }}
+            </div>
+
+
+          </div>
+            <div class="col-md-8" id = "definition">
               <label style = "float: left;" for="definition">Definition</label>
               {{ form.definition }}
             </div>

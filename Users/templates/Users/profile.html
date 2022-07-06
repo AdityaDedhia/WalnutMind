@@ -29,9 +29,6 @@
 </div>
 {% endif %}
 
-
-
-
 <!--PROFILE COVER-->
 <section class="h-100">
   <div class="container py-5 h-100">
@@ -168,14 +165,44 @@
 
                 <h3 class="display-6">✍️ Blog:</h3>
                 <hr/>
-                <ul>
-                {% for diary in diaries %}
-                <li>
-                {{ diary.dateCreated|date:"jS \o\f F" }} - <a href="{% url 'blogview' username=diary.author pk_slug=diary.slug %}">{{ diary.title }}</a><br/>
-                <p>{{ diary.content|safe|truncatewords:30 }}</p><br/>
-              </li>
-                {% endfor %}
-              </ul>
+
+                <section class="p-0">
+                    <div class="container" style="overflow-x: scroll; overflow-y: hidden; white-space:nowrap; padding:25px;">
+                      {% for diary in diaries %}
+                      {% if diary.public %}
+                      <!-- Card item START -->
+                      <div class="col-sm-6 col-md-6 col-lg-4" style="display:inline-block; padding: 20px;">
+                        <div class="card card-overlay-bottom card-img-scale zoom">
+                          <!-- Card Image -->
+                          <img src="{{ diary.cover.url }}" style="width:auto; height:200px; opacity: 0.9; filter: brightness(50%);">
+                          <!-- Card Image overlay -->
+                          <div class="card-img-overlay d-flex flex-column p-3 p-md-4"> 
+                            <div style="white-space:normal;">
+                              <!-- Card category -->
+                              {% for tag in diary.tags.all %}
+                              <span class="badge bg-warning mb-2" style="margin:5px;">
+                                #<b>{{ tag }}</b></span>
+                              {% endfor %}
+                            </div>
+                            <div class="w-100 mt-auto" style="white-space:normal;">
+                                                    
+                              <h6 class="text-white" style="overflow-wrap: break-word;"><a href="{% url 'blogview' username=diary.author pk_slug=diary.slug %}" class="btn-link text-reset stretched-link">{{ diary.title }}</a></h6>
+                              <!-- Card info -->
+                              <ul class="nav nav-divider text-white-force align-items-center small">
+                                <li class="nav-item" style="color:white">{{ diary.content|safe|truncatewords:10 }}</li>
+                                <li class="nav-item" style="color:white">{{ diary.dateCreated|date:"jS \o\f F" }}</li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Card item END -->
+                      {% endif %}
+                      {% endfor %}
+
+                    </div>
+                </section>
+
   
               </div>
             <h3 class="display-6">🕥 Recent Publications:</h3>

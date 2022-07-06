@@ -53,3 +53,5 @@ class UpdateProfileForm(forms.ModelForm):
         self.fields['blog'].widget.attrs['class'] = 'form-control'
         self.fields['blog'].help_text = "An optional field that may be helpful for viewers to understand what your blog is about."
         self.fields['is_public'].widget.attrs['class'] = 'form-check-input'
+
+

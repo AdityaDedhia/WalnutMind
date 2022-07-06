@@ -7,7 +7,7 @@
 {% block body %}
 {% load static %}
 
-    <ol class="breadcrumb" style="background-color:white">
+    <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
         <li class="breadcrumb-item"><a href="{% url 'blogindex' %}">Blogs</a></li>
         <li class="breadcrumb-item"><a href="{% url 'profile' username=post.author %}">{{ post.author }}</a></li>

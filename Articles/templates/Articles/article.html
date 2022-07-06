@@ -7,6 +7,7 @@
 {% block body %}
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'Articles/Article-Clean.css' %}"/>
+<link type="text/css" href="{% static 'layout.css' %}"/>
 
 <ol class="breadcrumb" style = "background-color:white">
     <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
@@ -29,20 +30,21 @@
 {% endif %}
 
 {% if post.public == True or post.author == request.user %}
-<!--COVER-->
-<figure>
-    <img style="height: 300px; display: block; margin-left: auto; margin-right: auto;" src = "{{ post.cover.url }}">
-    <figcaption>Source: <a href="{{ post.coverURL }}" target="_blank" rel="noopener noreferrer">{{ post.coverSrc }}</a></figcaption>
-</figure> 
+
 
 
 <section class="article-clean">
      <div class="container">
          <div class="row">
-             <div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
+             <div class="col-lg-8 col-xl-6 offset-lg-2 offset-xl-3">
+                <!--COVER-->
+                <figure>
+                    <img style="height: 300px; display: block; margin-left: auto; margin-right: auto;" src="{{ post.cover.url }}">
+                    <figcaption>Source: <a href="{{ post.coverURL }}" target="_blank" rel="noopener noreferrer">{{ post.coverSrc }}</a></figcaption>
+                </figure> 
                  <div class="intro">
-                     <h1 class="text-center">{{ post.title }}</h1>
-                     <h6 class="fw-light text-center">{{ post.abstract }}</h6>
+                     <h1 class="text-center">{{ post.title }}</h1><br/>
+                     <h6 style="color:gray"><i><b>Abstract:</b> {{ post.abstract }}</i></h6>
                      <p class="text-center">
                         <span class="by">by 
 
@@ -147,10 +149,32 @@
 
  {% endif %}
 
- <script>
+{% if not user.is_authenticated %}
+{% if pubs_left <= 0 %}
+ <div class="position-sticky" style="position:absolute; bottom:0; width:100%; height:400px; background-color:#1f1f1f; border-radius:20px 20px 0px 0px; box-shadow: 5px 6px gray;">
+    <h1 class="display-6" style="color:white; text-align:center">We apologise for the inconvenience. You are out of publications to view. Please <a href="{% url 'loginn' %}">login</a> or <a href="{% url 'registerr' %}">register</a> for a free <a href="https://www.walnutmind.org">walnutmind.org</a> account to continue uninterrupted service access and functionality.</h1>
+ </div>
+ {% else %}
+ <div class="position-sticky alert alert-dismissible fade show" role="alert" style="position:absolute; bottom:0; width:100%; height:auto; background-color:#d6d6d6; border-radius:20px 20px 0px 0px; box-shadow: 5px 6px gray;">
+    <h6 style="padding:20px; color:gray; text-align:center">You have <b>{{ pubs_left|add:"-1" }}</b> more publications left to view. Consider <a href="{% url 'loginn' %}">logging in</a> or <a href="{% url 'registerr' %}">registering</a> for a free <a href="https://www.walnutmind.org">walnutmind.org</a> account to continue uninterrupted service access and functionality.</h6>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+ </div>
+ {% endif %}
+
+{% endif %}
+
+ <script type="text/javascript">
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
- </script>
 
+    var pubs_left = {{ pubs_left }};
+
+    if (pubs_left <= 0){
+        
+        setTimeout($('body').addClass('blockbody'), 100)
+        setInterval(function(){$('body').addClass('blockbody'),$("body").css("overflow", "hidden")}, 1000);
+    }
+
+ </script>
 
 {% endblock body %}

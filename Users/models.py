@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django_countries.fields import CountryField
 from Blog.utils import image_resize
 from taggit.managers import TaggableManager
-from ckeditor.fields import RichTextField
 
 class Profile(models.Model):
     user = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
@@ -16,12 +15,11 @@ class Profile(models.Model):
     tags = TaggableManager(related_name="profiletags")
     bio = models.TextField(max_length=300, null = True, blank = True)
     blog = models.CharField(max_length=255, null = True, blank = True)
-    meta = RichTextField(null = True, blank = True)
+    meta = models.TextField(max_length=20000,null = True, blank = True)
     following = models.ManyToManyField(User, related_name="following", blank = True)
     is_public = models.BooleanField(default=False)
     is_author = models.BooleanField(default = False)
-
-
+    
     def __unicode__(self):
         return str(self.user)
 

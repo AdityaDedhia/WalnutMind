@@ -39,7 +39,7 @@
                           #<b>{{ tag }}</b></span>
                         {% endfor %}
                         </div>
-                        <h6 style="color:white;" class="card-title"><a href="post-single-6.html" class="btn-link text-reset stretched-link fw-bold"><b>{{ post.title|truncatewords:10 }}</b></a></h6>
+                        <h6 style="color:white;" class="card-title"><a href="{% url 'blogview' username=post.author pk_slug=post.slug %}" class="btn-link text-reset stretched-link fw-bold"><b>{{ post.title|truncatewords:10 }}</b></a></h6>
                     </div>
                 </div>
                 </div>

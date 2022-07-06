@@ -1,18 +1,37 @@
 import os
 import dotenv
 from pathlib import Path
+import sys
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
-#PRODUCTION SETTINGS ---------------------------------------------------
-DEBUG = False
-SECURE_SSL_REDIRECT = True #Redirect all non-HTTPS requests to HTTPS
+#AUTO PRODUCTION SETTINGS ---------------------------------------------------
 
+if 'runserver' in sys.argv:
+    DEBUG = True
+    SECURE_SSL_REDIRECT = False #Redirect all non-HTTPS requests to HTTPS
+else:
+    DEBUG = False
+    SECURE_SSL_REDIRECT = True #Redirect all non-HTTPS requests to HTTPS
+
+HOSTCOUNTRY_CODE = "LU"
+
+#USER SETTINGS (MODIFIABLE)
+
+PUBS_ACCESS = 2 #ANONYMOUS ACCESS LIMIT BEFORE SIGNIN
+
+#DO NOT CHANGE THIS -----------------------------------------------------
 CSRF_COOKIE_SECURE = True #Prevent CSRF cookie from being sent over HTTP
 SESSION_COOKIE_SECURE = True #Prevent session cookie from being sent over HTTP
+SECURE_HSTS_SECONDS = 31536000  # Sending of HSTS header 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True # Sending of HSTS header
+SECURE_HSTS_PRELOAD = True # Sending of HSTS header
+SECURE_BROWSER_XSS_FILTER = True # Prevent cross-site scripting attacks in browsers
 
-ALLOWED_HOSTS = ['127.0.0.1', 'www.walnutmind.org', 'walnutmind.org']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'www.walnutmind.org', 'walnutmind.org']
 SERVER_EMAIL = 'support@walnutmind.org'
 ADMINS = [
     ('Aditya Dedhia', 'aditya23dedhia@gmail.com'),
@@ -29,6 +48,8 @@ if os.path.isfile(dotenv_file):
 SECRET_KEY = os.environ['SECRET_KEY']
 
 INSTALLED_APPS = [
+    'dal', #BEFORE django.contrib.admin
+    'dal_select2', #BEFORE django.contrib.admin
     'django.contrib.admin',
     'django.contrib.auth',
     'axes',
@@ -46,7 +67,6 @@ INSTALLED_APPS = [
     'storages',
     'taggit',
     'rest_framework',
-    'reset_migrations',
     'embed_video',
     'Users',
     'Articles',
@@ -91,16 +111,36 @@ TEMPLATES = [
 WSGI_APPLICATION = 'Blog.wsgi.application'
 #https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ['DBName'],
-        'HOST': os.environ['DBHost'],
-        'PORT': 5432,
-        'USER': os.environ['DBUser'],
-        'PASSWORD': os.environ['DBPass'],
+
+if not 'test' in sys.argv: #DEFAULT PRODUCTION DATABASE
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ['DBName'],
+            'HOST': os.environ['DBHost'],
+            'PORT': 5432,
+            'USER': os.environ['DBUser'],
+            'PASSWORD': os.environ['DBPass'],
+            'TEST': {
+                'NAME': os.environ['TESTDBName'],
+            },
+        }
     }
-}
+else: #TEST DATABASE
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ['TESTDBName'],
+            'USER': os.environ['TESTDBUser'],
+            'PASSWORD': os.environ['TESTDBPass'],
+            'HOST': os.environ['TESTDBHost'],
+            'PORT': 5432,
+            'TEST': {
+                'NAME': os.environ['TESTDBName'],
+            }
+        }
+    }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -176,10 +216,22 @@ GEOIP_PATH = os.path.join(BASE_DIR, 'geoIP')
 
 STATIC_HOST = os.environ.get('STATIC_HOST', '')
 STATIC_URL = STATIC_HOST + '/static/'
+
+#ERROR REPORTING --------------------------------------------------
+sentry_sdk.init(
+    dsn=os.environ['sentrydsn'],
+    integrations=[DjangoIntegration()],
+    send_default_pii=True, #Associate users with errors
+    traces_sample_rate=1.0,
+)
+
+
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-STATICFILES_DIRS = (
-)
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
 
 MEDIA_URL = '/user_content/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'user_content')

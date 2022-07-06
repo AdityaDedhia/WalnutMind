@@ -5,6 +5,7 @@ from django.views.generic import ListView,DetailView, UpdateView
 from .models import Post, Comment
 from django.http import HttpResponseRedirect, JsonResponse, Http404
 from django.contrib import messages
+from django.conf import settings
 from .forms import PostForm
 from Users.models import Blacklist, Log
 from django.contrib.auth import logout
@@ -51,8 +52,20 @@ class bookView(DetailView):
         context = super(bookView, self).get_context_data(*args, **kwargs)
         content = self.object.content
         readEST = readtime.of_text(content).minutes + 4 #Get reading time of text.
+
+        # FOR ANONYMOUS USERS CHECK PUBSLEFT
+        if not self.request.user.is_authenticated: 
+            if 'pubs_remaining' in self.request.session:
+                if self.request.session['pubs_remaining'] >= 0:
+                    self.request.session['pubs_remaining'] -= 1
+            else:
+                self.request.session['pubs_remaining'] = settings.PUBS_ACCESS
+                pubs_left = settings.PUBS_ACCESS
+            pubs_left = self.request.session['pubs_remaining']
+            context['pubs_left'] = pubs_left
         context['readEST'] = readEST
         return context
+
 
     def get_object(self, queryset = None):
         if queryset is None:
