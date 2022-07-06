@@ -20,8 +20,9 @@ class Term(models.Model):
         return str(self.term)
 
     def save(self, *args, **kwargs):
-        image_resize(self.cover, 800, 600)
-        super().save(*args, **kwargs)
+        if self.cover:
+            image_resize(self.cover, 800, 600)
+            super().save(*args, **kwargs)
 
 class List(models.Model):
     title = models.CharField(max_length=128, blank = False, unique=True)

@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% load hitcount_tags %}
 
 {% block title %}
      <title>{{ post.title }} Commentary | WM</title>
@@ -17,13 +18,6 @@
 <div id = "spinner-box" class = "text-center mt-3">
   <div class="spinner-border text-info" role="status"></div>
 </div>
-  
-<style>
-  .body {
-      height: 100%;
-      overflow: hidden;
-    }
-</style>
 
 {% if post.publisher == request.user and post.public == False %}
 <div class="alert alert-danger d-flex align-items-center" role="alert">
@@ -32,7 +26,6 @@
     You are currently in DRAFT mode. Only you are able to see this post. <a href="{% url 'updatebook' pk=post.pk %}">Edit</a> and turn on the publish live toggle to remove this message.</div>
 </div>
 {% endif %}
-
 
 
 {% if post.public == True or post.publisher == request.user %}
@@ -130,6 +123,7 @@
 
   <hr/>
  <!--PLUGINS-->
+ <!--<p>Views: {% get_hit_count for post %}</p>-->
  <h3>Comments</h3>
  <hr style="border-top: 2px solid rgb(0, 0, 0)"/>
  
@@ -139,7 +133,7 @@
 
 
 {% if not user.is_authenticated %}
-<strong>Please <a href="{% url 'loginn' %}">login</a> or <a href = "{% url 'registerr' %}">register</a> to join the discussion.</strong>
+<strong>Please <a href="{% url 'loginn' %}">login</a> or <a href="{% url 'registerr' %}">register</a> to join the discussion.</strong>
 
 {% else %}
     {% if not post.comments.all %}

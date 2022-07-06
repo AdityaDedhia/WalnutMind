@@ -5,6 +5,7 @@
 {% endblock title %}
 
 {% block body %}
+{% load i18n %}
 {% load static %}
 
 {% if form.errors %}
@@ -14,99 +15,287 @@
 </div>
 {% endif %}
 
+<script>
+  $('body').scrollspy({ target: '#settings-nav' })
+</script>
+
     {% if request.user == user %}
 
     <h1>Update Profile</h1>
     <br/>
-    <form method = "POST" enctype = "multipart/form-data">
-        {% csrf_token %}
-        <!--PROFILE SETTINGS-->
-        <h2>Profile Settings</h2>
-        <hr style="border-top: 2px solid rgb(0, 0, 0)"/>
 
-        <div class="row">
+    <div class="row">
 
-            <div class="col-md-5">
-                <b>Update Avatar:</b><br/>
-                {{ p_form.avatar }}
-                {{ p_form.avatar.help_text }}
+    <div class="col-md-3">
 
-            </div>
-            <div class="col-md-5">
-                <b>Update Banner:</b><br/>
-                {{ p_form.banner }}
-                {{ p_form.banner.help_text }}
+    <nav id="settings-nav" class="navbar flex-column align-items-stretch p-1 bg-light" style="position: sticky; top:150px; text-align:center; z-index:0">
+        <a class="navbar-brand" href="#profile-settings">SETTINGS</a>
+        <a class="nav-link" href="#user-settings"><b>BASIC INFO</b></a>
+        <nav class="text-white nav nav-pills flex-column p-3 bg-info">
+          <a class="text-white nav-link ms-3 my-1" href="#user-info">I-1</a>
+          <a class="nav-link ms-3 my-1" href="#item-3-2">Item 3-2</a>
+        </nav>
+        <nav class="nav nav-pills flex-column p-2 bg-light">
+          <a class="nav-link" href="#profile-settings"><b>PROFILE</b></a>
+          <nav class="nav nav-pills flex-column bg-info">
+            <a class="text-white nav-link ms-3 my-1" href="#profile-settings-avatar">Update Avatar</a>
+            <a class="text-white nav-link ms-3 my-1" href="#profile-settings-banner">Update Banner</a>
+            <a class="text-white nav-link ms-3 my-1" href="#profile-settings-interests">My Interests</a>
+            <a class="text-white nav-link ms-3 my-1" href="#profile-settings-bio">Profile Bio</a>
+            <a class="text-white nav-link ms-3 my-1" href="#profile-settings-info">Additional Info</a>
 
-            </div>
-        </div>
-        <br/>
-        <div class="row">
-            <div class="col-md-4">
-                <b>Interests:</b>
-                {{ p_form.interests }}
-                {{ p_form.interests.help_text }}
-                <br/>
-                <b>Tags:</b>
-                {{ p_form.tags }}
-                {{ p_form.tags.help_text }}
-                <br/>
-                <b>Blog Description:</b>
-                {{ p_form.blog }}
-                {{ p_form.blog.help_text }}
-                <br/><br/><br/>
+          </nav>
+          <a class="nav-link" href="#content-settings">CONTENT</a>
+          <nav class="nav nav-pills flex-column bg-info">
+            <a class="nav-link ms-3 my-1" href="#content-autorship">Authorship Status</a>
+            <a class="nav-link ms-3 my-1" href="#content-stats">My Stats</a>
+          </nav>
+          <a class="nav-link" href="#user-settings"><b>ACCOUNT</b></a>
+          <nav class="text-white nav nav-pills flex-column p-3 bg-info">
+            <a class="text-white nav-link ms-3 my-1" href="#user-settings">I-1</a>
+            <a class="nav-link ms-3 my-1" href="#item-3-2">Item 3-2</a>
+          </nav>
+        </nav>
+      </nav>
+    </div>
 
-            </div>
-            <div class="col-md-8">
-                <b>Description:</b>
-                {{ p_form.bio }}
-                {{ p_form.bio.help_text }}
-            </div>
-        </div>
-        <br/>
-        <div class="row">
-            <b>Additional Information:</b>
-            {{ p_form.meta }}
-            {{ p_form.meta.help_text }}
-        </div>
-        <br/>
-        <div class="form-check form-switch" id="public" style="float:right">
-            <label class="form-check-label" for="public">
-              {{ p_form.is_public }}
-              <i class="bi bi-eye-fill"></i>
-              <b style="color:green" data-toggle="tooltip" data-placement="right" title="Any personally identifiable information such as your full name, profile metadata, and blog posts will be redacted. This will not affect any articles or commentaries you may have published. To make those private, archive them individually."> Make profile public?</b>
-            </label>
+
+    <div class="col-md-9" style="top:150px">
+      <div data-spy="scroll" data-target="#settings-nav" data-offset="0">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <!--PROFILE SETTINGS-->
+            <h2 id="profile-settings">Profile Settings</h2>
+            <hr style="border-top: 2px solid rgb(0, 0, 0)"/>
+            <div class="form-check form-switch" id="public">
+              <label class="form-check-label" for="public">
+                {{ p_form.is_public }}
+                <i class="bi bi-eye-fill"></i>
+                <b style="color:green" data-toggle="tooltip" data-placement="top" title="Any personally identifiable information such as your full name, profile metadata, and blog posts will be redacted. This will not affect any articles or commentaries you may have published. To make those private, archive them individually."> Make profile public?</b>
+              </label>
           </div>
-        <br/>
-        <!--USER SETTINGS-->
-        <h2>User Settings</h2>
-        <hr style="border-top: 2px solid rgb(0, 0, 0)">
-        <p>Your permanent username is: <b>{{ user.username }}</b>. This serves as our unique identifier for search. Only in extreme circumstances may we perform a username change by emailing <a href="mailto:support@walnutmind.org">support@walnutmind.org</a>.</p>
-        <p>Your account location is set to <b>{{ user.profile.location.name }}</b>.  This was set at the time of account creation and may not be changed manually. To protect your privacy your account may not be accessed outside of this country. If you plan to move, contact us.</p>
+          <br/>
+  
+            <div class="row">
 
-        <div class="row">
-        <div class="col">
-        <b>Legal First Name:</b>
-        {{ u_form.first_name }}
+                <div id="profile-settings-avatar" class="col-sm-5 col-md-7 col-lg-8 col-xl-9">
+                    <h4>Update Avatar:</h4><br/>
+                    {{ p_form.avatar }}
+                    {{ p_form.avatar.help_text }}
+                </div>
+                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
+                  {% if request.user.profile.avatar %}
+                  <img style="border-radius:50%; padding:5px; margin-top:20px" src="{{ request.user.profile.avatar.url }}" alt="Profile Avatar"/>
+                  {% else %}
+                  <p>No avatar uploaded.</p>
+                  {% endif %}
+                </div>
+
+            </div>
+          
+            <div class="row">
+
+            <div class="col-sm-5 col-md-7 col-lg-8 col-xl-9">
+              <h4 id="profile-settings-banner">Update Banner:</h4><br/>
+              {{ p_form.banner }}
+              {{ p_form.banner.help_text }}
+            </div>
+
+            <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
+              {% if request.user.profile.banner %}
+              <img style="border-radius:10px; padding:5px; width:200px; height:auto; margin-top:50px;" src="{{ request.user.profile.banner.url }}" alt="Profile Banner"/>
+              {% else %}
+              <p>No banner uploaded.</p>
+              {% endif %}
+            </div>
+
+            </div>
+
+            <br/>
+            <div class="row">
+              <h4 id="profile-settings-interests">My Interests:</h4>
+              <div class="col-8">
+                  <h6>Add Description:</h6>
+                    {{ p_form.interests }}
+                    {{ p_form.interests.help_text }}
+              </div>
+              <div class="col-4">
+                    <h6>Add Tags:</h6>
+                    {{ p_form.tags }}
+                    {{ p_form.tags.help_text }}
+              </div>
+
+            </div>
+
+            <br/>
+
+              <h4 id="profile-settings-bio">Description:</h4>
+              {{ p_form.bio }}
+              {{ p_form.bio.help_text }}
+            </div>
+            <br/>
+
+            <div id="profile-settings-info" class="row">
+              <h4>Additional Info:</h4>
+              {{ p_form.meta }}
+              {{ p_form.meta.help_text }}
+          </div>
+          <br/>
+
+            <h2 id="profile-settings">Content Settings</h2>
+            <hr style="border-top: 2px solid rgb(0, 0, 0)"/>
+
+            <h4 id="content-authorship">Authorship Status:</h4>
+            <p>
+              {% if request.user.profile.is_author %}
+              <b>Authorship Status:</b> <b style="color:green">WM Community</b><br/>
+              <a href="{% url 'opportunities' %}" target="_blank" rel="noopener noreferrer">Request for authorship</a>
+              {% else %}
+              <b>Authorship Status:</b> <b style="color:purple">WM Author</b>
+              {% endif %}
+            </p>
+            <br/>
+
+            <div class="container">
+              <h4 id="content-stats">Stats at a Glance:</h4>
+
+              <div class="row g-4">
+          
+                <div class="col-12">
+                  <!-- Counter START -->
+                  <div class="row g-4">
+                    
+                    <!-- Counter item -->
+                    <div class="col-sm-6 col-lg-3">
+                      <div class="card card-body border p-3">
+                        <div class="d-flex align-items-center">
+                          <!-- Icon -->
+                          <div class="icon-xl fs-1 bg-info bg-opacity-10 rounded-3 text-info">
+                            <i class="bi bi-bar-chart-line-fill"></i>
+                          </div>
+                          <!-- Content -->
+                          <div class="ms-3">
+                            <h3>0</h3>
+                            <h6 class="mb-0">Pageviews</h6>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+          
+                    <!-- Counter item -->
+                    <div class="col-sm-6 col-lg-3">
+                      <div class="card card-body border p-3">
+                        <div class="d-flex align-items-center">
+                          <!-- Icon -->
+                          <div class="icon-xl fs-1 bg-primary bg-opacity-10 rounded-3 text-primary">
+                            <i class="bi bi-file-earmark-text-fill"></i>
+                          </div>
+                          <!-- Content -->
+                          <div class="ms-3">
+                            <h3>{{ request.user.articlepublisher.count }}</h3>
+                            <h6 class="mb-0">Articles</h6>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+          
+                    <!-- Counter item -->
+                    <div class="col-sm-6 col-lg-3">
+                      <div class="card card-body border p-3">
+                        <div class="d-flex align-items-center">
+                          <!-- Icon -->
+                          <div class="icon-xl fs-1 bg-primary bg-opacity-10 rounded-3 text-primary">
+                            <i class="bi bi-file-earmark-text-fill"></i>
+                          </div>
+                          <!-- Content -->
+                          <div class="ms-3">
+                            <h3>{{ request.user.commentarypublisher.count }}</h3>
+                            <h6 class="mb-0">Books</h6>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+          
+                    <!-- Counter item -->
+                    <div class="col-sm-6 col-lg-3">
+                      <div class="card card-body border p-3">
+                        <div class="d-flex align-items-center">
+                          <!-- Icon -->
+                          <div class="icon-xl fs-1 bg-primary bg-opacity-10 rounded-3 text-primary">
+                            <i class="bi bi-file-earmark-text-fill"></i>
+                          </div>
+                          <!-- Content -->
+                          <div class="ms-3">
+                            <h3>{{ request.user.diarypublisher.count }}</h3>
+                            <h6 class="mb-0">Blogs</h6>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+          
+                  </div>
+                  <!-- Counter END -->
+                </div>
+
+            <h4>Blog Description:</h4>
+            {{ p_form.blog }}
+            {{ p_form.blog.help_text }}
+
+            <br/>
+            <!--USER SETTINGS-->
+            <h2 id="user-settings">User Settings</h2>
+            <hr style="border-top: 2px solid rgb(0, 0, 0)">
+            <p>Your permanent username is: <b>{{ user.username }}</b>. This serves as our unique identifier for search. Only in extreme circumstances may we perform a username change by emailing <a href="mailto:support@walnutmind.org">support@walnutmind.org</a>.</p>
+            <p>Your account location is set to <img src="{{ user.profile.location.flag }}"/> <b>{{ user.profile.location.name }}</b>.  This was set at the time of account creation and may not be changed manually to protect your account security.</p>
+    
+            <div class="row">
+              <div class="col">
+              <b>Legal First Name:</b>
+              {{ u_form.first_name }}
+              </div>
+              <div class="col">
+              <b>Legal Last Name:</b>
+              {{ u_form.last_name }}
+              </div>
+              <div class="col">
+              <b>Current Email Address:</b>
+              {{ u_form.email }}
+              </div>
+            </div>
+
+            <p style = "color:red">Your password is encrypted and unreadable by us. To update your password follow this <a href = "{% url 'update_password' %}">link</a>. In the case that you have forgotten your old password, to reset your password this <a href = "{% url 'reset_password' %}">link</a>.</p>
+          </div>
+
+            <button type="submit" class="btn btn-primary">UPDATE PROFILE</button>
+        </form>
+
+        <br/>
+        <h2 id="auth-settings">Authentication Settings</h2>
+        <hr/>
+        {% if request.user.is_verified %}
+        <p>Your account is secured using a two-step multi-factor (MFA) authentication process.</p><br/>
+        <div style="whitespace:nowrap">
+        <a class="btn btn-primary" href="{% url 'two_factor:backup_tokens' %}">View MFA Credentials</a>
+        <a class="btn btn-danger" style="display:inline" href="{% url 'two_factor:disable' %}">Disable MFA</a>
         </div>
-        <div class="col">
-        <b>Legal Last Name:</b>
-        {{ u_form.last_name }}
-        </div>
-        <div class="col">
-        <b>Current Email Address:</b>
-        {{ u_form.email }}
-        </div>
-        </div>
-        <p style = "color:red">Your password is encrypted and unreadable by us. To update your password follow this <a href = "{% url 'update_password' %}">link</a>. In the case that you have forgotten your old password, to reset your password this <a href = "{% url 'reset_password' %}">link</a>.</p>
-        <button type="submit" class="btn btn-primary">UPDATE PROFILE</button>
-    </form>
+        {% else %}
+        <p>Your account is not currently using multi-factor (MFA) authentication. MFA will significantly increase the security of your account's content and personal data.</p><br/>
+        <a class="btn btn-primary" href="{% url 'two_factor:setup' %}">Set up MFA</a>
+
+        {% endif %}
+        <br/><br/>
+        <a class="btn btn-danger" href="/users/{{ user.username }}/edit">DEACTIVATE ACCOUNT</a>
+
+    </div>
+
     {% else %}
     <h1>Access Denied</h1>
     {% endif %}
-    <br>
-    <!--<a class = "btn btn-danger" href = "/users/{{user.username}}/edit">DEACTIVATE ACCOUNT</a>-->
 
-<br><br>
+  </div>
+</div>
+
+  <br/>
 
 <script>
     $(function () {

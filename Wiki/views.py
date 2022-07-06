@@ -219,7 +219,13 @@ class collectionView(DetailView):
 @login_required(login_url='/users/login')
 def newTermView(request):
     if request.method == 'POST':
-        form = NewTermForm(request.POST, request.FILES)
+        form = NewTermForm(request.POST)
+
+        #Since cover is optional, check whether it exists:
+        if 'cover' in request.FILES:
+            form.instance.cover = request.FILES['cover']
+        else:
+            form.instance.cover = None
 
         if form.is_valid():
             #If publisher is author, terms are verified by default:

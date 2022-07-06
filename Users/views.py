@@ -157,6 +157,10 @@ def registerView(request):
 
 @sensitive_variables('password')
 def loginView(request):
+    #Prevent user from logging in if they are already logged in
+    if request.user is not None and request.user.is_authenticated:
+        messages.success(request, ("You are already logged in."))
+        return redirect('index')
     #GET USER LOCATION and RUN through Blacklisted IPs
     x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forw_for is not None:
@@ -197,7 +201,7 @@ def loginView(request):
 
             if not profilelocation == loginlocation:
                 userprofile.is_email_verified = False
-                messages.success(request, 'Suspicious login attempt from IP address: %s blocked. You are now being actively monitored for suspicious activity. If you are the rightful account owner, check your email for a reverification link.'% ip)
+                messages.success(request, 'Suspicious login attempt from IP address: %s blocked. If you are the rightful account owner, check your email for a reverification link.'% ip)
                 send_activation_email(user, request)
                 return redirect('index')
 
@@ -207,12 +211,18 @@ def loginView(request):
                 messages.success(request, ("Your email has not yet been verified. Check your inbox."))
                 return redirect('index')
 
-            #IF PASSES ALL CHECKS RECORD CURRENT LOGIN LOCATION AND LOGIN
+            #IF PASSES ALL CHECKS RECORD CURRENT LOGIN LOCATION AND IF MFA IS SETUP- SEND TO FINAL LOGIN PAGE
             userprofile.ip = ip
             userprofile.save(update_fields=["ip"])
-            login(request, user)
-            messages.success(request, ("You have successfully signed in."))
-            return redirect('index')
+
+            if user.is_verified:
+                messages.success(request, ("This account is protected by multifactor authentication. Re-enter your credentials."))
+                return redirect('two_factor:login')
+            else:
+                #IF NO MFA ENABLED, LOGIN IMMEDIATELY
+                login(request, user)
+                messages.success(request, ("To increase your account security you are advised to set up multifactor (MFA) authentication in settings."))
+                return redirect('index')
         else:
             messages.success(request, ("The username and/or password you have entered is incorrect, please try again."))
             return redirect('loginn')

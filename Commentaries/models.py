@@ -7,7 +7,8 @@ from autoslug import AutoSlugField
 from Blog.utils import image_resize
 from taggit.managers import TaggableManager
 from django.urls import reverse
-
+from hitcount.models import HitCountMixin, HitCount
+from django.contrib.contenttypes.fields import GenericRelation
 
 class Post(models.Model):
     title = models.CharField(max_length=128, blank = False) #Blank=false for required fields
@@ -29,6 +30,7 @@ class Post(models.Model):
     dateCreated = models.DateTimeField(auto_now_add = True)
     dateUpdated = models.DateTimeField(auto_now = True)
     public = models.BooleanField(default = False)
+    views = GenericRelation(HitCount, object_id_field='object_pk', related_name = "commentary_views"),
     likes = models.ManyToManyField(User, related_name="commentary_likes", blank = True)
     saves = models.ManyToManyField(User, related_name="commentary_saves", blank = True)
 

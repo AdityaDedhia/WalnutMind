@@ -1,0 +1,15 @@
+{% extends "two_factor/_base_focus.html" %}
+{% load i18n %}
+
+{% block title %}
+ <title>Disable MFA | WM</title>
+{% endblock title %}
+{% block content %}
+  <p>{% blocktrans trimmed %}You are about to disable multifactor (MFA) authentication and downgrade your account protection. If you are a staff member you will not be able to access the admin panel, are you sure you want to proceed?{% endblocktrans %}</p>
+  <form method="post">
+    {% csrf_token %}
+    <table>{{ form }}</table>
+    <button class="btn btn-danger"
+            type="submit">{% trans "Disable" %}</button>
+  </form>
+{% endblock %}
