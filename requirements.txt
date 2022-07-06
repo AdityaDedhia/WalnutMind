@@ -37,7 +37,7 @@ idna==3.3
 importlib-metadata==4.11.4
 isbnlib==3.10.10
 jmespath==1.0.0
-lxml==4.9.0
+lxml==4.9.1
 markdown2==2.4.3
 maxminddb==2.2.0
 multidict==6.0.2
