@@ -71,7 +71,7 @@ x-init="posts = await (await fetch('book-list')).json()">
           <a :href = "post.slug">
             <img :src = "post.cover" class = "img-thumbnail float-start" style = "height:250px; border: 2px solid black;"></a>
             <br>
-            <cap style = "white-space:nowrap; "><i x-text="post.title"></i>
+            <cap><i x-text="post.title"></i>
             </cap><br><b style = "color:grey;">Commentary</b>
           </div>
           <!--BOOK LIST ITEM END-->
