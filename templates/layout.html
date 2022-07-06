@@ -101,7 +101,7 @@
 
                 {% if request.user.is_staff %}
                 <li class="nav-item mx-2">
-                  <a class="nav-link btn btn-success zoom" style="color: white; display: inline-block;" href="/&mfHQp04wVAYsorpv9clIsPv0CDq4vEsfB&pdJd^h38T27^A0dsC1UH!54gx8h3dQ7U6p$3QgTyhp8!YrS7o9OFsIfl*eZ4dNxqGI$kq/"><span class="d-none d-xl-inline"><b>STAFF</b></span>
+                  <a class="nav-link btn btn-success zoom" style="color: white; display: inline-block; box-shadow: 0 0 20px #eee;" href="/&mfHQp04wVAYsorpv9clIsPv0CDq4vEsfB&pdJd^h38T27^A0dsC1UH!54gx8h3dQ7U6p$3QgTyhp8!YrS7o9OFsIfl*eZ4dNxqGI$kq/"><span class="d-none d-xl-inline"><b>STAFF</b></span>
                     <i class="bi bi-shield-lock-fill"></i>
                   </a>
                 </li>
@@ -120,11 +120,11 @@
   
                     <div class="d-grid d-lg-block" style="margin-top:11px">
 
-                    <a class="zoom btn btn-info rounded-pill" href="{% url 'newterm' %}"><i class="bi bi-plus-circle"></i></a>
+                    <a style="box-shadow: 0 0 20px #eee;" class="zoom btn btn-info rounded-pill" href="{% url 'newterm' %}"><i class="bi bi-plus-circle"></i></a>
                     {% if request.user.profile.is_author == True %}
-                    <a class="zoom btn btn-info rounded-pill" href="{% url 'newpost' %}"><i class="bi bi-pen-fill"></i></a>
+                    <a style="box-shadow: 0 0 20px #eee;" class="zoom btn btn-info rounded-pill" href="{% url 'newpost' %}"><i class="bi bi-pen-fill"></i></a>
                     {% else %}
-                    <a class="zoom btn btn-info rounded-pill" href="{% url 'newblogpost' %}"><i class="bi bi-pen-fill"></i></a>
+                    <a style="box-shadow: 0 0 20px #eee;" class="zoom btn btn-info rounded-pill" href="{% url 'newblogpost' %}"><i class="bi bi-pen-fill"></i></a>
                     {% endif %}
                     <!--User-->
             
@@ -136,7 +136,7 @@
                       {% endif %}
                     </a>
             
-                    <a class="zoom btn btn-danger rounded-pill" href="{% url 'logoutt' %}"><i class="bi bi-x-circle-fill"></i></a>
+                    <a style="box-shadow: 0 0 20px #eee;" class="zoom btn btn-danger rounded-pill" href="{% url 'logoutt' %}"><i class="bi bi-x-circle-fill"></i></a>
 
                     </div>
                     {% else %}

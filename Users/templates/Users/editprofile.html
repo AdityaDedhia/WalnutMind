@@ -8,18 +8,8 @@
 {% load i18n %}
 {% load static %}
 
-{% if form.errors %}
-<div class="alert alert-warning alert-dismissible fade show" role="alert">
-    <strong>There is an error in your form. Please try again later.</strong>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-{% endif %}
-
-<script>
-  $('body').scrollspy({ target: '#settings-nav' })
-</script>
-
     {% if request.user == user %}
+    <div class="col-xl-10 col-lg-8 offset-lg-1 offset-xl-1">
 
     <h1>Update Profile</h1>
     <br/>
@@ -28,35 +18,43 @@
 
     <div class="col-md-3">
 
-    <nav id="settings-nav" class="navbar flex-column align-items-stretch p-1 bg-light" style="position: sticky; top:150px; text-align:center; z-index:0">
-        <a class="navbar-brand" href="#profile-settings">SETTINGS</a>
-        <a class="nav-link" href="#user-settings"><b>BASIC INFO</b></a>
-        <nav class="text-white nav nav-pills flex-column p-3 bg-info">
-          <a class="text-white nav-link ms-3 my-1" href="#user-info">I-1</a>
-          <a class="nav-link ms-3 my-1" href="#item-3-2">Item 3-2</a>
-        </nav>
-        <nav class="nav nav-pills flex-column p-2 bg-light">
+      <nav id="settings-nav" class="navbar flex-column align-items-stretch p-1 bg-light" style="position: sticky; top:150px; text-align:center; z-index:0">
+          <a class="navbar-brand" href="">SETTINGS</a>
+          <nav class="nav nav-pills flex-column p-2 bg-light">
+
+          <a class="nav-link" href="#basic-settings"><b>BASIC INFO</b></a>
+          <nav class="text-white nav nav-pills flex-column p-3 bg-info">
+            <a class="text-white nav-link ms-3 my-1" href="#basic-identity">Identity</a>
+            <a class="text-white nav-link ms-3 my-1" href="#basic-contact">Contact</a>
+          </nav>
+
           <a class="nav-link" href="#profile-settings"><b>PROFILE</b></a>
-          <nav class="nav nav-pills flex-column bg-info">
-            <a class="text-white nav-link ms-3 my-1" href="#profile-settings-avatar">Update Avatar</a>
-            <a class="text-white nav-link ms-3 my-1" href="#profile-settings-banner">Update Banner</a>
-            <a class="text-white nav-link ms-3 my-1" href="#profile-settings-interests">My Interests</a>
-            <a class="text-white nav-link ms-3 my-1" href="#profile-settings-bio">Profile Bio</a>
-            <a class="text-white nav-link ms-3 my-1" href="#profile-settings-info">Additional Info</a>
+            <nav class="nav nav-pills flex-column bg-info">
+              <a class="text-white nav-link ms-3 my-1" href="#profile-avatar">Update Avatar</a>
+              <a class="text-white nav-link ms-3 my-1" href="#profile-banner">Update Banner</a>
+              <a class="text-white nav-link ms-3 my-1" href="#profile-interests">My Interests</a>
+              <a class="text-white nav-link ms-3 my-1" href="#profile-bio">Profile Bio</a>
+              <a class="text-white nav-link ms-3 my-1" href="#profile-info">Additional Info</a>
+            </nav>
+
+            <a class="nav-link" href="#content-settings"><b>CONTENT</b></a>
+            <nav class="nav nav-pills flex-column bg-info">
+              <a class="text-white nav-link ms-3 my-1" href="#content-autorship">Authorship</a>
+              <a class="text-white nav-link ms-3 my-1" href="#content-stats">My Stats</a>
+              <a class="text-white nav-link ms-3 my-1" href="#content-blog-description">Blog Description</a>
+            </nav>
+
+            <a class="nav-link" href="#account-settings"><b>ACCOUNT</b></a>
+            <nav class="text-white nav nav-pills flex-column p-3 bg-info">
+              <a class="text-white nav-link ms-3 my-1" href="#account-password">Password</a>
+              <a class="text-white nav-link ms-3 my-1" href="#account-mfa">MFA</a>
+              <a class="text-white nav-link ms-3 my-1" href="#account-deactivate">Danger Zone</a>
+            </nav>
 
           </nav>
-          <a class="nav-link" href="#content-settings">CONTENT</a>
-          <nav class="nav nav-pills flex-column bg-info">
-            <a class="nav-link ms-3 my-1" href="#content-autorship">Authorship Status</a>
-            <a class="nav-link ms-3 my-1" href="#content-stats">My Stats</a>
-          </nav>
-          <a class="nav-link" href="#user-settings"><b>ACCOUNT</b></a>
-          <nav class="text-white nav nav-pills flex-column p-3 bg-info">
-            <a class="text-white nav-link ms-3 my-1" href="#user-settings">I-1</a>
-            <a class="nav-link ms-3 my-1" href="#item-3-2">Item 3-2</a>
-          </nav>
+
         </nav>
-      </nav>
+        
     </div>
 
 
@@ -64,6 +62,31 @@
       <div data-spy="scroll" data-target="#settings-nav" data-offset="0">
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
+
+            <!--USER SETTINGS-->
+            <h2 id="basic-settings">Basic Settings</h2>
+            <hr style="border-top: 2px solid rgb(0, 0, 0)">
+
+            <h4 id="basic-identity">Identity:</h4>
+            <div class="row">
+              <div class="col">
+              <b>Legal First Name:</b>
+              {{ u_form.first_name }}
+              </div>
+              <div class="col">
+              <b>Legal Last Name:</b>
+              {{ u_form.last_name }}
+              </div>
+            </div>
+            <p>Your permanent username is: <b>{{ user.username }}</b>. This serves as our unique identifier for search. Only in extreme circumstances may we perform a username change by emailing <a href="mailto:support@walnutmind.org">support@walnutmind.org</a>.</p>
+            <p>Your account location is set to <img src="{{ user.profile.location.flag }}"/> <b>{{ user.profile.location.name }}</b>.  This was set at the time of account creation and may not be changed manually to protect your account security.</p>
+            <br/>
+            <h4 id="basic-contact">Contact:</h4>
+            <div>
+              <b>Current and Active Email Address:</b>
+              {{ u_form.email }}
+            </div>
+            <br/>
             <!--PROFILE SETTINGS-->
             <h2 id="profile-settings">Profile Settings</h2>
             <hr style="border-top: 2px solid rgb(0, 0, 0)"/>
@@ -78,8 +101,8 @@
   
             <div class="row">
 
-                <div id="profile-settings-avatar" class="col-sm-5 col-md-7 col-lg-8 col-xl-9">
-                    <h4>Update Avatar:</h4><br/>
+                <div class="col-sm-5 col-md-7 col-lg-8 col-xl-9">
+                    <h4 id="profile-avatar">Update Avatar:</h4><br/>
                     {{ p_form.avatar }}
                     {{ p_form.avatar.help_text }}
                 </div>
@@ -96,7 +119,7 @@
             <div class="row">
 
             <div class="col-sm-5 col-md-7 col-lg-8 col-xl-9">
-              <h4 id="profile-settings-banner">Update Banner:</h4><br/>
+              <h4 id="profile-banner">Update Banner:</h4><br/>
               {{ p_form.banner }}
               {{ p_form.banner.help_text }}
             </div>
@@ -113,7 +136,7 @@
 
             <br/>
             <div class="row">
-              <h4 id="profile-settings-interests">My Interests:</h4>
+              <h4 id="profile-interests">My Interests:</h4>
               <div class="col-8">
                   <h6>Add Description:</h6>
                     {{ p_form.interests }}
@@ -129,20 +152,20 @@
 
             <br/>
 
-              <h4 id="profile-settings-bio">Description:</h4>
+              <h4 id="profile-bio">Profile Bio:</h4>
               {{ p_form.bio }}
               {{ p_form.bio.help_text }}
             </div>
             <br/>
 
-            <div id="profile-settings-info" class="row">
+            <div id="profile-info" class="row">
               <h4>Additional Info:</h4>
               {{ p_form.meta }}
               {{ p_form.meta.help_text }}
           </div>
           <br/>
 
-            <h2 id="profile-settings">Content Settings</h2>
+            <h2 id="content-settings">Content Settings</h2>
             <hr style="border-top: 2px solid rgb(0, 0, 0)"/>
 
             <h4 id="content-authorship">Authorship Status:</h4>
@@ -237,61 +260,47 @@
                   <!-- Counter END -->
                 </div>
 
-            <h4>Blog Description:</h4>
+            <h4 id="content-blog-description">Blog Description:</h4>
             {{ p_form.blog }}
             {{ p_form.blog.help_text }}
+           <br/>
 
-            <br/>
-            <!--USER SETTINGS-->
-            <h2 id="user-settings">User Settings</h2>
-            <hr style="border-top: 2px solid rgb(0, 0, 0)">
-            <p>Your permanent username is: <b>{{ user.username }}</b>. This serves as our unique identifier for search. Only in extreme circumstances may we perform a username change by emailing <a href="mailto:support@walnutmind.org">support@walnutmind.org</a>.</p>
-            <p>Your account location is set to <img src="{{ user.profile.location.flag }}"/> <b>{{ user.profile.location.name }}</b>.  This was set at the time of account creation and may not be changed manually to protect your account security.</p>
-    
-            <div class="row">
-              <div class="col">
-              <b>Legal First Name:</b>
-              {{ u_form.first_name }}
-              </div>
-              <div class="col">
-              <b>Legal Last Name:</b>
-              {{ u_form.last_name }}
-              </div>
-              <div class="col">
-              <b>Current Email Address:</b>
-              {{ u_form.email }}
-              </div>
-            </div>
-
-            <p style = "color:red">Your password is encrypted and unreadable by us. To update your password follow this <a href = "{% url 'update_password' %}">link</a>. In the case that you have forgotten your old password, to reset your password this <a href = "{% url 'reset_password' %}">link</a>.</p>
           </div>
+          <br/>
+          <h2 id="account-settings">Account Settings</h2><hr/>
+          <h4 id="account-password">Update Password:</h4>
+          <p style="color:red">Your password is encrypted and unreadable by us. To update your password follow this <a href = "{% url 'update_password' %}">link</a>. In the case that you have forgotten your old password, to reset your password this <a href = "{% url 'reset_password' %}">link</a>.</p>
 
-            <button type="submit" class="btn btn-primary">UPDATE PROFILE</button>
+          <h4 id="account-mfa">MFA:</h4>
+          {% if request.user.is_verified %}
+          <p style="color:green">Your account is secured using a two-step multi-factor (MFA) authentication process.</p><br/>
+          <div style="whitespace:nowrap">
+          <a class="btn btn-primary btn-lg" style="display:inline" href="{% url 'two_factor:backup_tokens' %}">MFA Credentials</a>
+          <a class="btn btn-danger btn-lg" style="display:inline" href="{% url 'two_factor:disable' %}">Disable MFA</a>
+          </div>
+          {% else %}
+          <p>Your account is not currently using multi-factor (MFA) authentication. MFA will significantly increase the security of your account's content and personal data.</p><br/>
+          <a class="btn btn-primary btn-lg" href="{% url 'two_factor:setup' %}">Set up MFA</a>
+          {% endif %}
+          <br/>
+          <h4 id="account-deactivate">Danger Zone:</h4>
+          <a class="btn btn-danger" href="#">DEACTIVATE ACCOUNT</a>
+
+          <br/><br/>
+
+            <button style="float:right" type="submit" class="btn btn-primary btn-lg">UPDATE PROFILE</button>
         </form>
 
+
+
         <br/>
-        <h2 id="auth-settings">Authentication Settings</h2>
-        <hr/>
-        {% if request.user.is_verified %}
-        <p>Your account is secured using a two-step multi-factor (MFA) authentication process.</p><br/>
-        <div style="whitespace:nowrap">
-        <a class="btn btn-primary" href="{% url 'two_factor:backup_tokens' %}">View MFA Credentials</a>
-        <a class="btn btn-danger" style="display:inline" href="{% url 'two_factor:disable' %}">Disable MFA</a>
-        </div>
-        {% else %}
-        <p>Your account is not currently using multi-factor (MFA) authentication. MFA will significantly increase the security of your account's content and personal data.</p><br/>
-        <a class="btn btn-primary" href="{% url 'two_factor:setup' %}">Set up MFA</a>
-
-        {% endif %}
-        <br/><br/>
-        <a class="btn btn-danger" href="/users/{{ user.username }}/edit">DEACTIVATE ACCOUNT</a>
-
     </div>
 
     {% else %}
     <h1>Access Denied</h1>
+  </div>
     {% endif %}
-
+</div>
   </div>
 </div>
 

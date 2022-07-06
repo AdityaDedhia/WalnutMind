@@ -32,14 +32,14 @@
   transform: scale(1.05); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
 }
   
-  html,body
-  {
-      width: 100%;
-      height: 100%;
-      margin: 0px;
-      padding: 0px;
-      overflow-x: hidden; 
-  }
+html,body
+{
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    overflow-x: hidden; 
+}
      
 
 nav {
@@ -53,7 +53,7 @@ nav {
   margin-left:25px;
   font-size:16px;
   opacity:0.7;
-  text-shadow: 0 0 4px #ebebeb
+  text-shadow: 0 0 10px #ebebeb
 }
 
 .nav-avatar {
@@ -61,7 +61,8 @@ nav {
   height: 40px;
   border-radius: 50%;
   border: 3px solid #14a2b8;
-  margin-right: 4px
+  margin-right: 4px;
+  box-shadow: 0 0 20px #eee;
 }
 
 .btn-mystic-black {
