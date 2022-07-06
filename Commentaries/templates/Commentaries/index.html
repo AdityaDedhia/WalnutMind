@@ -11,7 +11,7 @@
 x-data="{tag: 'All', posts: []}"
 x-init="posts = await (await fetch('book-list')).json()">
 
-  <ol class="breadcrumb" style="background-color:white">
+  <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
     <li class="breadcrumb-item"><a href="">Books</a></li>
     <li class="breadcrumb-item active" aria-current="page" x-text="tag">

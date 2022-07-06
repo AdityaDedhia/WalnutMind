@@ -1,7 +1,8 @@
 from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from datetime import datetime, date
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 from .models import Post, Comment
 from django.contrib import messages
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView
@@ -13,7 +14,7 @@ from .serializers import ArticleSerializer
 from rest_framework.generics import ListAPIView
 from django.contrib.auth import logout
 import readtime
-
+from Users.forms import UpdateProfileForm
 
 def indexView(request):
     #GET USER LOCATION and RUN through Blacklisted IPs.
@@ -29,16 +30,17 @@ def indexView(request):
     recent = Post.objects.filter(public = True).order_by('-dateCreated')[:5] #Get last 5 entries
     tags = Tag.objects.all() #return all tags
 
+
     if request.user.is_authenticated: #Send custom feed to logged in users:
         user = request.user
         saved_articles = user.article_saves.all()
         saved_commentaries = user.commentary_saves.all()
         saved_diaries = user.diary_saves.all()
+
     else:
         saved_articles = None
         saved_commentaries = None
         saved_diaries = None
-
     return render(request, 'Articles/index.html', {
         'recent': recent, 'tags': tags, 'saved_articles': saved_articles, 'saved_commentaries': saved_commentaries, 'saved_diaries': saved_diaries
     })
@@ -98,7 +100,19 @@ class articleView(DetailView):
         context = super(articleView, self).get_context_data(*args, **kwargs)
         content = self.object.content
         readEST = readtime.of_text(content).minutes + 1 #Get reading time of text.
+
+        # FOR ANONYMOUS USERS CHECK PUBSLEFT
+        if not self.request.user.is_authenticated: 
+            if 'pubs_remaining' in self.request.session:
+                if self.request.session['pubs_remaining'] >= 0:
+                    self.request.session['pubs_remaining'] -= 1
+            else:
+                self.request.session['pubs_remaining'] = settings.PUBS_ACCESS
+                pubs_left = settings.PUBS_ACCESS
+            pubs_left = self.request.session['pubs_remaining']
+            context['pubs_left'] = pubs_left
         context['readEST'] = readEST
+
         return context
 
     def get_object(self, queryset = None):
@@ -190,18 +204,23 @@ def newPostView(request):
             if form.is_valid():
                 form.instance.author = request.user #Because author field from forms.py was excluded
                 title = form.instance.title
+
+                if form.instance.public == True:
+                    form.instance.was_public = True
+                    link = f"https://www.walnutmind.org/articles/{post_slug}"
+                    description = f"Published article: {title}"
+                    logitem = Log(
+                        user = request.user,
+                        description =description,
+                        link = link,
+                        datelog = datetime.now()
+                    )
+                    logitem.save()
                 form.save()
                 messages.success(request, ("Article is successfully published!"))
                 post_slug = Post.objects.latest('pk').slug #Essentially gets latest entry object based on last pk added, and then gets the pk of that entry object.
-                link = f"https://www.walnutmind.org/articles/{post_slug}"
-                description = f"Published article: {title}"
-                logitem = Log(
-                    user = request.user,
-                    description =description,
-                    link = link,
-                    datelog = datetime.now()
-                )
-                logitem.save()
+
+
                 return HttpResponseRedirect(reverse('articleview', args =[str(post_slug)]))
         else:
             form = PostForm()
@@ -246,6 +265,20 @@ class updatePostView(UpdateView):
         context = super(updatePostView, self).get_context_data(*args, **kwargs)
         tags = Tag.objects.all() #return all tags
         context['tags'] = tags
+
+        if not self.object.was_public == True:
+            title = self.object.title
+            post_slug = self.object.slug
+
+            link = f"https://www.walnutmind.org/articles/{post_slug}"
+            description = f"Published article: {title}"
+            logitem = Log(
+                user = self.request.user,
+                description =description,
+                link = link,
+                datelog = datetime.now()
+            )
+            logitem.save()
         return context
 
 

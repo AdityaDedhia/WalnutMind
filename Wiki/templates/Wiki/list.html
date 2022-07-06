@@ -1,25 +1,29 @@
 {% extends "layout.html" %}
 
 {% block title %}
-<title>New List | WM</title>
+<title>{{ list.title }} Terms List | WM</title>
 {% endblock title %}
 
 {% block body %}
-<ol class="breadcrumb" style = "background-color:white">
+<ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
     <li class="breadcrumb-item"><a href="{% url 'wikiindex' %}">Wiki</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'listsview' %}">Lists</a></li>
-    <li class="breadcrumb-item active" aria-current="page">{{ list.title }}</li>
+    <li class="breadcrumb-item"><a href="{% url 'listsview' %}">Walnut Define</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ list.title }} Terms List</li>
 </ol>
 
-{{ list.title }}
+<h1 class="display-6">{{ list.title }}</h1>
+<hr/>
 
 <ul>
-{% for term in terms %}
-<li>
-<a href="/wiki/define-{{ term.slug }}">{{ term.term }}</a>
-</li>
-{% endfor %}
+    {% for term in terms %}
+    <li>
+    <a href = "/wiki/define-{{ term.slug }}">{{ term.term }}</a>
+    {% if term.verified %}
+    <i style="color:green" class="bi bi-check2-circle"></i>
+    {% endif %}
+    </li>
+    {% endfor %}
 </ul>
 
 {% endblock body %}

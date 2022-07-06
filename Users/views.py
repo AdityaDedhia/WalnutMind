@@ -51,6 +51,7 @@ def activate_user(request, uidb64, token):
 
     except Exception as e:
         user = None
+        raise Exception('Generated token is invalid')
 
     if user and generate_token.check_token(user, token):
         #GET USER LOCATION
@@ -61,32 +62,39 @@ def activate_user(request, uidb64, token):
             ip = request.META.get('REMOTE_ADDR')
         #BYPASS IP CHECK IF SERVED ON LOCAL HOST
         if ip =='127.0.0.1':
-            location = 'LU' #THIS NEEDS TO BE CHANGED WHEN LOCALHOST LOCATION CHANGES
+            location = settings.HOSTCOUNTRY_CODE #THIS NEEDS TO BE CHANGED WHEN LOCALHOST LOCATION CHANGES
         else:
             location = GeoIP2().country_code(ip)
-        #ACTIVATE USER ACCOUNT
-        user.is_active = True
-        user.save()
-        #INSTANTIATE USER PROFILE
-        profile = Profile(
-        user = user,
-        ip = ip,
-        location = location,
-        interests = 'None',
-        bio = "Hello, I'm new to Walnut Mind!",
-        avatar = 'Users/profile_covers/def_avatar.png',
-        is_email_verified = True,
-        )
-        profile.save()
-        description = "🚩 Joined WalnutMind"
-        logitem = Log(
-        user = user,
-        description =description,
-        datelog = datetime.now()
-        )
-        logitem.save()
-        messages.success(request, ("Registration has been successful. You may now login."))
-        return redirect('loginn')
+
+        if Profile.objects.filter(user = user).exists() and user.is_active == False: #IF USER HAS PROFILE, DO NOT DELETE UNDER ANY CIRCUMSTANCE, ONLY REVERIFY AND UPDATE LOCATION
+            profile = Profile.objects.get(user = user)
+            profile.is_email_verified = True
+            profile.location = location
+            messages.success(request, ("Account ownership has been verified. You may now login."))
+            return redirect('loginn')
+        else:
+            #ACTIVATE USER ACCOUNT
+            user.is_active = True
+            user.save()
+            #INSTANTIATE NEW USER PROFILE
+            profile = Profile(
+            user = user,
+            ip = ip,
+            location = location,
+            interests = 'None',
+            bio = "Hello, I'm new to Walnut Mind!",
+            is_email_verified = True,
+            )
+            profile.save()
+            description = "🚩 Joined Walnut Mind"
+            logitem = Log(
+            user = user,
+            description = description,
+            datelog = datetime.now()
+            )
+            logitem.save()
+            messages.success(request, ("Registration has been successful. You may now login."))
+            return redirect('loginn')
 
     return render(request, 'Users/failedactivation.html', {
         'user':user
@@ -113,7 +121,8 @@ def registerView(request):
                 #IF ACCOUNT IS UNVERIFIED; DELETE ACCOUNT AND PROCEED WITH REGISTRATION ELSE ABORT
                 existingUser = User.objects.get(email = email)
                 if existingUser.is_active == True:
-                    messages.success(request, 'Unauthorized registration detected for email address: %s. You are now being actively monitored for suspicious activity. If you are the rightful account owner, contact support immediately.'% email)
+                    messages.success(request, 'Unauthorised registration detected for email address: %s. You are now being actively monitored for suspicious activity. If you are the rightful account owner, contact support immediately.'% email)
+                    
                     blacklistform = Blacklist(
                     ip = ip,
                     reason = "Automated ban reason: Suspicious registration attempt to an active user account with email: {email} was made.".format(email = email),
@@ -187,19 +196,17 @@ def loginView(request):
             profilelocation = userprofile.location
 
             if not profilelocation == loginlocation:
-                messages.success(request, 'Unauthorized login attempt from IP address: %s blocked. You are now being actively monitored for suspicious activity. If you are the rightful account owner, contact support immediately.'% ip)
-                blacklistform = Blacklist(
-                    ip = ip,
-                    reason = "Automated ban reason: Suspicious login attempt to the user account: {username} was made.".format(username = username),
-                    datelog = datetime.now()
-                )
-                blacklistform.save()
+                userprofile.is_email_verified = False
+                messages.success(request, 'Suspicious login attempt from IP address: %s blocked. You are now being actively monitored for suspicious activity. If you are the rightful account owner, check your email for a reverification link.'% ip)
+                send_activation_email(user, request)
                 return redirect('index')
+
             #FORCE PROFILE VERIFICATION IF NOT ALREADY VERIFIED
             if not userprofile.is_email_verified:
                 send_activation_email(user, request)
                 messages.success(request, ("Your email has not yet been verified. Check your inbox."))
                 return redirect('index')
+
             #IF PASSES ALL CHECKS RECORD CURRENT LOGIN LOCATION AND LOGIN
             userprofile.ip = ip
             userprofile.save(update_fields=["ip"])
@@ -214,6 +221,8 @@ def loginView(request):
 
 def logoutView(request):
     logout(request)
+    if 'pubs_remaining' in request.session:
+        request.session['pubs_remaining'] = settings.PUBS_ACCESS
     messages.success(request, ("You have successfully signed out."))
     return redirect('index')
 

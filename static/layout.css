@@ -1,0 +1,155 @@
+.navbar.scrolled {
+  background-color: rgba(255, 225, 205, 0.9);
+  transition: background-color 350ms linear;
+}
+
+.body{ 
+  margin:0;
+  min-height: 100%;
+}
+
+.blockbody {
+  height: 100%;
+  overflow: hidden;
+}
+
+.overlay{
+  opacity:0.8;
+  background-color:rgb(0, 0, 0);
+  position:fixed;
+  width:100%;
+  height:100%;
+  top:0px;
+  left:0px;
+  z-index:1000;
+}
+
+.zoom{
+  transition: 0.3s;
+}
+
+.zoom:hover {
+  transform: scale(1.05); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+  
+  html,body
+  {
+      width: 100%;
+      height: 100%;
+      margin: 0px;
+      padding: 0px;
+      overflow-x: hidden; 
+  }
+     
+
+nav {
+  background-color:rgba(169,169,169,0.4);
+  z-index:1;
+  border-radius:60px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.nav-principals {
+  margin-left:25px;
+  font-size:16px;
+  opacity:0.7;
+  text-shadow: 0 0 4px #ebebeb
+}
+
+.nav-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid #14a2b8;
+  margin-right: 4px
+}
+
+.btn-mystic-black {
+  background-image: linear-gradient(to right, #000000 0%, #434343  51%, #000000  100%);
+  margin: 10px;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;            
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  display: block;
+}
+
+.btn-mystic-black:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
+.btn-sky-blue {
+  background-image: linear-gradient(to right, #1FA2FF 0%, #12D8FA  51%, #1FA2FF  100%);
+  margin: 10px;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;            
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  display: block;
+}
+
+.btn-sky-blue:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+            
+.btn-mystic-purple {
+  background-image: linear-gradient(to right, #DA22FF 0%, #9733EE  51%, #DA22FF  100%);
+  margin: 10px;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;            
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  display: block;
+}
+
+.btn-mystic-purple:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
+::-webkit-input-placeholder {
+  font-style: italic;
+  font-weight: bold;
+  font-size: 14px;
+}
+:-moz-placeholder {
+  font-style: italic;  
+  font-weight: bold;
+  font-size: 14px;
+}
+::-moz-placeholder {
+  font-style: italic;  
+  font-weight: bold;
+  font-size: 14px;
+}
+:-ms-input-placeholder {  
+  font-style: italic; 
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.noselect {
+-webkit-touch-callout: none;
+-webkit-user-select: none;
+  -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+        user-select: none;
+}

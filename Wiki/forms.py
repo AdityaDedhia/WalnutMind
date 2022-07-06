@@ -1,14 +1,18 @@
 from django import forms
-from .models import Term, List
+from .models import Term, List, Resource
+from dal import autocomplete
 
 class NewTermForm(forms.ModelForm):
     class Meta:
         model = Term
-        fields = ('term', 'definition')
+        fields = ('term', 'definition', 'cover', 'coverSrc', 'coverURL')
         
         widgets = {
             'term': forms.TextInput(attrs={'class': 'form-control'}),
             'definition': forms.Textarea(attrs={'class': 'form-control'}),
+            'cover': forms.FileInput(attrs={'class': 'form-control'}),
+            'coverSrc': forms.TextInput(attrs={'class': 'form-control'}),
+            'coverURL': forms.URLInput(attrs={'class': 'form-control'}),
         }
 
 class NewListForm(forms.ModelForm):
@@ -16,9 +20,26 @@ class NewListForm(forms.ModelForm):
         model = List
         fields = ('title','description', 'terms')
 
+        
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
-            
+            'terms': autocomplete.ModelSelect2Multiple(url='autocompleteterm', attrs={'class': 'form-control'}),
+            #'terms': forms.SelectMultiple(attrs={'class': 'form-control'}),
         }
-        terms = forms.ModelMultipleChoiceField(queryset=Term.objects.all(), widget=forms.CheckboxSelectMultiple())
+
+class NewResourceForm(forms.ModelForm):
+    class Meta:
+        model = Resource
+        fields = ('title', 'source', 'isbnlink', 'weblink', 'videolink', 'filelink', 'text', 'description')
+
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'source': forms.TextInput(attrs={'class': 'form-control'}),
+            'isbnlink': forms.TextInput(attrs={'class': 'form-control'}),
+            'weblink': forms.TextInput(attrs={'class': 'form-control'}),
+            'videolink': forms.TextInput(attrs={'class': 'form-control'}),
+            'filelink': forms.FileInput(attrs={'class': 'form-control'}),
+            'text': forms.Textarea(attrs={'class': 'form-control'}),
+            'description': forms.TextInput(attrs={'class': 'form-control'}),
+        }

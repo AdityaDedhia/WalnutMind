@@ -2,7 +2,7 @@ from .models import Term, List, Resource, Collection
 from django.views.generic import DetailView
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
-from .forms import NewTermForm, NewListForm
+from .forms import NewResourceForm, NewTermForm, NewListForm
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect
 from isbnlib import meta, cover,doi
@@ -11,8 +11,19 @@ from taggit.models import Tag
 from Articles.views import Post as ArticlesPost
 from Commentaries.views import Post as BooksPost
 from Diaries.views import Post as BlogPost
+from dal import autocomplete
 
 SERVICE = "goob"
+
+
+class TermAutoComplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Term.objects.all()
+
+        if self.q:
+            qs = qs.filter(term__istartswith=self.q)
+
+        return qs
 
 def wikiView(request):
     return render(request, 'Wiki/index.html')
@@ -208,7 +219,7 @@ class collectionView(DetailView):
 @login_required(login_url='/users/login')
 def newTermView(request):
     if request.method == 'POST':
-        form = NewTermForm(request.POST)
+        form = NewTermForm(request.POST, request.FILES)
 
         if form.is_valid():
             #If publisher is author, terms are verified by default:
@@ -216,8 +227,13 @@ def newTermView(request):
                 form.instance.verified = True
             form.save()
             messages.success(request, ("Terms were successfully published."))
-            latest_id = Term.objects.latest('pk').pk #Essentially gets latest entry object based on last pk added, and then gets the pk of that entry object.
-            return redirect(f"/wiki/define-{latest_id}")
+
+
+            #if request.POST.get('to_term'):
+            #latest_id = Term.objects.latest('pk').pk #Essentially gets latest entry object based on last pk added, and then gets the pk of that entry object.
+             #   return redirect(f"/wiki/define-{latest_id}")
+           # else:
+            return redirect(f"/wiki/terms/new")
         else:
             messages.success(request, ("Integrity validation failed. This term may already exist."))
 
@@ -242,5 +258,23 @@ def newListView(request):
 
     form = NewListForm(request.POST, instance = request.user)
     return render(request, 'Wiki/newlist.html', {
+        'form': form,
+    })
+
+def newResourceView(request):
+    if request.method == 'POST':
+        form = NewResourceForm(request.POST)
+
+        if form.is_valid():
+            form.instance.creator = request.user #Because author field from forms.py was excluded
+            form.save()
+            messages.success(request, ("Resource was successfully added."))
+            latest_id = Resource.objects.latest('pk').pk #Essentially gets latest entry object based on last pk added, and then gets the pk of that entry object.
+            return redirect(f"/wiki/resource-{latest_id}")
+        else:
+            messages.success(request, ("Integrity validation failed. You have attempted to manipulate non-editable fields."))
+
+    form = NewResourceForm(request.POST, instance = request.user)
+    return render(request, 'Wiki/newresource.html', {
         'form': form,
     })

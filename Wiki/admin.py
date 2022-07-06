@@ -8,7 +8,6 @@ class FileAdmin(admin.ModelAdmin):
 
     readonly_fields = ['slug']
 
-
 @admin.register(List)
 class FileAdmin(admin.ModelAdmin):
     search_fields = ['title']
@@ -16,12 +15,9 @@ class FileAdmin(admin.ModelAdmin):
 
     readonly_fields = ['slug']
 
-
 @admin.register(Resource)
 class FileAdmin(admin.ModelAdmin):
     search_fields = ['title']
-
-
 
 @admin.register(Collection)
 class FileAdmin(admin.ModelAdmin):

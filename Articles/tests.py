@@ -1,3 +1,8 @@
 from django.test import TestCase
 
-# Create your tests here.
+class URLTests(TestCase):
+    def test_urls(self):
+        response = self.client.get('/', {}, True)
+        self.assertEqual(response.status_code, 200)
+
+
