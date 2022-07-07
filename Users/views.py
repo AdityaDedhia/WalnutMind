@@ -215,14 +215,9 @@ def loginView(request):
             userprofile.ip = ip
             userprofile.save(update_fields=["ip"])
             login(request, user)
-            if request.user.is_verified():
-                logout(request)
-                messages.success(request, ("This account is protected by multifactor authentication. Re-enter your credentials."))
-                return redirect('two_factor:login')
-            else:
-                #IF NO MFA ENABLED, LOGIN IMMEDIATELY
-                messages.success(request, ("To increase your account security you are advised to set up multifactor (MFA) authentication in settings."))
-                return redirect('index')
+            #IF NO MFA ENABLED, LOGIN IMMEDIATELY
+            messages.success(request, ("To increase your account security you are advised to set up multifactor (MFA) authentication in settings."))
+            return redirect('index')
         else:
             messages.success(request, ("The username and/or password you have entered is incorrect, please try again."))
             return redirect('loginn')

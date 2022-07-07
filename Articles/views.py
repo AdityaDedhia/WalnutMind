@@ -18,6 +18,11 @@ from hitcount.views import HitCountDetailView
 
 
 def indexView(request):
+    if request.user.is_verified():
+        logout(request)
+        messages.success(request, ("This account is protected by multifactor authentication. Re-enter your credentials."))
+        return redirect('two_factor:login')
+
     #GET USER LOCATION and RUN through Blacklisted IPs.
     x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forw_for is not None:
