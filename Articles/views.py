@@ -14,7 +14,8 @@ from .serializers import ArticleSerializer
 from rest_framework.generics import ListAPIView
 from django.contrib.auth import logout
 import readtime
-from Users.forms import UpdateProfileForm
+from hitcount.views import HitCountDetailView
+
 
 def indexView(request):
     #GET USER LOCATION and RUN through Blacklisted IPs.
@@ -91,10 +92,11 @@ class ArticleListAPIView(ListAPIView):
     queryset = Post.objects.filter(public = True)
     serializer_class = ArticleSerializer
 
-class articleView(DetailView):
+class articleView(HitCountDetailView):
     model = Post
     slug_url_kwarg = 'pk_slug'
     template_name = 'Articles/article.html'
+    count_hit = True
 
     def get_context_data(self, *args, **kwargs):
         context = super(articleView, self).get_context_data(*args, **kwargs)

@@ -12,6 +12,7 @@ from taggit.models import Tag
 from datetime import datetime, date
 from Users.serializers import ProfileSerializer
 from rest_framework.generics import ListAPIView
+from hitcount.views import HitCountDetailView
 
 
 def diariesView(request):
@@ -24,10 +25,11 @@ def diariesView(request):
         'profiles':profiles, 'tags': tags, 'recents':recents
         })
 
-class diaryView(DetailView):
+class diaryView(HitCountDetailView):
     model = Post
     slug_url_kwarg = 'pk_slug'
     template_name = 'Diaries/diary.html'
+    count_hit = True
 
     def get_context_data(self, *args, **kwargs):
         context = super(diaryView, self).get_context_data(*args, **kwargs)

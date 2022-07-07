@@ -16,6 +16,7 @@ from datetime import datetime, date
 from taggit.models import Tag
 from .serializers import CommentarySerializer
 from rest_framework.generics import ListAPIView
+from hitcount.views import HitCountDetailView
 
 class booksView(ListView):
     model = Post
@@ -44,10 +45,11 @@ class BookListAPIView(ListAPIView):
     serializer_class = CommentarySerializer
 
 
-class bookView(DetailView):
+class bookView(HitCountDetailView):
     model = Post
     slug_url_kwarg = 'pk_slug'
     template_name = 'Commentaries/book.html'
+    count_hit = True
     def get_context_data(self, *args, **kwargs):
         context = super(bookView, self).get_context_data(*args, **kwargs)
         content = self.object.content
