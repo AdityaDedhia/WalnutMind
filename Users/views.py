@@ -214,13 +214,13 @@ def loginView(request):
             #IF PASSES ALL CHECKS RECORD CURRENT LOGIN LOCATION AND IF MFA IS SETUP- SEND TO FINAL LOGIN PAGE
             userprofile.ip = ip
             userprofile.save(update_fields=["ip"])
-
+            login(request, user)
             if user.is_verified():
+                logout(request)
                 messages.success(request, ("This account is protected by multifactor authentication. Re-enter your credentials."))
                 return redirect('two_factor:login')
             else:
                 #IF NO MFA ENABLED, LOGIN IMMEDIATELY
-                login(request, user)
                 messages.success(request, ("To increase your account security you are advised to set up multifactor (MFA) authentication in settings."))
                 return redirect('index')
         else:
