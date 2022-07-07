@@ -1,8 +1,10 @@
 {% extends "two_factor/_base_focus.html" %}
 {% load i18n %}
+{% block title %}
+<title>Set up Multi-factor Authentication | WM</title>
+{% endblock title %}
 
 {% block content %}
-  <h1>{% block title %}{% trans "Add Backup Phone" %}{% endblock %}</h1>
 
   {% if wizard.steps.current == 'setup' %}
       <p>{% blocktrans trimmed %}You'll be adding a backup phone number to your

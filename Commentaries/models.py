@@ -7,7 +7,7 @@ from autoslug import AutoSlugField
 from Blog.utils import image_resize
 from taggit.managers import TaggableManager
 from django.urls import reverse
-from hitcount.models import HitCountMixin, HitCount
+from hitcount.models import HitCount
 from django.contrib.contenttypes.fields import GenericRelation
 
 class Post(models.Model):

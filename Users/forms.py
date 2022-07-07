@@ -47,7 +47,7 @@ class UpdateProfileForm(forms.ModelForm):
         self.fields['bio'].widget.attrs['class'] = 'form-control'
         self.fields['bio'].help_text = "Maximum characters: 300"
         self.fields['meta'].widget.attrs['class'] = 'form-control'
-        self.fields['meta'].help_text = "A place to add additional context to your profile. You may also embed widgets such as from Goodreads, Twitter, or other social media accounts."
+        self.fields['meta'].help_text = "A place to add additional context to your profile. You may embed widgets from sources such as Goodreads, Twitter, or other social media accounts."
         self.fields['tags'].widget.attrs['class'] = 'form-control'
         self.fields['tags'].help_text = "Add tags to help people find out what your interests are."
         self.fields['blog'].widget.attrs['class'] = 'form-control'

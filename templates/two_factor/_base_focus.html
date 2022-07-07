@@ -1,12 +1,10 @@
 {% extends "two_factor/_base.html" %}
 
-{% block content_wrapper %}
-  <div class="container">
+{% block body %}
     <div class="row">
-      <div class="col-md-5 offset-md-3">
+      <div class="col-md-5 offset-md-3" style="transform:translate(0%,50%)">
         {% block content %}
         {% endblock content %}
       </div>
     </div>
-  </div>
-{% endblock %}
+{% endblock body %}

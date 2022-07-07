@@ -49,7 +49,7 @@
                         <span class="by">by 
 
                             {% if post.author.profile.avatar %}
-                            <img style = "position: relative; top:-12px; width: 40px; height: 40px; border-radius: 50%;" src = "{{post.author.profile.avatar.url}}">
+                            <img style = "position: relative; top:-12px; width: 40px; height: 40px; border-radius: 50%;" src = "{{ post.author.profile.avatar.url }}">
                             {% else %}
                             <img style = "position: relative; top:-12px; width: 40px; height: 40px; border-radius: 50%;" src = "{% static 'Users/def_avatar.png' %}">
                             {% endif %}

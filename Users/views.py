@@ -176,9 +176,8 @@ def loginView(request):
             username = request.POST['username']
             password = request.POST['password']
             user = authenticate(request, username=username, password=password)
-            login(request,user)
-            messages.success(request, 'Login security bypassed from localhost: %s. You have successfully signed in.'% ip)
-            return redirect('index')
+            messages.success(request, 'Login security bypassed from localhost: %s. For additional security, please re-enter your credentials.'% ip)
+            return redirect('two_factor:login')
         #IF NO IPBLOCK DETECTED CHECK FOR BOT LOGIN ATTEMPT
         captcha_token = request.POST.get("g-recaptcha-response")
         captcha_url = "https://www.google.com/recaptcha/api/siteverify"
@@ -214,10 +213,9 @@ def loginView(request):
             #IF PASSES ALL CHECKS RECORD CURRENT LOGIN LOCATION AND IF MFA IS SETUP- SEND TO FINAL LOGIN PAGE
             userprofile.ip = ip
             userprofile.save(update_fields=["ip"])
-            login(request, user)
-            #IF NO MFA ENABLED, LOGIN IMMEDIATELY
-            messages.success(request, ("To increase your account security you are advised to set up multifactor (MFA) authentication in settings."))
-            return redirect('index')
+            messages.success(request, ("For additional security, please re-enter your credentials."))
+            return redirect('two_factor:login')
+            #IF NO MFA ENABLED, LOGIN IMMEDIATELY 
         else:
             messages.success(request, ("The username and/or password you have entered is incorrect, please try again."))
             return redirect('loginn')
@@ -292,7 +290,10 @@ def editProfileView(request, username):
             requestedUser = User.objects.get(username = username)
             u_form = UpdateUserForm(instance = request.user)
             p_form = UpdateProfileForm(instance = request.user.profile)
-    
+
+            if not request.user.is_verified():
+                messages.success(request, ("To increase your account security you are advised to set up multifactor (MFA) authentication below."))
+
     return render(request, 'Users/editprofile.html', {
         'user': requestedUser, 'u_form': u_form, 'p_form': p_form
     })

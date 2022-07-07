@@ -5,8 +5,8 @@
 {% endblock title %}
 
 {% block body %}
-{% load i18n %}
 {% load static %}
+
 
     {% if request.user == user %}
     <div class="col-xl-10 col-lg-8 offset-lg-1 offset-xl-1">
@@ -34,7 +34,7 @@
               <a class="text-white nav-link ms-3 my-1" href="#profile-banner">Update Banner</a>
               <a class="text-white nav-link ms-3 my-1" href="#profile-interests">My Interests</a>
               <a class="text-white nav-link ms-3 my-1" href="#profile-bio">Profile Bio</a>
-              <a class="text-white nav-link ms-3 my-1" href="#profile-info">Additional Info</a>
+              <a class="text-white nav-link ms-3 my-1" href="#profile-widgets">Widgets</a>
             </nav>
 
             <a class="nav-link" href="#content-settings"><b>CONTENT</b></a>
@@ -158,8 +158,8 @@
             </div>
             <br/>
 
-            <div id="profile-info" class="row">
-              <h4>Additional Info:</h4>
+            <div id="profile-widgets" class="row">
+              <h4>Widgets:</h4>
               {{ p_form.meta }}
               {{ p_form.meta.help_text }}
           </div>
@@ -199,7 +199,7 @@
                           <!-- Content -->
                           <div class="ms-3">
                             <h3>0</h3>
-                            <h6 class="mb-0">Pageviews</h6>
+                            <h6 class="mb-0">Page Views</h6>
                           </div>
                         </div>
                       </div>
@@ -272,17 +272,17 @@
           <p style="color:red">Your password is encrypted and unreadable by us. To update your password follow this <a href = "{% url 'update_password' %}">link</a>. In the case that you have forgotten your old password, to reset your password this <a href = "{% url 'reset_password' %}">link</a>.</p>
 
           <h4 id="account-mfa">MFA:</h4>
+
           {% if request.user.is_verified %}
           <p style="color:green">Your account is secured using a two-step multi-factor (MFA) authentication process.</p><br/>
           <div style="whitespace:nowrap">
-          <a class="btn btn-primary btn-lg" style="display:inline" href="{% url 'two_factor:backup_tokens' %}">MFA Credentials</a>
-          <a class="btn btn-danger btn-lg" style="display:inline" href="{% url 'two_factor:disable' %}">Disable MFA</a>
           </div>
           {% else %}
-          <p>Your account is not currently using multi-factor (MFA) authentication. MFA will significantly increase the security of your account's content and personal data.</p><br/>
-          <a class="btn btn-primary btn-lg" href="{% url 'two_factor:setup' %}">Set up MFA</a>
+          <p>Your account is not currently using multi-factor (MFA) authentication. MFA will significantly increase the security of your account's content and personal data.</p>
           {% endif %}
-          <br/>
+          <a class="btn btn-primary btn-lg" style="display:inline" href="{% url 'two_factor:profile' %}" target="_blank" rel="noopener noreferrer">MFA Credentials</a>
+
+          <br/><br/>
           <h4 id="account-deactivate">Danger Zone:</h4>
           <a class="btn btn-danger" href="#">DEACTIVATE ACCOUNT</a>
 

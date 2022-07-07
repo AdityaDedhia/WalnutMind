@@ -1,8 +1,10 @@
 {% extends "two_factor/_base_focus.html" %}
 {% load i18n %}
+
 {% block title %}
 <title>Set up Multi-factor Authentication</title>
 {% endblock title %}
+
 {% block content %}
   {% if wizard.steps.current == 'welcome' %}
     <p>{% blocktrans trimmed %}Follow the steps in this wizard to enable MFA for your account.{% endblocktrans %}</p>

@@ -51,6 +51,7 @@ pathspec==0.9.0
 phonenumbers==8.12.51
 Pillow==9.1.1
 psycopg2==2.9.3
+PyJWT==2.4.0
 pyquery==1.4.3
 python-dateutil==2.8.2
 python-decouple==3.6
@@ -68,6 +69,7 @@ soupsieve==2.3.2.post1
 sqlparse==0.4.2
 tomli==2.0.1
 tqdm==4.64.0
+twilio==7.10.0
 typing_extensions==4.2.0
 urllib3==1.26.9
 whitenoise==6.1.0

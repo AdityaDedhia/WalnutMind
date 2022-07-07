@@ -1,6 +1,8 @@
 {% extends "two_factor/_base_focus.html" %}
 {% load i18n %}
-
+{% block title %}
+<title>Multi-factor Authentication Required | WM</title>
+{% endblock title %}
 {% block content %}
 
   <p>{% blocktrans trimmed %}The page you requested, enforces users to verify using
