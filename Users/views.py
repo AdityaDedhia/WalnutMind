@@ -215,7 +215,7 @@ def loginView(request):
             userprofile.ip = ip
             userprofile.save(update_fields=["ip"])
             login(request, user)
-            if user.is_verified():
+            if request.user.is_verified():
                 logout(request)
                 messages.success(request, ("This account is protected by multifactor authentication. Re-enter your credentials."))
                 return redirect('two_factor:login')
