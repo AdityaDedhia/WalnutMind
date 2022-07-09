@@ -78,10 +78,16 @@
             <!--PROFILE META-->
             <div class="ms-3" style="margin-top: 100px;">
               {% if is_public == True %}
-              <h5>{{ user.first_name }} {{ user.last_name }}</h5>
+              <h5 style="text-shadow: 2px 1px #5e5e5e;">{{ user.first_name }} {{ user.last_name }}
+                {% if user.is_staff %}
+                <a href="#" type="button" data-toggle="tooltip" data-placement="top" title="User is a Walnut Mind admin."><i style="color: #56bbff;" class="bi bi-shield-lock-fill"></i></a>
+                
+                {% endif %}
+              </h5>
               {% else %}
-              <h5>{{ user.username }}</h5>
+              <h5 style="text-shadow: 2px 1px #5e5e5e;">{{ user.username }}</h5>
               {% endif %}
+  
 
               <b>Location:</b> {{ user.profile.location.name }} <img src="{{ user.profile.location.flag }}"><br/>
               <b>Interests:</b> {{ user.profile.interests }}

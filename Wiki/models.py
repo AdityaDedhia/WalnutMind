@@ -8,6 +8,7 @@ from Blog.utils import image_resize
 
 class Term(models.Model):
     term = models.CharField(max_length=128, blank = False, unique=True)
+    creator = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='termcreator')
     cover = models.ImageField(upload_to = 'Wiki/term_covers', blank = True, null = True)
     coverSrc = models.CharField(max_length = 128, blank = True, null = True)
     coverURL = models.URLField(max_length = 255, blank = True, null = True)
@@ -30,7 +31,7 @@ class List(models.Model):
     creator = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="listpublisher")
     description = models.CharField(max_length = 255, null = True, blank = True)
     terms = models.ManyToManyField(Term)
-    public = models.BooleanField(default = True)
+    public = models.BooleanField(default = False)
     dateCreated = models.DateTimeField(auto_now_add = True)
     dateUpdated = models.DateTimeField(auto_now = True)
 

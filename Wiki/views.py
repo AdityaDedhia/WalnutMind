@@ -54,8 +54,16 @@ def listsView(request):
     terms = Term.objects.all()
     lists = List.objects.filter(public = True)
     listsCount = lists.count()
+
+    if request.user.is_authenticated:
+        privatelists = List.objects.filter(public =False, creator = request.user)
+        privatelistsCount = privatelists.count()
+    else:
+        privatelists = None
+        privatelistsCount = 0
+
     return render(request, 'Wiki/lists.html', {
-        'terms':terms, 'lists':lists, 'listsCount': listsCount
+        'terms':terms, 'lists':lists, 'listsCount': listsCount, 'privatelists':privatelists, 'privatelistsCount': privatelistsCount
     })
 
 class listView(DetailView):

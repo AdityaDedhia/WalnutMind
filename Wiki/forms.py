@@ -18,13 +18,15 @@ class NewTermForm(forms.ModelForm):
 class NewListForm(forms.ModelForm):
     class Meta:
         model = List
-        fields = ('title','description', 'terms')
+        fields = ('title','description', 'terms', 'public')
 
         
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
             'terms': autocomplete.ModelSelect2Multiple(url='autocompleteterm', attrs={'class': 'form-control'}),
+            'public': forms.CheckboxInput(attrs = {'class': 'form-check-input'}),
+
             #'terms': forms.SelectMultiple(attrs={'class': 'form-control'}),
         }
 

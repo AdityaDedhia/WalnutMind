@@ -58,23 +58,24 @@
       <div class="row noselect">
         <div class="col-12">
           <nav
-            class="navbar navbar-expand-lg blur blur-rounded position-fixed top-0 border-bottom py-3 shadow my-3 start-0 end-0 mx-4">
+            class="navbar navbar-expand-lg blur blur-rounded position-fixed top-0 border-bottom py-3 shadow my-2 start-0 end-0 mx-5">
 
             <div class="container">
               <!-- NAVBAR BRAND-->
-              <a class="navbar-brand">
-                <a class="navbar-brand" href="{% url 'index' %}" style="color: #321c05; margin-right:-35px">
-                  <img src="{% static 'Articles/logo.png' %}" width="50" height="50" class="d-inline-block zoom">
-                </a>
-
-                <cap class="d-none d-xl-inline d-sm-inline d-md-inline d-lg-inline" style="margin-left:35px;"><b style="font-family: 'Josefin Sans', sans-serif;">WALNUT&nbsp;</b>MIND<br/>
-                <span style="font-size:12px; text-decoration: underline;"><i>Where ideas click.</i></span></cap>
+              <a class="navbar-brand" href="{% url 'index' %}" style="color: #321c05;">
+                  <img src="{% static 'Articles/logo.png' %}" width="48" height="48" class="d-inline-block zoom">
               </a>
+                <div class="d-none d-xl-inline d-sm-inline d-md-inline d-lg-inline" style="margin-left:-15px">
+                <b style="font-family: 'Josefin Sans', sans-serif;">WALNUT&nbsp;</b>MIND<br/>
+                <span style="font-size:12px; text-decoration: underline;"><i>Where ideas click.</i></span>
+              
+              </div>
+
               <!-- END NAVBAR BRAND-->
-              <ul class="navbar-nav-hover" style="display: flex; list-style:none; margin-top:15px; text-align: center;">
+              <ul class="navbar-nav-hover" style="display: flex; list-style:none; margin-top:15px; margin-left:-60px; text-align: center;">
 
                 <li class="nav-item mx-2">
-                  <a class="zoom nav-link" style = "color: #000000; display: inline-block;" href="{% url 'articleindex' %}"><span class="d-none d-xl-inline nav-principals"><b>ARTICLES</b></span>
+                  <a class="zoom nav-link" style = "color: #000000; display: inline-block;" href="{% url 'articleindex' %}"><span class="d-none d-xl-inline nav-principals" style="padding:right:10px"><b>ARTICLES</b></span>
                     <i class="zoom bi bi-newspaper"></i>
                   </a>
                 </li>
@@ -99,13 +100,6 @@
                   </a>
                 </li>
 
-                {% if request.user.is_staff %}
-                <li class="nav-item mx-2">
-                  <a class="nav-link btn btn-success zoom" style="color: white; display: inline-block; box-shadow: 0 0 20px #eee;" href="/&mfHQp04wVAYsorpv9clIsPv0CDq4vEsfB&pdJd^h38T27^A0dsC1UH!54gx8h3dQ7U6p$3QgTyhp8!YrS7o9OFsIfl*eZ4dNxqGI$kq/"><span class="d-none d-xl-inline"><b>STAFF</b></span>
-                    <i class="bi bi-shield-lock-fill"></i>
-                  </a>
-                </li>
-                {% endif %}
               </ul>
 
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -118,7 +112,7 @@
 
                     {% if request.user.is_authenticated %}
   
-                    <div class="d-grid d-lg-block" style="margin-top:11px">
+                    <div style="margin-top:11px; text-align:center">
 
                     <a style="box-shadow: 0 0 20px #eee;" class="zoom btn btn-info rounded-pill" href="{% url 'newterm' %}"><i class="bi bi-plus-circle"></i></a>
                     {% if request.user.profile.is_author == True %}
@@ -128,15 +122,21 @@
                     {% endif %}
                     <!--User-->
             
-                    <a href="{% url 'profile' username=request.user.username %}">
+                    <a style="font-size:0;" href="{% url 'profile' username=request.user.username %}">
                       {% if request.user.profile.avatar %}
-                      <img class="zoom nav-avatar float-md-start" src="{{ request.user.profile.avatar.url }}">
+                      <img class="zoom nav-avatar" style="transform:translateY(-4px);" src="{{ request.user.profile.avatar.url }}"/>
                       {% else %}
-                      <img class="zoom nav-avatar float-md-start" src="{% static 'Users/def_avatar.png' %}">
+                      <img class="zoom nav-avatar" style="transform:translateY(-4px);" src="{% static 'Users/def_avatar.png' %}"/>
                       {% endif %}
                     </a>
+
+                    {% if request.user.is_staff %}
+                    <a style="box-shadow: 0 0 20px #eee;" class="zoom btn btn-success rounded-pill" href="/&mfHQp04wVAYsorpv9clIsPv0CDq4vEsfB&pdJd^h38T27^A0dsC1UH!54gx8h3dQ7U6p$3QgTyhp8!YrS7o9OFsIfl*eZ4dNxqGI$kq/">
+                      <i class="bi bi-shield-lock-fill"></i>
+                    </a>
+                  {% endif %}
             
-                    <a style="box-shadow: 0 0 20px #eee;" class="zoom btn btn-danger rounded-pill" href="{% url 'logoutt' %}"><i class="bi bi-x-circle-fill"></i></a>
+                    <a style="box-shadow: 0 0 20px #eee;" class="btn btn-danger rounded-pill" href="{% url 'logoutt' %}"><i class="bi bi-x-circle-fill"></i></a>
 
                     </div>
                     {% else %}
@@ -146,7 +146,7 @@
                     {% endif %}
                     <!--SEARCH BAR-->
                     <div class="dropdown nav-search">
-                      <a class="nav-link btn-mystic-purple rounded-pill zoom" role="button" style="color:white; font-weight:bold" href="#" id="navSearch" data-bs-toggle="dropdown" aria-expanded="false"><i>~/ </i>SEARCH</a>
+                      <a class="nav-link btn-mystic-purple rounded-pill zoom" role="button" style="color:white; font-weight:bold;" href="#" id="navSearch" data-bs-toggle="dropdown" aria-expanded="false">SEARCH</a>
                       <div class="dropdown-menu dropdown-menu-end" style="background-color: transparent; border:none" aria-labelledby="navSearch">
                         <form class="input-group" method="post" action="{% url 'search' %}" style="width:275px;">
                           {% csrf_token %}

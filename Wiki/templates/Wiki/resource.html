@@ -5,13 +5,25 @@
 {% endblock title %}
 
 {% block body %}
-{% if metadata %}
+
+<!--TYPE: DOCUMENT-->
+{% if resource.text %}
+<h1 class="display-4">{{ resource.title }}</h1>
+<b>By <a href="{% url 'profile' username=resource.creator %}" target="_blank" rel="noopener noreferrer">{{ resource.creator.first_name }} {{ resource.creator.last_name }}</a></b>
+    <hr/>
+{{ resource.text|safe }}
+
+{% elif metadata %}
+
 <p>The following data is fetched through Google Books and hence may be crude or incomplete.</p>
 <h3>{{ metadata.Title }}</h3>
 <h5>Authored by: {{ metadata.Authors }}</h5>
-<h5>Published by: {{metadata.Publisher}}, {{ metadata.Year }}</h5>
+<h5>Published by: {{ metadata.Publisher }}, {{ metadata.Year }}</h5>
 <p>Digital Object Identifier (DOI): {{ DOI }}</p>
 {{ cover }}
+
+
+
 {% else %}
 Attachments: 
 {% if resource.weblink %}

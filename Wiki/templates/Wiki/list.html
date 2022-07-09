@@ -12,18 +12,35 @@
     <li class="breadcrumb-item active" aria-current="page">{{ list.title }} Terms List</li>
 </ol>
 
-<h1 class="display-6">{{ list.title }}</h1>
+<h1 class="display-6">{{ list.title }} List</h1>
 <hr/>
 
 <ul>
+    <div class="list-group">
     {% for term in terms %}
-    <li>
-    <a href = "/wiki/define-{{ term.slug }}">{{ term.term }}</a>
-    {% if term.verified %}
-    <i style="color:green" class="bi bi-check2-circle"></i>
-    {% endif %}
-    </li>
+        <div class="list-group-item list-group-item-action">
+        
+        <a href="/wiki/define-{{ term.slug }}">{{ term.term }}</a>
+        {% if term.verified %}
+        <i style="color:green" class="bi bi-check2-circle"></i>
+        {% endif %}
+
+        {% if term.cover %}
+        <div class="row">
+
+        <div class="col-md-11 col-sm-10" style="font-size:13px;">{{ term.definition }}</div>
+        <div class="col-md-1 col-sm-2" style="white-space: nowrap;">
+            <img src="{{ term.cover.url }}" style="height:40px; width:auto; float:right; border-radius:3px; display:inline"/>
+        </div>
+
+        </div>
+        {% else %}
+        <p style="font-size:13px">{{ term.definition }}</p>
+        {% endif %}
+
+        </div>
     {% endfor %}
+    </div>
 </ul>
 
 {% endblock body %}

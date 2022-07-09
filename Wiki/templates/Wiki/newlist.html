@@ -49,13 +49,17 @@
           <div class="col-md-6" id = "terms">
             <label style = "float: left;" for="terms">Select Terms</label>
             {{ form.terms }}
-        </div>
 
+        </div>
 
         </div>
 
         <br/>
-
+        <div class="form-check form-switch" id="public" style="float:left">
+          <label class="form-check-label" for="public"><i class="bi bi-cloud-arrow-up-fill"></i><b> PUBLISH LIVE</b>
+          </label>
+          {{ form.public }}
+        </div>
         <button type="submit" style="float: right;" class="btn btn-primary btn-lg">SUBMIT</button>
         </form>
 
