@@ -31,12 +31,10 @@
 
 {% if post.public == True or post.author == request.user %}
 
-
-
 <section class="article-clean">
      <div class="container">
          <div class="row">
-             <div class="col-lg-8 col-xl-6 offset-lg-2 offset-xl-3">
+             <div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
                 <!--COVER-->
                 <figure>
                     <img style="height: 300px; display: block; margin-left: auto; margin-right: auto;" src="{{ post.cover.url }}">

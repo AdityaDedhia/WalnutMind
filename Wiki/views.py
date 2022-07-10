@@ -21,12 +21,18 @@ class TermAutoComplete(autocomplete.Select2QuerySetView):
         qs = Term.objects.all()
 
         if self.q:
-            qs = qs.filter(term__istartswith=self.q)
+            qs = qs.filter(term__icontains=self.q) #case insensitive standard search
 
         return qs
 
 def wikiView(request):
-    return render(request, 'Wiki/index.html')
+    if request.user.is_authenticated:
+        docs = Resource.objects.filter(creator = request.user).order_by('-dateCreated')[:10] #Get the 10 most recent resources
+    else:
+        docs = None
+
+    return render(request, 'Wiki/index.html', {'docs': docs
+    })
 
 def resourceView(request, pk):
     resource = Resource.objects.get(pk = pk)
@@ -277,7 +283,7 @@ def newListView(request):
 
 def newResourceView(request):
     if request.method == 'POST':
-        form = NewResourceForm(request.POST)
+        form = NewResourceForm(request.POST, request.FILES)
 
         if form.is_valid():
             form.instance.creator = request.user #Because author field from forms.py was excluded

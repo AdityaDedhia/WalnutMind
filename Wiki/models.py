@@ -47,7 +47,8 @@ class Resource(models.Model):
     videolink = EmbedVideoField(null = True, blank = True)
     filelink = models.FileField(upload_to = 'Wiki/Resources', null = True, blank = True)
     text = RichTextUploadingField(blank = True)
-    description = models.CharField(max_length = 255, blank = True)
+    description = models.CharField(max_length = 255, blank = True, null = True)
+    public = models.BooleanField(default = False)
     dateCreated = models.DateTimeField(auto_now_add = True)
 
     def __str__(self):

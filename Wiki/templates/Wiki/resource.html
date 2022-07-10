@@ -5,13 +5,16 @@
 {% endblock title %}
 
 {% block body %}
-
+<h1 class="display-4">{{ resource.title }}</h1>
 <!--TYPE: DOCUMENT-->
 {% if resource.text %}
-<h1 class="display-4">{{ resource.title }}</h1>
 <b>By <a href="{% url 'profile' username=resource.creator %}" target="_blank" rel="noopener noreferrer">{{ resource.creator.first_name }} {{ resource.creator.last_name }}</a></b>
     <hr/>
 {{ resource.text|safe }}
+<!--TYPE: FILE-->
+{% elif resource.filelink %}
+<b>By <a href="{% url 'profile' username=resource.creator %}" target="_blank" rel="noopener noreferrer">{{ resource.creator.first_name }} {{ resource.creator.last_name }}</a></b><br/>
+<embed style="width:100%; height:80vh;" src="{{ resource.filelink.url }}" type="application/pdf"/>
 
 {% elif metadata %}
 
@@ -32,11 +35,7 @@ Attachments:
 {% if resource.videolink %}
 <i class="bi bi-file-earmark-play"> </i><a href="{{ resource.videolink }}" target="_blank" rel="noopener noreferrer">{{ resource.videolink }}</a>
 {% endif %}
-{% if resource.filelink %}
-<i class="bi bi-file-earmark-pdf"> </i><a href="{{ resource.filelink.url }}" target="_blank" rel="noopener noreferrer">Files</a>
-<embed src="{{ resource.filelink.url }}" type="application/pdf" height="500px" width="800px"/>
 
-{% endif %}
 {% endif %}
 
 {% endblock body %}
