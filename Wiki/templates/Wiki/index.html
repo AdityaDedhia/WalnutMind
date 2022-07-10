@@ -41,12 +41,44 @@
     <hr/>
 
     {% if request.user.is_authenticated %}
+
     {% if docs %}
+
     <h3>Recently added: </h3>
-    <div style="white-space:nowrap; overflow-x: auto;">
+    <div style="white-space:nowrap; overflow-x: auto; font-size:0">
+
     {% for doc in docs %}
-    <a href="{% url 'resourceview' pk=doc.pk %}" target="_blank" rel="noopener noreferrer">
-    <span class="btn btn-info mb-2">
+    <a href="{% url 'resourceview' pk=doc.pk %}" target="_blank" rel="noopener noreferrer" style="padding:5px">
+  
+      <!--FILE LINK-->
+    {% if doc.filelink %}
+      <span class="btn btn-dark btn-sm mb-2">
+        <b>{{ doc.title }}</b>
+        <p>{{ doc.dateCreated|naturaltime }}
+          {% if doc.public %}
+          <span class="badge bg-success rounded-pill">PUBLIC</span>
+          {% else %}
+          <span class="badge bg-secondary rounded-pill">PRIVATE</span>
+          {% endif %}</p>
+
+          <i class="bi bi-paperclip"></i> <b>FILE</b> | File Size: {{ doc.filelink.size|filesizeformat }}
+      </span>
+      <!--TEXT LINK-->
+    {% elif doc.text %}
+      <span class="btn btn-light btn-sm mb-2">
+        <b>{{ doc.title }}</b>
+        <p>{{ doc.dateCreated|naturaltime }}
+          {% if doc.public %}
+          <span class="badge bg-success rounded-pill">PUBLIC</span>
+          {% else %}
+          <span class="badge bg-secondary rounded-pill">PRIVATE</span>
+          {% endif %}</p>
+
+          <i class="bi bi-file-text"></i> <b>DOC</b> | Word Count: {{ doc.text|wordcount }}
+      </span>
+      <!--VIDEO LINK-->
+    {% elif doc.videolink %}
+    <span class="btn btn-danger btn-sm mb-2">
       <b>{{ doc.title }}</b>
       <p>{{ doc.dateCreated|naturaltime }}
         {% if doc.public %}
@@ -55,13 +87,14 @@
         <span class="badge bg-secondary rounded-pill">PRIVATE</span>
         {% endif %}</p>
 
-      {% if doc.filelink %}
-      File Size: {{ doc.filelink.size|filesizeformat }}
-      {% endif %}
+        <i class="bi bi-play-btn"></i> <b>VIDEO</b>
+    </span>
 
+    {% endif %}
 
-    </span></a>
+  </a>
     {% endfor %}
+
   </div>
     
 

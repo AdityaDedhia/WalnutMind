@@ -12,7 +12,7 @@ from Articles.views import Post as ArticlesPost
 from Commentaries.views import Post as BooksPost
 from Diaries.views import Post as BlogPost
 from dal import autocomplete
-
+from pytube import YouTube #Support YT Metadata
 SERVICE = "goob"
 
 
@@ -28,6 +28,8 @@ class TermAutoComplete(autocomplete.Select2QuerySetView):
 def wikiView(request):
     if request.user.is_authenticated:
         docs = Resource.objects.filter(creator = request.user).order_by('-dateCreated')[:10] #Get the 10 most recent resources
+
+        
     else:
         docs = None
 

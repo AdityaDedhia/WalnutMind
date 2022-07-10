@@ -41,7 +41,7 @@ class List(models.Model):
 class Resource(models.Model):
     title = models.CharField(max_length=100, blank = False, unique=True)
     creator = models.ForeignKey(User, on_delete=models.DO_NOTHING, null = True, blank = True)
-    source = models.CharField(max_length = 50, blank = False)
+    source = models.CharField(max_length = 50, blank = True, null = True)
     isbnlink = models.CharField(null = True, blank = True, max_length=13)
     weblink = models.URLField(null = True, blank = True)
     videolink = EmbedVideoField(null = True, blank = True)
@@ -50,6 +50,8 @@ class Resource(models.Model):
     description = models.CharField(max_length = 255, blank = True, null = True)
     public = models.BooleanField(default = False)
     dateCreated = models.DateTimeField(auto_now_add = True)
+    dateUpdated = models.DateTimeField(auto_now = True)
+
 
     def __str__(self):
         return str(self.title)
