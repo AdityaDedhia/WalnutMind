@@ -46,11 +46,16 @@ class Resource(models.Model):
     weblink = models.URLField(null = True, blank = True)
     videolink = EmbedVideoField(null = True, blank = True)
     filelink = models.FileField(upload_to = 'Wiki/Resources', null = True, blank = True)
-    text = RichTextUploadingField(blank = True)
+    imagelink = models.ImageField(upload_to = 'Wiki/Resources', blank = True, null = True)
+
+    text = RichTextUploadingField(blank = True, null = True)
     description = models.CharField(max_length = 255, blank = True, null = True)
     public = models.BooleanField(default = False)
     dateCreated = models.DateTimeField(auto_now_add = True)
     dateUpdated = models.DateTimeField(auto_now = True)
+
+    class Meta:
+        ordering = ['-dateCreated']
 
 
     def __str__(self):

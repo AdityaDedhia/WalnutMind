@@ -1,13 +1,13 @@
 {% extends "layout.html" %}
+{% load widget_tweaks %}
 
 {% block title %}
-<title> User Registration | WM</title>
-{% endblock %}
+<title>Registration | WM</title>
+{% endblock title %}
 
 {% block body %}
 {% load static %}
-
-    <form action = "{% url 'registerr' %}" method = POST>
+    <form action="{% url 'registerr' %}" method="post" autocomplete='off'>
         {% csrf_token %}
 
         <section class="vh-100">
@@ -46,9 +46,9 @@
                                 <i class="bi bi-person-bounding-box fa-lg me-3 fa-fw"></i>
                                 <div class="form-outline flex-fill mb-0">
                                   <div class="col" id = "username">
-                                      {{ form.username }}
-                                      <label style = "float: left;" for="username">Username</label><br/>
-                                      <cap style = "color:gray">This username will be publicly accessible and cannot be changed.</cap>
+                                      {% render_field form.username class="form-control" %}
+                                      <label style="float: left;" for="username">Username</label><br/>
+                                      <cap style="color:gray">This username will be publicly accessible and cannot be changed.</cap>
 
                                     </div>
                                   
@@ -62,7 +62,7 @@
                                 <div class="form-outline flex-fill mb-0">
                                   <div class="col" id = "email">
                                       {{ form.email }}
-                                      <label style = "float: left;" for="email">Email</label>
+                                      <label style="float: left;" for="email">Email</label>
                                     </div>
                                 </div>
                             </div>
@@ -71,8 +71,8 @@
                                 <i class="bi bi-unlock-fill fa-lg me-3 fa-fw"></i>
                                 <div class="form-outline flex-fill mb-0">
                                   <div class="col" id = "pass1">
-                                      {{ form.password1 }}
-                                      <label style = "float: left;" for="pass1">Password</label>
+                                      {% render_field form.password1 class="form-control" %}
+                                      <label style="float: left;" for="pass1">Password</label>
                                     </div>
                                 </div>
                             </div>
@@ -85,19 +85,21 @@
                                 <i class="bi bi-lock-fill fa-lg me-3 fa-fw"></i>
                                 <div class="form-outline flex-fill mb-0">
                                   <div class="col" id = "pass2">
-                                      {{ form.password2 }}
-                                      <label style = "float: left;" for="pass2">Repeat Password</label>
+                                    {% render_field form.password2 class="form-control" %}
+                                    <label style="float: left;" for="pass2">Repeat Password</label>
                                   </div>
                                 </div>
                             </div>
                             <div class="d-flex flex-row align-items-center mb-4">
                             <p><b>By clicking register, you acknowledge and agree to WalnutMind's <a href="{% url 'terms' %}" target="_blank" rel="noopener noreferrer" type="button" data-toggle="tooltip" data-placement="top" title="Opens in a new tab.">terms of use</a>.</b>
                             Account registration is
-                                <a href="#" type="button" data-toggle="tooltip" data-placement="top" title="Our security measures impose geo-based restrictions on account access. This means that any attempts to login to your account outside of your residing country at time of registration will be blocked. If you plan to move, you must contact support beforehand.">
+                                <a href="#" type="button" data-toggle="tooltip" data-placement="top" title="Our security measures impose geo-based restrictions on account access. Foreign login attempts will be blocked and require reverification.">
                                   geographically bounding</a>.</p>
                             </div>
                             <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                              {% if not request.htmx %}
                                 <button type="submit" class="btn btn-primary">REGISTER</button>
+                              {% endif %}
                             </div>
     
                             <p>Already have an account? <a href="{% url 'loginn' %}">Login here</a>.</p>
@@ -122,10 +124,12 @@
 
     </form>
 
+
 <script>
   $(function () {
     $('[data-toggle="tooltip"]').tooltip()
   })
+
 </script>
 
 <br/><br/><br/><br/>

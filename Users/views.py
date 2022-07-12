@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib import messages
 from .forms import RegisterUserForm, UpdateProfileForm, UpdateUserForm
 from .models import User, Profile, Highlight, Blacklist, Log
@@ -11,7 +11,7 @@ from django.utils.encoding import force_bytes, force_str
 from .utils import generate_token
 from django.core.mail import EmailMessage
 from django.views.decorators.debug import sensitive_variables
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.conf import settings
 from django.contrib.gis.geoip2 import GeoIP2
@@ -100,6 +100,7 @@ def activate_user(request, uidb64, token):
         'user':user
     })
 
+
 @sensitive_variables('password')
 def registerView(request):
     #GET USER LOCATION and RUN through Blacklisted IPs
@@ -154,6 +155,7 @@ def registerView(request):
         return render(request,'Users/register.html', {
             'form': form
         })
+
 
 @sensitive_variables('password')
 def loginView(request):

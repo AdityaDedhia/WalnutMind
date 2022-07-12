@@ -268,7 +268,9 @@ class updatePostView(UpdateView):
         tags = Tag.objects.all() #return all tags
         context['tags'] = tags
 
-        if not self.object.was_public == True:
+
+        if not self.object.was_public == True and self.object.public == True:
+            self.object.was_public = True
             title = self.object.title
             post_slug = self.object.slug
 

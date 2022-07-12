@@ -33,7 +33,7 @@ class NewListForm(forms.ModelForm):
 class NewResourceForm(forms.ModelForm):
     class Meta:
         model = Resource
-        fields = ('title', 'source', 'isbnlink', 'weblink', 'videolink', 'filelink', 'text', 'description')
+        fields = ('title', 'source', 'isbnlink', 'weblink', 'videolink', 'filelink', 'imagelink', 'text', 'description')
 
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
@@ -42,6 +42,7 @@ class NewResourceForm(forms.ModelForm):
             'weblink': forms.TextInput(attrs={'class': 'form-control'}),
             'videolink': forms.TextInput(attrs={'class': 'form-control'}),
             'filelink': forms.FileInput(attrs={'class': 'form-control'}),
+            'imagelink': forms.FileInput(attrs={'class': 'form-control'}),
             'text': forms.Textarea(attrs={'class': 'form-control'}),
             'description': forms.TextInput(attrs={'class': 'form-control'}),
         }

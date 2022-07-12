@@ -1,5 +1,5 @@
 from .models import Term, List, Resource, Collection
-from django.views.generic import DetailView
+from django.views.generic import DetailView, ListView
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from .forms import NewResourceForm, NewTermForm, NewListForm
@@ -13,7 +13,7 @@ from Commentaries.views import Post as BooksPost
 from Diaries.views import Post as BlogPost
 from dal import autocomplete
 from pytube import YouTube #Support YT Metadata
-SERVICE = "goob"
+SERVICE = "wiki"
 
 
 class TermAutoComplete(autocomplete.Select2QuerySetView):
@@ -27,24 +27,78 @@ class TermAutoComplete(autocomplete.Select2QuerySetView):
 
 def wikiView(request):
     if request.user.is_authenticated:
-        docs = Resource.objects.filter(creator = request.user).order_by('-dateCreated')[:10] #Get the 10 most recent resources
-
-        
+        resources = Resource.objects.filter(creator = request.user)
     else:
-        docs = None
+        resources = None
 
-    return render(request, 'Wiki/index.html', {'docs': docs
+    return render(request, 'Wiki/index.html', {
+        'resources': resources
+    })
+
+class resourceList(ListView):
+    model = Resource
+    template_name ='Wiki/resource-list.html'
+    context_object_name = 'resources'
+
+    def get_queryset(self):
+        return Resource.objects.filter(creator = self.request.user)[:10] #MUST MATCH WITH wikiView
+
+@login_required(login_url='/users/login')
+def addResourceView(request):
+    title = request.POST.get('title')
+    description = request.POST.get('description')
+    source = request.POST.get('source')
+    text = request.POST.get('text')
+    file = request.FILES.get('filelink')
+    image = request.FILES.get('imagelink')
+    web = request.POST.get('weblink')
+    video = request.POST.get('videolink')
+    book = request.POST.get('isbnlink')
+    public = bool(request.POST.get('public'))
+
+    Resource.objects.create(
+        title = title,
+        creator = request.user,
+        description = description,
+        source = source,
+        text = text,
+        filelink = file,
+        imagelink = image,
+        weblink = web,
+        videolink = video,
+        isbnlink = book,
+        public = public,
+
+    )
+
+    resources = Resource.objects.filter(creator = request.user)
+
+    return render(request, 'Wiki/resource-list.html', {
+        'resources': resources
+    })
+
+@login_required(login_url='/users/login')
+def deleteResourceView(request, pk):
+    resource = Resource.objects.get(pk = pk)
+    if resource.creator == request.user:
+        resource.delete()
+
+    resources = Resource.objects.filter(creator = request.user)
+
+    return render(request, 'Wiki/resource-list.html', {
+        'resources': resources
     })
 
 def resourceView(request, pk):
     resource = Resource.objects.get(pk = pk)
+
     if resource.isbnlink is not None:
         isbn = resource.isbnlink
         metadata = meta(isbn, SERVICE)
         DOI = doi(isbn)
         bookcover = cover(isbn)
         return render(request,'Wiki/resource.html', {
-            'metadata':metadata, 'DOI':DOI, 'cover':bookcover
+            'resource':resource, 'metadata':metadata, 'DOI':DOI, 'cover':bookcover,
         })
     return render(request,'Wiki/resource.html', {
         'resource': resource

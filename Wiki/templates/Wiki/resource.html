@@ -6,6 +6,16 @@
 
 {% block body %}
 <h1 class="display-4">{{ resource.title }}</h1>
+
+{% if resource.public == False and resource.creator == request.user %}
+<div class="alert alert-danger d-flex align-items-center" role="alert">
+    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+    <div>This resource is private.</div>
+  </div>
+{% endif %}
+
+{% if resource.public or resource.creator == request.user %}
+
 <!--TYPE: DOCUMENT-->
 {% if resource.text %}
 <b>By <a href="{% url 'profile' username=resource.creator %}" target="_blank" rel="noopener noreferrer">{{ resource.creator.first_name }} {{ resource.creator.last_name }}</a></b>
@@ -18,14 +28,12 @@
 
 {% elif metadata %}
 
-<p>The following data is fetched through Google Books and hence may be crude or incomplete.</p>
+<p>The following data is fetched through an API and hence may be crude or incomplete.</p>
 <h3>{{ metadata.Title }}</h3>
 <h5>Authored by: {{ metadata.Authors }}</h5>
 <h5>Published by: {{ metadata.Publisher }}, {{ metadata.Year }}</h5>
 <p>Digital Object Identifier (DOI): {{ DOI }}</p>
-{{ cover }}
-
-
+<img src="{{ cover }}"/>
 
 {% else %}
 Attachments: 
@@ -36,6 +44,16 @@ Attachments:
 <i class="bi bi-file-earmark-play"> </i><a href="{{ resource.videolink }}" target="_blank" rel="noopener noreferrer">{{ resource.videolink }}</a>
 {% endif %}
 
+{% endif %}
+
+{% else %}
+<p>This resource is private. Contact the uploader <a href="{% url 'profile' username=resource.creator %}">
+    {% if resource.creator.profile.is_public %}
+    {{ resource.creator.first_name }} {{ resource.creator.last_name }}
+    {% else %}
+    {{ resource.creator }}
+    {% endif %}
+</a> to request for access.</p>
 {% endif %}
 
 {% endblock body %}
