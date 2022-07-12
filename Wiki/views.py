@@ -30,9 +30,11 @@ class TermAutoComplete(autocomplete.Select2QuerySetView):
 def wikiView(request):
     if request.user.is_authenticated:
         resources = Resource.objects.filter(creator = request.user)
+        bytes = storage_usage(request.user)
+
     else:
         resources = None
-    bytes = storage_usage(request.user)
+        bytes = None
 
     return render(request, 'Wiki/index.html', {
         'resources': resources, 'bytes': bytes
