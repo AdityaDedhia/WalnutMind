@@ -25,7 +25,6 @@ htmx_urlpatterns = [
     path('add-resource/', views.addResourceView, name = "add-resource"),
     path('delete-resource/<int:pk>', views.deleteResourceView, name = "delete-resource"),
 
-
 ]
 
 urlpatterns += htmx_urlpatterns

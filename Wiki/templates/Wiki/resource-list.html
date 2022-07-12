@@ -4,8 +4,25 @@
 <div style="white-space:nowrap; overflow-x: auto; font-size:0;">
     
     {% for resource in resources %}
+      <!--TEXT LINK-->
+    {% if resource.text %}
+    <span class="btn btn-light btn-sm mb-2 zoom" style="margin:10px;  border-radius:10px">
+      <a style="text-decoration:none; color:black" href="{% url 'resourceview' pk=resource.pk %}" target="_blank" rel="noopener noreferrer">
+      <b>{{ resource.title }}</b></a>
+  
+      <span class="badge bg-danger" hx-delete="{% url 'delete-resource' pk=resource.pk %}" hx-target="#resource-list" hx-confirm="Are you sure you want to delete this resource?"><i class="bi bi-x"></i></span>
+
+      <p>{{ resource.dateCreated|naturaltime }}
+        {% if resource.public %}
+        <span class="badge bg-success rounded-pill">PUBLIC</span>
+        {% else %}
+        <span class="badge bg-secondary rounded-pill">PRIVATE</span>
+        {% endif %}</p>
+        <i class="bi bi-file-text"></i> <b>DOC</b> | Word Count: {{ resource.text|wordcount }}
+
+    </span>
       <!--FILE LINK-->
-    {% if resource.filelink %}
+    {% elif resource.filelink %}
     <span class="btn btn-dark btn-sm mb-2 zoom" style="margin:10px;  border-radius:10px">
         <a style="text-decoration:none; color:white" href="{% url 'resourceview' pk=resource.pk %}" target="_blank" rel="noopener noreferrer">
         <b>{{ resource.title }}</b></a>
@@ -19,23 +36,22 @@
 
           <i class="bi bi-paperclip"></i> <b>FILE</b> | File Size: {{ resource.filelink.size|filesizeformat }}
       </span>
-      <!--TEXT LINK-->
-    {% elif resource.text %}
-      <span class="btn btn-light btn-sm mb-2 zoom" style="margin:10px;  border-radius:10px">
-        <a style="text-decoration:none; color:black" href="{% url 'resourceview' pk=resource.pk %}" target="_blank" rel="noopener noreferrer">
-        <b>{{ resource.title }}</b></a>
-    
-        <span class="badge bg-danger" hx-delete="{% url 'delete-resource' pk=resource.pk %}" hx-target="#resource-list" hx-confirm="Are you sure you want to delete this resource?"><i class="bi bi-x"></i></span>
-
-        <p>{{ resource.dateCreated|naturaltime }}
-          {% if resource.public %}
-          <span class="badge bg-success rounded-pill">PUBLIC</span>
-          {% else %}
-          <span class="badge bg-secondary rounded-pill">PRIVATE</span>
-          {% endif %}</p>
-          <i class="bi bi-file-text"></i> <b>DOC</b> | Word Count: {{ resource.text|wordcount }}
-
-      </span>
+      <!--IMAGE LINK-->
+      {% elif resource.imagelink %}
+      <span class="btn btn-info btn-sm mb-2 zoom" style="margin:10px;  border-radius:10px">
+          <a style="text-decoration:none; color:black" href="{% url 'resourceview' pk=resource.pk %}" target="_blank" rel="noopener noreferrer">
+          <b>{{ resource.title }}</b></a>
+          <span class="badge bg-danger" hx-delete="{% url 'delete-resource' pk=resource.pk %}" hx-target="#resource-list" hx-confirm="Are you sure you want to delete this resource?"><i class="bi bi-x"></i></span>
+          <p>{{ resource.dateCreated|naturaltime }}
+            {% if resource.public %}
+            <span class="badge bg-success rounded-pill">PUBLIC</span>
+            {% else %}
+            <span class="badge bg-secondary rounded-pill">PRIVATE</span>
+            {% endif %}</p>
+  
+            <i class="bi bi-image"></i> <b>IMG</b> | Image Size: {{ resource.imagelink.size|filesizeformat }}
+        </span>
+  
       <!--VIDEO LINK-->
     {% elif resource.videolink %}
     <span class="btn btn-danger btn-sm mb-2 zoom" style="margin:10px; border-radius:10px">
@@ -55,8 +71,9 @@
 
     {% endif %}
     {% endfor %}
-
   </div>
+  <h6 style="color:gray">Total storage used: {{ bytes|filesizeformat }} / 200MB</h6>
+
 {% else %}
 <p>No resources added yet...</p>
 {% endif %}

@@ -193,12 +193,12 @@
 
 {% if not user.is_authenticated %}
 {% if pubs_left <= 0 %}
- <div class="position-sticky" style="position:absolute; bottom:0; width:100%; height:400px; background-color:#1f1f1f; border-radius:20px 20px 0px 0px; box-shadow: 5px 6px gray;">
-    <h1 class="display-6" style="color:white; text-align:center">We apologise for the inconvenience. You are out of publications to view.<a href="{% url 'loginn' %}">Login</a> or <a href="{% url 'registerr' %}">register</a> for a free <a href="https://www.walnutmind.org">walnutmind.org</a> account to continue uninterrupted service access and functionality.</h1>
+ <div class="position-sticky" style="position:absolute; bottom:0; width:100%; height:300px; background-color:#1f1f1f; border-radius:20px 20px 0px 0px; box-shadow: 5px 6px gray;">
+    <h1 class="display-6" style="color:white; text-align:center">We apologise for the inconvenience. You are out of publications to view.<a href="{% url 'loginn' %}">Login</a> or <a href="{% url 'registerr' %}">register</a> for a free <a href="https://www.walnutmind.org">walnutmind.org</a> account to continue.</h1>
  </div>
  {% else %}
  <div class="position-sticky alert alert-dismissible fade show" role="alert" style="position:absolute; bottom:0; width:100%; height:auto; background-color:#d6d6d6; border-radius:20px 20px 0px 0px; box-shadow: 5px 6px gray;">
-    <h6 style="padding:20px; color:gray; text-align:center">You have <b>{{ pubs_left|add:"-1" }}</b> more publications left to view. Consider <a href="{% url 'loginn' %}">logging in</a> or <a href="{% url 'registerr' %}">registering</a> for a free <a href="https://www.walnutmind.org">walnutmind.org</a> account to continue uninterrupted service access and functionality.</h6>
+    <h6 style="padding:20px; color:gray; text-align:center">You have <b>{{ pubs_left|add:"-1" }}</b> more publications left to view. Consider <a href="{% url 'loginn' %}">logging in</a> or <a href="{% url 'registerr' %}">registering</a> for a free <a href="https://www.walnutmind.org">walnutmind.org</a> account to continue uninterrupted service access.</h6>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
  </div>
  {% endif %}
@@ -208,7 +208,7 @@
 </div>
 </div>
 {% else %}
-<p>We apologoize for the inconvenience but the commentary for '{{ post.title }}' has been redacted by the author.</p>
+<p>We apologise for the inconvenience but the commentary for '{{ post.title }}' has been redacted by the author.</p>
 
 <p>The author may currently be updating the post or it may have been archived.</p>
 

@@ -8,8 +8,10 @@ from django.shortcuts import get_object_or_404, render, redirect
 from isbnlib import meta, cover,doi
 from django.contrib.postgres.search import SearchQuery, SearchVector, SearchRank, SearchHeadline #Support full-text search
 from taggit.models import Tag
+from django.conf import settings
 from Articles.views import Post as ArticlesPost
 from Commentaries.views import Post as BooksPost
+from .utils import storage_usage
 from Diaries.views import Post as BlogPost
 from dal import autocomplete
 from pytube import YouTube #Support YT Metadata
@@ -30,9 +32,10 @@ def wikiView(request):
         resources = Resource.objects.filter(creator = request.user)
     else:
         resources = None
+    bytes = storage_usage(request.user)
 
     return render(request, 'Wiki/index.html', {
-        'resources': resources
+        'resources': resources, 'bytes': bytes
     })
 
 class resourceList(ListView):
@@ -56,6 +59,14 @@ def addResourceView(request):
     book = request.POST.get('isbnlink')
     public = bool(request.POST.get('public'))
 
+    #VALIDATE TOTAL FILE STORAGE
+    bytes = storage_usage(request.user)
+    if bytes > settings.BASIC_STORAGE:
+        messages.success(request, ("You have exceeded your maximum file storage capacity of 200MB. Please delete some files before adding more."))
+        return render(request, 'Wiki/resource-list.html', {
+            'resources': resources
+        })
+
     Resource.objects.create(
         title = title,
         creator = request.user,
@@ -68,13 +79,12 @@ def addResourceView(request):
         videolink = video,
         isbnlink = book,
         public = public,
-
     )
 
     resources = Resource.objects.filter(creator = request.user)
 
     return render(request, 'Wiki/resource-list.html', {
-        'resources': resources
+        'resources': resources, 'bytes': bytes
     })
 
 @login_required(login_url='/users/login')

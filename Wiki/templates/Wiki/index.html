@@ -13,48 +13,6 @@
     </ol>
 
     <style>
-         
-      .btn-warm-blue {
-        background-image: linear-gradient(to right, #1FA2FF 0%, #12D8FA  51%, #1FA2FF  100%);
-        margin: 10px;
-        padding: 5px 15px;
-        text-align: center;
-        text-transform: uppercase;
-        text-decoration: none;
-        transition: 0.5s;
-        background-size: 200% auto;
-        color: white;            
-        box-shadow: 0 0 20px #eee;
-        border-radius: 10px;
-      }
-
-      .btn-warm-blue:hover {
-        background-position: right center; /* change the direction of the change here */
-        color: #fff;
-        text-decoration: none;
-      }
-
-           
-      .btn-vivid-red {
-        background-image: linear-gradient(to right, #D31027 0%, #EA384D  51%, #D31027  100%);
-        margin: 10px;
-        padding: 5px 15px;
-        text-align: center;
-        text-transform: uppercase;
-        transition: 0.5s;
-        background-size: 200% auto;
-        color: white;            
-        box-shadow: 0 0 20px #eee;
-        border-radius: 10px;
-      }
-
-      .btn-vivid-red:hover {
-        background-position: right center; /* change the direction of the change here */
-        color: #fff;
-        text-decoration: none;
-      }
-     
-
       .marquee-wrapper{
         text-align:center;
       }
@@ -113,14 +71,11 @@
          left: 0; 
         }
       }
-
-
     #wrapper{
         position: relative;
         width: 200px;
         height: 200px;
     }
-    
     .content{
         font-size: 26px;
         font-weight: bold;
@@ -129,16 +84,13 @@
         margin-left:27vw;
         transform:translateY(100px);
     }
-
     .background{
         color: #999999;
         position: absolute;
         top: 0;
         left: 0;
         z-index: -100;
-      
     }
-    
     </style>
 
     <h3 style="font-family: 'Josefin Sans', sans-serif;">WM <b style="color:gray">Wiki</b></h3>
@@ -472,27 +424,27 @@
           <h6>Content Type</h6>
           <cap style="font-size:13px; color:gray">With multiple sources, precedence is given in this order:</cap><hr/>
           <div class="form-group row">
-            <label for="text">Rich Text Field</label>
+            <label for="text">Rich Text Doc</label>
             <input class="form-control" type="textarea" name="text" placeholder="Type some text..."/>
           </div>
           <div class="form-group row">
-            <label for="filelink">File Field</label>
-            <input class="form-control" type="file" name="filelink"/>
+            <label for="filelink">File (10MB Limit)</label>
+            <input class="form-control" type="file" accept=".pdf" name="filelink"/>
           </div>
           <div class="form-group row">
-            <label for="imagelink">Image Field</label>
-            <input class="form-control" type="file" name="imagelink"/>
+            <label for="imagelink">Image (5MB Limit)</label>
+            <input class="form-control" type="file" accept="image/*" name="imagelink"/>
           </div>
           <div class="form-group row">
-            <label for="weblink">Web Link</label>
+            <label for="weblink">Webpage</label>
             <input class="form-control" type="url" name="weblink"/>
           </div>
           <div class="form-group row">
-            <label for="videolink">Video Link</label>
+            <label for="videolink">Video (YT, Vimeo)</label>
             <input class="form-control" type="url" name="videolink"/>
           </div>
           <div class="form-group row">
-            <label for="isbnlink">Book ISBN-13</label>
+            <label for="isbnlink">Book (ISBN-13)</label>
             <input class="form-control" type="number" name="isbnlink"/>
           </div>
           <div class="form-group row">
@@ -501,7 +453,6 @@
             <button hx-post="{% url 'add-resource' %}"hx-encoding="multipart/form-data" hx-target="#resource-list" hx-swap="outerhtml" type="submit" style="margin-left:2px" class="btn btn-warm-blue"><b>SUBMIT</b></button>
 
         </div>
-
 
       </form>
     </div>
@@ -517,7 +468,5 @@
 <p style="text-align:center"><a href="{% url 'loginn' %}">Login</a> or <a href="{% url 'registerr' %}">register</a> to save, store, and share your content.</p>
 {% endif %}
 <br/>
-
-
 
 {% endblock body %}

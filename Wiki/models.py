@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 from embed_video.fields import EmbedVideoField
 from ckeditor_uploader.fields import RichTextUploadingField
 from Blog.utils import image_resize
-
+from .validators import validate_file_size, validate_image_size
+from django.core.exceptions import ValidationError
 
 class Term(models.Model):
     term = models.CharField(max_length=128, blank = False, unique=True)
@@ -57,9 +58,18 @@ class Resource(models.Model):
     class Meta:
         ordering = ['-dateCreated']
 
-
     def __str__(self):
         return str(self.title)
+
+    def clean(self):
+        if self.filelink:
+            validate_file_size(self.filelink)
+        if self.imagelink:
+            validate_image_size(self.imagelink)
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
 
 class Collection(models.Model):
     title = models.CharField(max_length=128, blank = False, unique=True)

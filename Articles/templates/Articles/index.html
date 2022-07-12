@@ -405,7 +405,7 @@
 
 
 {% if not request.user.is_authenticated %}
-
+<!--TBD
 <section class="container">
   <div class="bg-dark border border-light rounded-3 py-5 px-4 px-sm-0">
     <div class="row justify-content-center py-sm-2 py-lg-5">
@@ -413,7 +413,6 @@
         <h2 class="display-4 text-light mb-4">Ready to get notified?</h2>
         <p class="display-6 fs-lg text-light opacity-70 pb-4 mb-3">Get the <img src="{% static 'Articles/logo.png' %}" style="width:48px; height:48px;"> in your inbox today.</p>
 
-        <!-- Desktop -->
         <form class="input-group input-group-lg d-none d-sm-flex needs-validation mb-3" novalidate="">
           <input style="background:none; color:white" type="email" class="form-control rounded-start ps-5" placeholder="Your email" required="">
           <i class="bi bi-envelope fs-lg text-white position-absolute top-50 start-0 translate-middle-y ms-3 zindex-5"></i>
@@ -421,7 +420,6 @@
           <button type="submit" class="btn btn-primary">Get notified</button>
         </form>
 
-        <!-- Mobile -->
         <form class="needs-validation d-sm-none mb-3" novalidate="">
           <div class="position-relative mb-3">
             <input style="background:none; color:white" type="email" class="form-control form-control-lg rounded-start ps-5" placeholder="Your email" required="">
@@ -435,7 +433,7 @@
     </div>
   </div>
 </section>
-
+-->
 
 {% endif %}
 
