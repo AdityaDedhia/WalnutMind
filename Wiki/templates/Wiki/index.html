@@ -73,15 +73,17 @@
       }
     #wrapper{
         position: relative;
-        width: 200px;
+        width: 100vw;
         height: 200px;
+        display:block;
+
     }
     .content{
         font-size: 26px;
         font-weight: bold;
         z-index: 100;
-        width:300px;
-        margin-left:27vw;
+        width:400px;
+        margin:auto;
         transform:translateY(100px);
     }
     .background{
@@ -103,16 +105,16 @@
         <div id="wrapper">
 
           <!--FRONT-->
-          <div class="content" style="display: block;">
+          <div class="content" style="padding-right:100px">
             <form method="post" action="{% url 'search' %}" class="input-group mt-4">
               {% csrf_token %}
-              <input style="border-radius:8px 0px 0px 8px" class="form-control form-control-lg border-primary" type="search" placeholder="Enter query..." aria-label="Search" name="searchedterm">
-              <button class="btn btn-primary btn-lg m-0" type="submit">
-                <span class="d-none d-md-block">Search</span>
-                <i class="d-block d-md-none bi bi-search"></i></button>
+              <input style="border-radius:16px 16px 16px 16px; z-index:1;" class="form-control form-control-lg border-secondary" type="search" placeholder="What are you searching for today?" aria-label="Search" name="searchedterm">
+              <button class="btn" style="z-index:2; border-radius:45%; margin-left:-42px" type="submit">
+                <i class="bi bi-search"></i>
+                </button>
             </form><br/>
-            <a class="btn btn-info mb-4" style="width:100px; margin-left:40px; padding:5px; text-align:center" href="{% url 'listsview' %}">Lists</a>
-            <a class="btn btn-info mb-4" style="width: 100px; padding:5px; text-align:center" href="{% url 'collectionsview' %}">Collections</a>
+            <a class="btn btn-secondary mb-4" style="width:100px; margin-left:40px; padding:5px; text-align:center" href="{% url 'listsview' %}">Lists</a>
+            <a class="btn btn-secondary mb-4" style="width: 100px; padding:5px; text-align:center" href="{% url 'collectionsview' %}">Collections</a>
           </div>
           <!--BACK-->
 
@@ -402,7 +404,6 @@
         {% csrf_token %}
         {{ form.media }}
 
-
           <div class="form-group row">
             <input class="btn btn-vivid-red" style="margin-left:2px; font-weight:bold;" type='reset' value='Clear' name='reset'> 
 
@@ -450,7 +451,7 @@
           <div class="form-group row">
             Make public?&nbsp;<input class="form-control form-check-input" type="checkbox" name="public"/>
 
-            <button hx-post="{% url 'add-resource' %}"hx-encoding="multipart/form-data" hx-target="#resource-list" hx-swap="outerhtml" type="submit" style="margin-left:2px" class="btn btn-warm-blue"><b>SUBMIT</b></button>
+            <button hx-post="{% url 'add-resource' %}" hx-encoding="multipart/form-data" hx-target="#resource-list" hx-swap="outerhtml" type="submit" style="margin-left:2px" class="btn btn-warm-blue"><b>SUBMIT</b></button>
 
         </div>
 

@@ -1,0 +1,11 @@
+{% csrf_token %}
+
+<input type="text"
+hx-post="{% url 'search-term' pk=list.pk %}"
+hx-target="#results"
+hx-trigger="keydown changed delay:50ms"
+name="search"
+class="form-control-sm mr-2"
+placeholder="Search terms"/>
+
+<div id="results"></div>

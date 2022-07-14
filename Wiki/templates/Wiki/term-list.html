@@ -1,0 +1,47 @@
+
+{% if terms %}
+
+{% if messages %}
+<ul hx-get="{% url 'clear-messages' %}" hx-trigger="load delay:4s">
+<div class="alert alert-success">
+        {% for message in messages %}
+        {{ message }}
+        {% endfor %}
+</div>
+</ul>
+
+{% endif %}
+
+<ul>
+    <form class="sortable list-group" hx-trigger="end" hx-post="/sort" hx-target="#term-list">
+        <div class="htmx-indicator">Updating...</div>
+
+    {% for term in terms %}
+        <div class="list-group-item justify-content-between list-group-item-action">
+
+            <input type="hidden" name="term-order" value="{{ term.pk }}"/>
+
+        <a href="/wiki/define-{{ term.slug }}">{{ term.term }}</a>
+        {% if term.verified %}
+        <i style="color:green" class="bi bi-check2-circle"></i>
+        {% endif %}
+        <span class="btn btn-danger btn-sm" hx-delete="{% url 'remove-term' listpk=list.pk termpk=term.pk %}" hx-target="#term-list" hx-confirm="Are you sure you want to remove the term from this list?">Remove</span>
+
+        {% if term.cover %}
+        <div class="row">
+
+        <div class="col-md-11 col-sm-10" style="font-size:13px;">{{ term.definition }}</div>
+        <div class="col-md-1 col-sm-2" style="white-space: nowrap;">
+            <img src="{{ term.cover.url }}" style="height:40px; width:auto; float:right; border-radius:3px; display:inline"/>
+        </div>
+
+        </div>
+        {% else %}
+        <p style="font-size:13px">{{ term.definition }}</p>
+        {% endif %}
+
+        </div>
+    {% endfor %}
+    </form>
+</ul>
+    {% endif %}

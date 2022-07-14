@@ -10,6 +10,7 @@ urlpatterns = [
     path('lists', views.listsView, name = "listsview"),
     path('lists/new', views.newListView, name = "newlist"),
     path('lists/<slug:pk_slug>', views.listView.as_view(), name = "listview"),
+    path('list/<int:pk>', views.termList.as_view(), name = "term-list"),
     path('resource-<int:pk>',views.resourceView, name = "resourceview"),
     path('resources/', views.resourceList.as_view(), name = "resource-list"),
     path('collections', views.collectionsView, name = "collectionsview"),
@@ -22,8 +23,14 @@ urlpatterns = [
 ] + static(settings.STATIC_URL, document_root = settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 
 htmx_urlpatterns = [
+    path('add-term/<int:pk>', views.addTermView, name = "add-term"),
+    path('add-existing-term/<int:pk>', views.existingTermView, name = "add-existing-term"),
+    path('search-term/<int:pk>', views.searchTermView, name = "search-term"),
+    path('remove-term/<int:listpk>/<int:termpk>', views.removeTermView, name = "remove-term"),
+
     path('add-resource/', views.addResourceView, name = "add-resource"),
     path('delete-resource/<int:pk>', views.deleteResourceView, name = "delete-resource"),
+    path('clear-messages/', views.clearMessagesView, name = "clear-messages"),
 
 ]
 

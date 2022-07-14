@@ -41,6 +41,14 @@ class Blacklist(models.Model):
     def __str__(self):
         return str(self.ip)
 
+class Infraction(models.Model):
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING) #keep log.
+    reason = models.CharField(max_length=255)
+    datelog = models.DateTimeField(auto_now_add = True)
+
+    def __str__(self):
+        return str(self.user)
+
 class Highlight(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.CharField(max_length=255, blank = False)

@@ -5,7 +5,7 @@ from embed_video.fields import EmbedVideoField
 from ckeditor_uploader.fields import RichTextUploadingField
 from Blog.utils import image_resize
 from .validators import validate_file_size, validate_image_size
-from django.core.exceptions import ValidationError
+from django.db.models.functions import Lower
 
 class Term(models.Model):
     term = models.CharField(max_length=128, blank = False, unique=True)
@@ -18,13 +18,16 @@ class Term(models.Model):
     dateUpdated = models.DateTimeField(auto_now = True)
     verified = models.BooleanField(default = False)
 
+    class Meta:
+        ordering = [Lower('term')] #Case insensitive
+
     def __str__(self):
         return str(self.term)
 
     def save(self, *args, **kwargs):
         if self.cover:
             image_resize(self.cover, 800, 600)
-            super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 class List(models.Model):
     title = models.CharField(max_length=128, blank = False, unique=True)

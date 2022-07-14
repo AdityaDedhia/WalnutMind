@@ -1,10 +1,13 @@
+from http.client import BAD_REQUEST
 from .models import Term, List, Resource, Collection
 from django.views.generic import DetailView, ListView
-from django.http import Http404
+from django.http import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from .forms import NewResourceForm, NewTermForm, NewListForm
 from django.contrib import messages
+from django.contrib.auth import logout
 from django.shortcuts import get_object_or_404, render, redirect
+from django.urls import reverse
 from isbnlib import meta, cover,doi
 from django.contrib.postgres.search import SearchQuery, SearchVector, SearchRank, SearchHeadline #Support full-text search
 from taggit.models import Tag
@@ -12,10 +15,15 @@ from django.conf import settings
 from Articles.views import Post as ArticlesPost
 from Commentaries.views import Post as BooksPost
 from .utils import storage_usage
+from Blog.utils import profanity_filter
 from Diaries.views import Post as BlogPost
 from dal import autocomplete
 from pytube import YouTube #Support YT Metadata
 SERVICE = "wiki"
+
+
+def clearMessagesView(request):
+    return HttpResponse("")
 
 
 class TermAutoComplete(autocomplete.Select2QuerySetView):
@@ -40,6 +48,101 @@ def wikiView(request):
         'resources': resources, 'bytes': bytes
     })
 
+
+def searchTermView(request, pk):
+    query = request.POST.get('search')
+
+    list = List.objects.get(pk = pk)
+
+    terms = list.terms.all()
+
+    results = Term.objects.filter(term__icontains=query).exclude(term__in=terms.values_list('term', flat=True)) #filters out terms already in list
+
+
+    return render(request, 'Wiki/search-term-results.html', {
+        'results': results, 'pk': pk
+    })
+
+@login_required(login_url='/users/login')
+def removeTermView(request, listpk, termpk):
+    term = Term.objects.get(pk = termpk)
+    list = List.objects.get(pk = listpk)
+
+    list.terms.remove(term)
+    list.save()
+
+    terms = Term.objects.filter(list = list)
+
+    return render(request, 'Wiki/term-list.html', {
+        'terms': terms,'list':list
+    })
+
+
+@login_required(login_url='/users/login')
+def existingTermView(request, pk):
+    term = request.POST.get("term")
+  
+    object = Term.objects.get(term = term)
+
+    list = List.objects.get(pk = pk)
+    list.terms.add(object)
+    list.save()
+
+    terms = Term.objects.filter(list = list)
+    messages.success(request, f"Added {term} to {list}.")
+    return render(request, 'Wiki/term-list.html', {
+        'terms': terms,'list':list
+    })
+
+@login_required(login_url='/users/login')
+def addTermView(request, pk):
+   
+    if request.method == 'POST':
+        form = NewTermForm(request.POST)
+
+        #Since cover is optional, check whether it exists:
+        if 'cover' in request.FILES:
+            form.instance.cover = request.FILES['cover']
+        else:
+            form.instance.cover = None
+                
+        if form.is_valid():
+            form.instance.creator = request.user #Because author field from forms.py was excluded
+
+            if profanity_filter(form.instance.term) == True or profanity_filter(form.instance.definition) == True:
+                return HttpResponseBadRequest(STATUS=BAD_REQUEST)
+
+            if request.user.profile.is_author:
+                form.instance.verified = True
+            form.save()
+
+        latest_id = Term.objects.latest('pk').pk 
+        newterm = Term.objects.get(pk = latest_id)
+
+        #2) ADD TERM TO LIST
+
+        list = List.objects.get(pk = pk)
+        list.terms.add(newterm)
+        list.save()
+
+        #3) RETRIEVE UPDATED TERMS LIST
+
+        terms = Term.objects.filter(list = list)
+        messages.success(request, f"Added {newterm} to {list}.")
+
+        return render(request, 'Wiki/term-list.html', {
+            'terms': terms,'list':list
+        })
+  
+
+class termList(ListView):
+    model = Term
+    template_name ='Wiki/term-list.html'
+    context_object_name = 'terms'
+
+    def get_queryset(self):
+        return Resource.objects.filter(creator = self.request.user)[:10] #MUST MATCH WITH wikiView
+
 class resourceList(ListView):
     model = Resource
     template_name ='Wiki/resource-list.html'
@@ -50,6 +153,7 @@ class resourceList(ListView):
 
 @login_required(login_url='/users/login')
 def addResourceView(request):
+
     title = request.POST.get('title')
     description = request.POST.get('description')
     source = request.POST.get('source')
@@ -147,7 +251,10 @@ class listView(DetailView):
     def get_context_data(self, *args, **kwargs):
         context = super(listView, self).get_context_data(*args, **kwargs)
         terms = Term.objects.filter(list = self.object)
+        form = NewTermForm(self.request.POST)
+
         context['terms'] = terms
+        context['form'] = form
         return context
 
     def get_object(self, queryset = None):

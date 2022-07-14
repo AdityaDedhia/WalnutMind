@@ -1,0 +1,18 @@
+{% if results %}
+
+{% csrf_token %}
+
+<ul class="list-group">
+    {% for term in results %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+    
+            {{ term.term }}
+            <span class="btn btn-primary badge-pill" hx-post="{% url 'add-existing-term' pk=pk %}" hx-vals='{"term": "{{ term.term }}"}' hx-target="#term-list">Add</span>
+
+        </li>
+    {% endfor %}
+</ul>
+
+{% else %}
+<p>No terms found.</p>
+{% endif %}

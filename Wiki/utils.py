@@ -1,5 +1,4 @@
 from .models import Resource
-from django.shortcuts import render
 
 def storage_usage(User):
     #VALIDATE TOTAL FILE STORAGE
@@ -12,5 +11,6 @@ def storage_usage(User):
 
         if resource.imagelink:
             bytes += resource.imagelink.size
-            
+
     return bytes
+

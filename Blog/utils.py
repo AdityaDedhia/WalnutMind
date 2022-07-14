@@ -2,6 +2,7 @@ from django.core.files import File
 from pathlib import Path
 from PIL import Image
 from io import BytesIO
+from profanity_check import predict, predict_prob
 
 image_types = {
     "jpg": "JPEG",
@@ -34,3 +35,10 @@ def image_resize(image, width, height):
         file_object = File(buffer)
         # Save the new resized file as usual, which will save to S3 using django-storages
         image.save(img_filename, file_object)
+
+def profanity_filter(string):
+    if predict([string]) > 0.7:
+        
+        return True
+    else:
+        return False

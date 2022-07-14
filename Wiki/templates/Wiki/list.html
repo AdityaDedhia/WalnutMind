@@ -12,35 +12,63 @@
     <li class="breadcrumb-item active" aria-current="page">{{ list.title }} Terms List</li>
 </ol>
 
+
 <h1 class="display-6">{{ list.title }} List</h1>
 <hr/>
 
-<ul>
-    <div class="list-group">
-    {% for term in terms %}
-        <div class="list-group-item list-group-item-action">
-        
-        <a href="/wiki/define-{{ term.slug }}">{{ term.term }}</a>
-        {% if term.verified %}
-        <i style="color:green" class="bi bi-check2-circle"></i>
-        {% endif %}
+{% if request.user == list.creator %}
 
-        {% if term.cover %}
-        <div class="row">
+<form method="post">
 
-        <div class="col-md-11 col-sm-10" style="font-size:13px;">{{ term.definition }}</div>
-        <div class="col-md-1 col-sm-2" style="white-space: nowrap;">
-            <img src="{{ term.cover.url }}" style="height:40px; width:auto; float:right; border-radius:3px; display:inline"/>
+    <div class="row">
+    <div class="col-4" id="term">
+        <div class="row" id="term">
+            <label style="float: left;" for="term">Term</label>
+            {{ form.term }}
         </div>
-
+        <div class="row" id="cover">
+            <label style="float: left;" for="cover"><b>Cover</b></label><hr/>
+            {{ form.cover }}
         </div>
-        {% else %}
-        <p style="font-size:13px">{{ term.definition }}</p>
-        {% endif %}
-
+        <div class="row" id="coverSrc">
+            <label style="float: left;" for="cover">Source</label>
+            {{ form.coverSrc }}
         </div>
-    {% endfor %}
+        <div class="row" id="coverURL">
+            <label style="float: left;" for="coverURL">URL</label>
+            {{ form.coverURL }}
+        </div>
+    {{ existing_form.terms }}
     </div>
-</ul>
+
+    <div class="col-8" id="definition">
+        <label style="float: left;" for="definition">Definition</label>
+        {{ form.definition }}
+    </div>
+</div>
+
+    <button hx-post="{% url 'add-term' pk=list.pk %}" hx-encoding="multipart/form-data" hx-target="#term-list" hx-swap="outerhtml" type="submit" class="btn-warm-blue"><b>SUBMIT</b></button>
+    <input class="btn-vivid-red" style="margin-left:2px; font-weight:bold;" type='reset' value='Clear' name='reset'> 
+</form>
+{% endif %}
+
+{% if list.public == False and request.user == list.creator %}
+<div class="alert alert-danger d-flex align-items-center" role="alert">
+    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+    <div>This list is private.</div>
+</div>
+{% endif %}
+
+<div class="row">
+
+<div class="col-9" style="z-index:0" id="term-list">
+    {% include 'Wiki/term-list.html' %}
+</div>
+
+<div class="col-3">
+{% include 'Wiki/search-term.html' %}
+</div>
+
+</div>
 
 {% endblock body %}
