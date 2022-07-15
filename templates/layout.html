@@ -52,6 +52,7 @@
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Nuosu+SIL&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Nuosu+SIL&display=swap');
+   
     </style>
 
     <!--NAVBAR-->
@@ -116,12 +117,12 @@
                     <div style="margin-top:11px; text-align:center">
 
   
-                    {% if request.user.profile.is_author == True %}
+                    <!--{% if request.user.profile.is_author == True %}
                     <a style="box-shadow: 0 0 20px #eee;" class="zoom btn btn-info rounded-pill" href="{% url 'newpost' %}"><i class="bi bi-pen-fill"></i></a>
                     {% else %}
                     <a style="box-shadow: 0 0 20px #eee;" class="zoom btn btn-info rounded-pill" href="{% url 'newblogpost' %}"><i class="bi bi-pen-fill"></i></a>
                     {% endif %}
-                    <!--User-->
+                    DECOMISSIONED-->
             
                     <a style="font-size:0;" href="{% url 'profile' username=request.user.username %}">
                       {% if request.user.profile.avatar %}

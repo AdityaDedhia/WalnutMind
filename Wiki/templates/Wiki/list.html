@@ -9,11 +9,12 @@
     <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
     <li class="breadcrumb-item"><a href="{% url 'wikiindex' %}">Wiki</a></li>
     <li class="breadcrumb-item"><a href="{% url 'listsview' %}">Walnut Define</a></li>
-    <li class="breadcrumb-item active" aria-current="page">{{ list.title }} Terms List</li>
+    <li class="breadcrumb-item"><a href="{% url 'listsview' %}">Lists</a></li>
+
+    <li class="breadcrumb-item active" aria-current="page">{{ list.title }}</li>
 </ol>
 
-
-<h1 class="display-6">{{ list.title }} List</h1>
+<h1 class="display-6">{{ list.title }}</h1>
 <hr/>
 
 {% if request.user == list.creator %}

@@ -1,6 +1,8 @@
 from django.contrib.sites.shortcuts import get_current_site
 from django.dispatch import receiver
 from two_factor.signals import user_verified
+from django.contrib.auth import user_logged_in, user_logged_out
+from .models import Sessions
 
 @receiver(user_verified)
 def test_receiver(request, user, device, **kwargs):

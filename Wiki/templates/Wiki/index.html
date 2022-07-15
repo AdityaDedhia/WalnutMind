@@ -13,6 +13,10 @@
     </ol>
 
     <style>
+      ::placeholder {
+        text-align: center; 
+      }
+
       .marquee-wrapper{
         text-align:center;
       }
@@ -82,8 +86,8 @@
         font-size: 26px;
         font-weight: bold;
         z-index: 100;
-        width:400px;
-        margin:auto;
+        width:75%;
+        margin-left:15%;
         transform:translateY(100px);
     }
     .background{
@@ -102,19 +106,14 @@
     <!--SEARCH-->
     <section class="pt-4">
       <div class="container">
-        <div id="wrapper">
+        <div id="wrapper" style="max-width:100%">
 
           <!--FRONT-->
-          <div class="content" style="padding-right:100px">
+          <div class="content">
             <form method="post" action="{% url 'search' %}" class="input-group mt-4">
               {% csrf_token %}
-              <input style="border-radius:16px 16px 16px 16px; z-index:1;" class="form-control form-control-lg border-secondary" type="search" placeholder="What are you searching for today?" aria-label="Search" name="searchedterm">
-              <button class="btn" style="z-index:2; border-radius:45%; margin-left:-42px" type="submit">
-                <i class="bi bi-search"></i>
-                </button>
-            </form><br/>
-            <a class="btn btn-secondary mb-4" style="width:100px; margin-left:40px; padding:5px; text-align:center" href="{% url 'listsview' %}">Lists</a>
-            <a class="btn btn-secondary mb-4" style="width: 100px; padding:5px; text-align:center" href="{% url 'collectionsview' %}">Collections</a>
+              <input style="opacity: 75%; border-radius:16px 16px 16px 16px; z-index:1;" class="form-control form-control-lg border-secondary" type="search" placeholder="What are you searching for today?" aria-label="Search" name="searchedterm">
+            </form>
           </div>
           <!--BACK-->
 
@@ -405,7 +404,7 @@
         {{ form.media }}
 
           <div class="form-group row">
-            <input class="btn btn-vivid-red" style="margin-left:2px; font-weight:bold;" type='reset' value='Clear' name='reset'> 
+            <input class="btn-vivid-red" style="margin-left:2px; font-weight:bold;" type='reset' value='Clear' name='reset'> 
 
             <label style="float: left;" for="title">Title</label>
             <input class="form-control" type="text" name="title" placeholder="Required"/>
@@ -451,7 +450,7 @@
           <div class="form-group row">
             Make public?&nbsp;<input class="form-control form-check-input" type="checkbox" name="public"/>
 
-            <button hx-post="{% url 'add-resource' %}" hx-encoding="multipart/form-data" hx-target="#resource-list" hx-swap="outerhtml" type="submit" style="margin-left:2px" class="btn btn-warm-blue"><b>SUBMIT</b></button>
+            <button hx-post="{% url 'add-resource' %}" hx-encoding="multipart/form-data" hx-target="#resource-list" hx-swap="outerhtml" type="submit" style="margin-left:2px" class=" btn-warm-blue"><b>SUBMIT</b></button>
 
         </div>
 
@@ -459,14 +458,26 @@
     </div>
     <!--MAIN AREA-->
     <div class="col-md-8 col-lg-9 col-xl-10">
-      <h3>Your latest additions: </h3>
+      <br/>
+      <div style="display:flex; align-content: space-between">
+      <a href="{% url 'newblogpost' %}" class="btn-dreamy-purple">WM Publish</a>
+      <a href="{% url 'newterm' %}" class="btn-dreamy-blue">WM Define</a>
+      <a href="{% url 'newresource' %}" class="btn-mystic-peach">WM Collect</a>
+      <b style="flex-grow:1"></b>
+      <a href="{% url 'listsview' %}" class="btn-dark-violet" style="flex-position: end">WM Lists</a>
+      <a href="{% url 'collectionsview' %}" class="btn-dark-violet" style="flex-position: end">WM Collections</a>
+      </div>
+      <br/>
+      <h3>Your latest additions:</h3>
       <div id="resource-list">
         {% include 'Wiki/resource-list.html' %}
       </div><hr/>
+
     </div>
   </div>
 {% else %}
-<p style="text-align:center"><a href="{% url 'loginn' %}">Login</a> or <a href="{% url 'registerr' %}">register</a> to save, store, and share your content.</p>
+<br/><br/><br/><br/><br/>
+<p style="text-align:center; font-weight:bold;"><a href="{% url 'loginn' %}">Login</a> or <a href="{% url 'registerr' %}">register</a> to upload, find, and share your content.</p>
 {% endif %}
 <br/>
 

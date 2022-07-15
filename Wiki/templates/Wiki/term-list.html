@@ -11,10 +11,9 @@
 </ul>
 
 {% endif %}
-
 <ul>
     <form class="sortable list-group" hx-trigger="end" hx-post="/sort" hx-target="#term-list">
-        <div class="htmx-indicator">Updating...</div>
+        <div class="htmx-indicator noselect">Updating...</div>
 
     {% for term in terms %}
         <div class="list-group-item justify-content-between list-group-item-action">
@@ -42,6 +41,7 @@
 
         </div>
     {% endfor %}
+    </ul>
+
     </form>
-</ul>
     {% endif %}

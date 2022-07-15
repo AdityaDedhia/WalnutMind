@@ -33,6 +33,7 @@ class Profile(models.Model):
             image_resize(self.avatar, 200, 200)
         super().save(*args, **kwargs)
 
+
 class Blacklist(models.Model):
     ip = models.GenericIPAddressField()
     reason = models.CharField(max_length=255)
@@ -40,6 +41,8 @@ class Blacklist(models.Model):
 
     def __str__(self):
         return str(self.ip)
+
+
 
 class Infraction(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING) #keep log.
