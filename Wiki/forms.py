@@ -1,5 +1,5 @@
 from django import forms
-from .models import Term, List, Resource
+from .models import Term, List, Resource, Collection
 from dal import autocomplete
 
 class NewTermForm(forms.ModelForm):
@@ -45,4 +45,17 @@ class ResourceForm(forms.ModelForm):
             'imagelink': forms.FileInput(attrs={'class': 'form-control'}),
             'text': forms.Textarea(attrs={'class': 'form-control'}),
             'description': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+class CollectionForm(forms.ModelForm):
+    class Meta:
+        model = Collection
+        fields = ('title', 'cover', 'description', 'public')
+
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'cover': forms.FileInput(attrs={'class': 'form-control'}),
+            'description': forms.TextInput(attrs={'class': 'form-control'}),
+            'public': forms.CheckboxInput(attrs = {'class': 'form-check-input'}),
+
         }

@@ -529,7 +529,7 @@
   <!--/SEARCH-->
     {% if request.user.is_authenticated %}
 
-    <div id="main-content" class="row">
+    <div class="row">
 
   <!--ADD RESOURCE-->
 
@@ -594,7 +594,6 @@
 
       </form>
     </div>
-    
     <!--MAIN AREA-->
     <div class="col-sm-7 col-md-8 col-lg-9 col-xl-10">
       <br/>
@@ -614,10 +613,10 @@
 
       <h3>Your Collections:</h3>
 
-      <form>
-        <input type="text" name="title" placeholder="Collection Title"/>
-        <input type="text" name="description" placeholder="Description"/>
-        <button hx-post="{% url 'add-collection' %}" hx-encoding="multipart/form-data" hx-target="#collection-resource-list" hx-swap="outerhtml" type="submit" class="btn-warm-blue"><b>SUBMIT</b></button>
+      <form class="form-group" style="display:flex">
+        <div><input class="form-control" type="text" name="title" placeholder="Collection Title"/></div>
+        <div><input class="form-control" type="text" name="description" placeholder="Description"/></div>
+        <button hx-post="{% url 'add-collection' %}" hx-encoding="multipart/form-data" hx-target="#collection-resource-list" hx-swap="outerhtml" type="submit" class="btn-warm-blue btn-sm">SUBMIT</button>
       </form>
 
       <div id="collection-resource-list">

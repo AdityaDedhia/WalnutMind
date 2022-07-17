@@ -1,0 +1,27 @@
+<div class="modal-content">
+
+    <div class="modal-header">
+        <h5 class="modal-title">{{ resource.title }}</h5>
+        <p>Created {{ resource.dateCreated }}</p>
+    </div>
+
+    <div class="modal-body">
+
+        {{ resource.description }}
+
+    </div>
+
+    <div class="modal-footer">
+        {% if next %}
+        <span style="margin-left:20px;" class="btn btn-primary btn-sm" hx-get="{% url 'resourcemodalview' collectionpk=collectionpk resourcepk=next.resource.pk order=next.order %}" hx-target="#detail-dialog" data-bs-dismiss="modal">Next</span>
+        {% endif %}
+        {% if previous %}
+        <span style="margin-left:20px;" class="btn btn-primary btn-sm" hx-get="{% url 'resourcemodalview' collectionpk=collectionpk resourcepk=previous.resource.pk order=previous.order %}" hx-target="#detail-dialog" data-bs-dismiss="modal">Previous</span>
+        {% endif %}
+        
+
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Return</button>
+
+    </div>
+
+</div>

@@ -1,9 +1,9 @@
 from http.client import BAD_REQUEST
 from .models import Term, List, Resource, Collection, CollectionOrder
 from django.views.generic import DetailView, ListView, UpdateView
-from django.http import Http404, HttpResponse, HttpResponseBadRequest
+from django.http import Http404, HttpResponse, HttpResponseBadRequest, QueryDict
 from django.contrib.auth.decorators import login_required
-from .forms import ResourceForm, NewTermForm, NewListForm
+from .forms import ResourceForm, NewTermForm, NewListForm, CollectionForm
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect
@@ -36,10 +36,7 @@ def wikiView(request):
         resources = Resource.objects.filter(creator = request.user)
         collections = Collection.objects.filter(creator = request.user)
         collectionresources = CollectionOrder.objects.prefetch_related('resource').filter(user=request.user) #Prefetch resources of collection object in collectionresources
-        unsorted = []
-        for resource in resources:
-            if not collectionresources.filter(resource__pk = resource.pk).exists():
-                unsorted.append(resource)
+
 
         bytes = storage_usage(request.user)
 
@@ -47,11 +44,10 @@ def wikiView(request):
         resources = None
         collections = None
         collectionresources = None
-        unsorted = None
         bytes = None
 
     return render(request, 'Wiki/index.html', {
-        'collections': collections, 'collectionresources': collectionresources,'resources': resources, 'unsorted': unsorted, 'bytes': bytes,
+        'collections': collections, 'collectionresources': collectionresources,'resources': resources, 'bytes': bytes,
     })
 
 #WM DEFINE ---------------------------------------------------------------
@@ -306,8 +302,33 @@ def addCollectionView(request):
         'collections': collections, 'bytes': bytes
     })
 
+
+@login_required(login_url='/users/login')
+def editCollectionView(request, pk_slug):
+    collection = Collection.objects.get(pk = pk_slug)
+
+    if request.method == 'POST':
+        data = QueryDict(request.body).dict()
+        form = CollectionForm(data, instance=collection)
+        if form.is_valid():
+            form.save()
+            return render(request,'Wiki/partials/collection-details.html', {
+                'collection': collection,
+            })
+
+    else:
+        form = CollectionForm(instance=collection) #Instantiate form data with collection data
+
+        return render(request, 'Wiki/partials/edit-collection.html', {
+            'form': form, 'collection': collection
+        })
+
 def resourceView(request, pk):
     resource = Resource.objects.get(pk = pk)
+    if resource.weblink is not None:
+        return redirect(resource.weblink)
+    if resource.videolink is not None:
+        return redirect(resource.videolink)
 
     if resource.isbnlink is not None:
         isbn = resource.isbnlink
@@ -320,6 +341,36 @@ def resourceView(request, pk):
     return render(request,'Wiki/resource.html', {
         'resource': resource
     })
+
+def resourceModalView(request, collectionpk, resourcepk, order):
+
+    object = CollectionOrder.objects.get(collection__pk=collectionpk, resource__pk=resourcepk, user=request.user)
+
+    orders = CollectionOrder.objects.filter(collection__pk=collectionpk, user=request.user)
+
+    if order >1 and order <len(orders):
+        next = orders.get(order = int(order+1))
+        previous = orders.get(order = int(order-1))
+    elif order <2:
+        previous = None
+        next = orders.get(order = int(order+1))
+    elif order >= len(orders):
+            next = None
+            previous = orders.get(order = int(order-1))
+
+
+    resource = object.resource #Input is order
+
+    return render(request,'Wiki/resource-modal.html', {
+        'resource': resource, 'next': next, 'previous': previous, 'collectionpk': collectionpk,
+    })
+
+class editResourceView(UpdateView):
+    login_required = True
+    model = Resource
+    form_class = ResourceForm
+    template_name = 'Wiki/editresource.html'
+    success_url = None
 
 def collectionsView(request):
     resources = Resource.objects.all()
@@ -524,7 +575,6 @@ def newTermView(request):
             form.save()
             messages.success(request, ("Terms were successfully published."))
 
-
             #if request.POST.get('to_term'):
             #latest_id = Term.objects.latest('pk').pk #Essentially gets latest entry object based on last pk added, and then gets the pk of that entry object.
              #   return redirect(f"/wiki/define-{latest_id}")
@@ -556,11 +606,3 @@ def newListView(request):
     return render(request, 'Wiki/newlist.html', {
         'form': form,
     })
-
-
-class editResourceView(UpdateView):
-    login_required = True
-    model = Resource
-    form_class = ResourceForm
-    template_name = 'Wiki/editresource.html'
-    success_url = None

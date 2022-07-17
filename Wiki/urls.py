@@ -12,11 +12,14 @@ urlpatterns = [
     path('lists/<slug:pk_slug>', views.listView.as_view(), name = "listview"),
     path('list/<int:pk>', views.termList.as_view(), name = "term-list"),
     path('resource-<int:pk>',views.resourceView, name = "resourceview"),
+    path('resource-panel-<int:collectionpk>/<int:resourcepk>/<int:order>',views.resourceModalView, name = "resourcemodalview"),
     path('resource-<int:pk>/edit', views.editResourceView.as_view(), name = "editresource"),
 
     path('resources/', views.resourceList.as_view(), name = "resource-list"),
     path('collections', views.collectionsView, name = "collectionsview"),
     path('collections/<slug:pk_slug>', views.collectionView.as_view(), name = "collectionview"),
+    path('collections/<slug:pk_slug>/edit', views.editCollectionView, name = "editcollection"),
+
     path('topics/<tag>', views.tagView, name = "tagview"),
     path('search', views.searchView, name = "search"),
     path('terms/new', views.newTermView, name = "newterm"),

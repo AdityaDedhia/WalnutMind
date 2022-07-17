@@ -1,0 +1,23 @@
+<div style="display:flex">
+
+    <div>
+        <h4><a href="{% url 'collectionview' pk_slug=collection.slug %}" style="text-decoration:none; color:black; font-weight:bold;" target="_blank" rel="noopener noreferrer">{{ collection.title }}</a></h4>
+    </div>
+
+    <div style="flex-grow:1"></div>
+
+    <div><button class="btn btn-primary" hx-get="{% url 'editcollection' pk_slug=collection.pk %}" hx-target="#collection-details">Edit</button></div>
+
+    <div>
+    <input type="text"
+    hx-post="{% url 'search-resource' pk=collection.pk %} "
+    hx-target="#resource-results"
+    hx-trigger="keydown changed delay:50ms"
+    name="search"
+    class="form-control"
+    style="border-radius:10px; width:150px; margin-left:8px;"
+    placeholder="Add resources"/></div>
+
+</div>
+
+<p>Description: {{ collection.description }}</p>
