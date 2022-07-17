@@ -7,6 +7,9 @@ from two_factor.urls import urlpatterns as tf_urls
 from two_factor.admin import AdminSiteOTPRequired
 from two_factor.gateways.twilio.urls import urlpatterns as tf_twilio_urls
 
+import debug_toolbar
+
+
 admin.site.__class__ = AdminSiteOTPRequired #ADMIN SITE MAY ONLY BE ACCESSED BY STAFF IF THEY HAVE MFA ENABLED
 
 urlpatterns = [
@@ -16,6 +19,7 @@ urlpatterns = [
     path('users/',include('Users.urls')),
     path('', include(tf_urls)),
     path('users/', include('django.contrib.auth.urls')),
+    path('__debug__/', include(debug_toolbar.urls)),
     path('', include('Articles.urls')),
     path('books/', include('Commentaries.urls')),
     path('blogs/', include('Diaries.urls')),

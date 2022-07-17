@@ -80,7 +80,7 @@
       text-fill-color: transparent;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: textclip 30s linear infinite;
+      animation: textclip 25s linear infinite;
       display: inline-block;
           font-size: 190px;
     }
@@ -104,12 +104,12 @@
 {% else %}
 
 
-<div style="text-align: center; position: relative; color: black; z-index:-1">
+<div class="noselect" style="text-align: center; position: relative; color: black; z-index:-1">
   <img src="{% static "Articles/home.jpg" %}" class="img-fluid" alt="Responsive image" style = "transform:translate(0,-5%)">
       <strong class="title animate-splash" style="font-size: 2.2vw; opacity: 0.85; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -40%);">Liberate Your Learning Shell<br></strong><h4 style="font-size: 1.4vw; opacity: 0.85; position: absolute; top: 50%; left: 50%; transform: translate(-50%, 110%); text-shadow: 2px 2px #b9bdb7;">A curated content-publishing platform.</h4>
 </div>
 
-<section class="position-relative pt-0">
+<section class="position-relative pt-0" class="noselect">
   <div class="container">
     <div class="row">
 
@@ -237,14 +237,16 @@
 		          </div>
 						</div>
             {% endfor %}
-            <!--<button style="top:-80px" class="carousel-control-prev" type="button" data-bs-target="#hero" data-bs-slide="prev">
+
+            <button style="top:-80px" class="carousel-control-prev" type="button" data-bs-target="#hero" data-bs-slide="prev">
               <span class="carousel-control-prev-icon" aria-hidden="true"></span>
               <span class="visually-hidden">Previous</span>
             </button>
             <button style="top:-80px" class="carousel-control-next" type="button" data-bs-target="#hero" data-bs-slide="next">
               <span class="carousel-control-next-icon" aria-hidden="true"></span>
               <span class="visually-hidden">Next</span>
-            </button>-->
+            </button>
+
 					</div>
 				</div>
 			</div>

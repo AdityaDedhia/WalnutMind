@@ -4,9 +4,9 @@ from django.views.generic import DetailView, ListView, UpdateView
 from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required
 from .forms import ResourceForm, NewTermForm, NewListForm
+from django.core.paginator import Paginator
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect
-from django.urls import reverse_lazy
 from isbnlib import meta, cover,doi
 from django.contrib.postgres.search import SearchQuery, SearchVector, SearchRank, SearchHeadline #Support full-text search
 from taggit.models import Tag
@@ -35,8 +35,7 @@ def wikiView(request):
     if request.user.is_authenticated:
         resources = Resource.objects.filter(creator = request.user)
         collections = Collection.objects.filter(creator = request.user)
-        collectionresources = CollectionOrder.objects.filter(user=request.user)
-
+        collectionresources = CollectionOrder.objects.prefetch_related('resource').filter(user=request.user) #Prefetch resources of collection object in collectionresources
         unsorted = []
         for resource in resources:
             if not collectionresources.filter(resource__pk = resource.pk).exists():
@@ -150,7 +149,7 @@ def searchResourceView(request, pk):
     results = Resource.objects.filter(title__icontains=query).exclude(title__in=resources.values_list('resource__title', flat=True))
 
     return render(request, 'Wiki/partials/search-resources-results.html', {
-        'results': results, 'pk': pk
+        'results': results, 'pk': pk,
     })
 
 def resourceSort(request):
@@ -158,12 +157,21 @@ def resourceSort(request):
     collectionpk = request.POST.get('collectionpk')
     collections = Collection.objects.filter(creator = request.user)
 
+    updatedresources = []
+
+    collectionresources = CollectionOrder.objects.prefetch_related('resource').filter(collection__pk = collectionpk, user=request.user) #Prefetch resources of collection object in collectionresources
 
     for index, resource_pk in enumerate(resource_order, start=1):
-        resource = CollectionOrder.objects.get(pk=resource_pk, collection__pk = collectionpk, user = request.user)
-        resource.order = index
-        resource.save()
+        resource = next(x for x in collectionresources if x.pk == int(resource_pk))
+
+        if resource.order != index:
+            resource.order = index
+            updatedresources.append(resource)
+
+    CollectionOrder.objects.bulk_update(updatedresources, ['order']) #Only update order field for only resources that have changed order.
     
+
+
     collectionresources = CollectionOrder.objects.filter(user=request.user)
     messages.success(request, "Collection synced.")
     return render(request, 'Wiki/partials/collection-resource-list.html', {  
@@ -218,7 +226,7 @@ class termList(ListView):
     context_object_name = 'terms'
 
     def get_queryset(self):
-        return Term.objects.filter(creator = self.request.user)[:10] #MUST MATCH WITH wikiView
+        return Term.objects.filter(creator = self.request.user) #MUST MATCH WITH wikiView
 
 class resourceList(ListView):
     model = Resource
@@ -556,4 +564,3 @@ class editResourceView(UpdateView):
     form_class = ResourceForm
     template_name = 'Wiki/editresource.html'
     success_url = None
-
