@@ -1,0 +1,291 @@
+.body{ 
+  margin:0;
+  min-height: 100%;
+}
+
+.blockbody {
+  height: 100%;
+  overflow: hidden;
+}
+
+.overlay{
+  opacity:0.8;
+  background-color:rgb(0, 0, 0);
+  position:fixed;
+  width:100%;
+  height:100%;
+  top:0px;
+  left:0px;
+  z-index:1000;
+}
+
+.zoom{
+  transition: 0.3s;
+}
+
+.zoom:hover {
+  transform: scale(1.05); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+  
+html,body
+{
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    overflow-x: hidden; 
+}
+
+nav {
+  background-color:rgba(169,169,169,0.4);
+  z-index:1;
+  border-radius:60px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.navbar.scrolled {
+  background-color: rgba(255, 225, 205, 0.9);
+  transition: background-color 350ms linear;
+}
+
+.nav-principals {
+  margin-left:25px;
+  font-size:16px;
+  opacity:0.7;
+  text-shadow: 0 0 10px #ebebeb
+}
+
+.nav-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid #14a2b8;
+  margin-right: 4px;
+  box-shadow: 0 0 20px #eee;
+}
+
+::-webkit-input-placeholder {
+  font-style: italic;
+  font-weight: bold;
+  font-size: 14px;
+}
+:-moz-placeholder {
+  font-style: italic;  
+  font-weight: bold;
+  font-size: 14px;
+}
+::-moz-placeholder {
+  font-style: italic;  
+  font-weight: bold;
+  font-size: 14px;
+}
+:-ms-input-placeholder {  
+  font-style: italic; 
+  font-weight: bold;
+  font-size: 14px;
+}
+
+
+/* BUTTONS */
+
+.btn-mystic-black {
+  background-image: linear-gradient(to right, #000000 0%, #434343  51%, #000000  100%);
+  margin: 10px;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;            
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  display: block;
+}
+
+.btn-mystic-black:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
+.btn-sky-blue {
+  background-image: linear-gradient(to right, #1FA2FF 0%, #12D8FA  51%, #1FA2FF  100%);
+  margin: 10px;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;            
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  display: block;
+}
+
+.btn-sky-blue:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+            
+.btn-mystic-purple {
+  background-image: linear-gradient(to right, #DA22FF 0%, #9733EE  51%, #DA22FF  100%);
+  margin: 10px;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;            
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  display: block;
+}
+
+.btn-mystic-purple:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
+.btn-warm-blue {
+  background-image: linear-gradient(to right, #1FA2FF 0%, #12D8FA  51%, #1FA2FF  100%);
+  margin: 10px;
+  padding: 5px 15px;
+  text-align: center;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;            
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+}
+
+.btn-warm-blue:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+     
+.btn-vivid-red {
+  background-image: linear-gradient(to right, #D31027 0%, #EA384D  51%, #D31027  100%);
+  margin: 10px;
+  padding: 5px 15px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;            
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+}
+
+.btn-vivid-red:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
+.btn-dark-violet {
+  background-image: linear-gradient(to right, #000000 0%, #53346D  51%, #000000  100%);
+  margin: 10px;
+  padding: 8px 26px;
+  text-align: center;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;            
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  display: block;
+}
+
+.btn-dark-violet:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
+         
+.btn-dreamy-purple {
+  background-image: linear-gradient(to right, #4776E6 0%, #8E54E9  51%, #4776E6  100%);
+  margin: 10px;
+  padding: 8px 26px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;            
+  text-decoration: none;
+  font-weight: bold;
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  display: block;
+}
+
+.btn-dreamy-purple:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
+   
+.btn-mystic-peach {
+  background-image: linear-gradient(to right, #EECDA3 0%, #EF629F  51%, #EECDA3  100%);
+  margin: 10px;
+  padding: 8px 26px;
+  text-align: center;
+  text-decoration: none;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;            
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  display: block;
+}
+
+.btn-mystic-peach:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
+   
+.btn-dreamy-blue {
+  background-image: linear-gradient(to right, #6190E8 0%, #A7BFE8  51%, #6190E8  100%);
+  margin: 10px;
+  padding: 8px 26px;
+  text-decoration: none;
+  font-weight:bold;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;            
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  display: block;
+}
+
+.btn-dreamy-blue:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
+/* END BUTTONS */
+
+.noselect {
+-webkit-touch-callout: none;
+-webkit-user-select: none;
+  -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+        user-select: none;
+}

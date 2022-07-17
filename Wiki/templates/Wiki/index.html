@@ -9,8 +9,142 @@
 
     <ol class="breadcrumb" style = "background-color:white">
         <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Wiki</li>
+        <li class="breadcrumb-item active">Wiki</li>
+
+        {% if request.user.is_authenticated %}
+        <li class="breadcrumb-item active" aria-current="page">{{ request.user.first_name }}'s Dashboard</li>
+        {% endif %}
+
     </ol>
+
+    <style>
+      .heading__credits {
+        margin: 10px 0px;
+        color: #888888;
+        font-size: 25px;
+        transition: all 0.5s;
+      }
+      
+      .heading__link {
+        text-decoration: none;
+      }
+      
+      .heading__credits .heading__link {
+        color: inherit;
+      }
+      
+      /* CARDS */
+      
+      .resource-card {
+        box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.25);
+        transition: all 0.2s;
+      }
+      
+      .resource-card:hover {
+        box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.4);
+        transform: scale(1.01);
+      }
+      
+      .resource-card__link,
+      .resource-card__exit,
+      .resource-card__icon {
+        position: relative;
+        text-decoration: none;
+        color: rgba(255, 255, 255, 0.9);
+      }
+      
+      .resource-card__link::after {
+        position: absolute;
+        top: 20px;
+        left: 0;
+        content: "";
+        width: 0%;
+        height: 3px;
+        background-color: rgba(255, 255, 255, 0.6);
+        transition: all 0.5s;
+      }
+      
+      .resource-card__link:hover::after {
+        width: 100%;
+      }
+    
+      
+      /* CARD BACKGROUNDS */
+      
+      .card-1 {
+        background: radial-gradient(#1fe4f5, #3fbafe);
+      }
+      
+      .card-2 {
+        background: radial-gradient(#fbc1cc, #fa99b2);
+      }
+      
+      .card-3 {
+        background: radial-gradient(#76b2fe, #b69efe);
+      }
+      
+      .card-4 {
+        background: radial-gradient(#60efbc, #58d5c9);
+      }
+      
+      .card-5 {
+        background: radial-gradient(#f588d8, #c0a3e5);
+      }
+      
+      /* RESPONSIVE */
+      
+      @media (max-width: 1600px) {
+        .cards {
+          justify-content: center;
+        }
+      }
+    
+      .masked-overflow-x {
+        /* scroll bar width, for use in mask calculations */
+        --scrollbar-width: 8px;
+    
+        /* mask fade distance, for use in mask calculations */
+        --mask-height: 30px;
+        --mask-width: 32px;
+    
+        white-space:nowrap;
+        overflow-x: auto;
+    
+        /* Need to make sure container has bottom space,
+      otherwise content at the bottom is always faded out */
+        padding-bottom: 8px;
+    
+        /* The CSS mask */
+    
+        /* The content mask is a linear gradient from top to bottom */
+        --mask-image-content: linear-gradient(
+            to right,
+            transparent,
+            black var(--mask-height),
+            black calc(100% - var(--mask-height)),
+            transparent
+        );
+    
+        /* scale the content gradient to the width of the container 
+      minus the scrollbar width. The height is the full container height */
+        --mask-size-content: calc(100% - var(--scrollbar-width)) 100%;
+    
+        --mask-image-scrollbar: linear-gradient(black, black);
+    
+        /* width of the scrollbar.
+      The height is the full container height */
+        --mask-size-scrollbar: var(--scrollbar-width) 100%;
+    
+        mask-image: var(--mask-image-content), var(--mask-image-scrollbar);
+        mask-size: var(--mask-size-content), var(--mask-size-scrollbar);
+    
+        /* Position the content gradient in the top left, and the 
+      scroll gradient in the top right */
+        mask-position: 0 0, 125% 0;
+    
+        mask-repeat: no-repeat, no-repeat;
+    }
+    </style>
 
     <style>
       ::placeholder {
@@ -102,17 +236,21 @@
     <h3 style="font-family: 'Josefin Sans', sans-serif;">WM <b style="color:gray">Wiki</b></h3>
     <p style="color:gray">Meet WM Wiki, our enhanced search engine enabled by the capabilities of Postgres vector-based full-text search queries and community-driven content contributions. Querying analyses various parameters across dozens of stored publications metadata such as key word clusters, positioning, and linguistic patterns to name a few.</p>
     <hr/>
-
+  
     <!--SEARCH-->
     <section class="pt-4">
+      <div>
+        <!--<h5><i class="bi bi-globe"></i> Published live:</h5>-->
+  
+      </div>
       <div class="container">
-        <div id="wrapper" style="max-width:100%">
+        <div id="wrapper" class="noselect" style="max-width:100%; opacity: 60%">
 
           <!--FRONT-->
           <div class="content">
             <form method="post" action="{% url 'search' %}" class="input-group mt-4">
               {% csrf_token %}
-              <input style="opacity: 75%; border-radius:16px 16px 16px 16px; z-index:1;" class="form-control form-control-lg border-secondary" type="search" placeholder="What are you searching for today?" aria-label="Search" name="searchedterm">
+              <input style="opacity: 90%; border-radius:16px 16px 16px 16px; z-index:1;" class="form-control form-control-lg border-secondary" type="search" placeholder="What are you searching for today?" aria-label="Search" name="searchedterm">
             </form>
           </div>
           <!--BACK-->
@@ -391,12 +529,12 @@
   <!--/SEARCH-->
     {% if request.user.is_authenticated %}
 
-    <div class="row">
+    <div id="main-content" class="row">
 
   <!--ADD RESOURCE-->
 
-    <div class="form-group col-md-4 col-lg-3 col-xl-2 card bg-light" style="border-radius:10px; padding:25px">
-      <h3>Quick Entry: </h3>
+    <div class="form-group col-sm-5 col-md-4 col-lg-3 col-xl-2 card bg-light" style="border-radius:10px; padding:25px">
+      <h4><b>Quick Entry:</b></h4>
       <h6><i>Save now; edit later</i></h6>
       <hr/>
     <form method="post" enctype="multipart/form-data">
@@ -456,16 +594,17 @@
 
       </form>
     </div>
+    
     <!--MAIN AREA-->
-    <div class="col-md-8 col-lg-9 col-xl-10">
+    <div class="col-sm-7 col-md-8 col-lg-9 col-xl-10">
       <br/>
-      <div style="display:flex; align-content: space-between">
+      <div style="display:flex; flex-wrap: wrap;">
       <a href="{% url 'newblogpost' %}" class="btn-dreamy-purple">WM Publish</a>
       <a href="{% url 'newterm' %}" class="btn-dreamy-blue">WM Define</a>
-      <a href="{% url 'newresource' %}" class="btn-mystic-peach">WM Collect</a>
-      <b style="flex-grow:1"></b>
-      <a href="{% url 'listsview' %}" class="btn-dark-violet" style="flex-position: end">WM Lists</a>
-      <a href="{% url 'collectionsview' %}" class="btn-dark-violet" style="flex-position: end">WM Collections</a>
+      <a href="{% url 'collectionsview' %}" class="btn-mystic-peach">WM Collect</a>
+      <b style="flex-grow:1; padding:15px;"></b>
+      <a href="{% url 'listsview' %}" class="btn-dark-violet">Lists</a>
+      <a href="{% url 'collectionsview' %}" class="btn-dark-violet">Collections</a>
       </div>
       <br/>
       <h3>Your latest additions:</h3>
@@ -473,7 +612,25 @@
         {% include 'Wiki/resource-list.html' %}
       </div><hr/>
 
+      <h3>Your Collections:</h3>
+
+      <form>
+        <input type="text" name="title" placeholder="Collection Title"/>
+        <input type="text" name="description" placeholder="Description"/>
+        <button hx-post="{% url 'add-collection' %}" hx-encoding="multipart/form-data" hx-target="#collection-resource-list" hx-swap="outerhtml" type="submit" class="btn-warm-blue"><b>SUBMIT</b></button>
+      </form>
+
+      <div id="collection-resource-list">
+        {% include 'Wiki/partials/collection-resource-list.html' %}
+      </div>
+
     </div>
+   <!-- <h3>Categories:</h3>
+    <h5>Files and Docs</h5>
+    <h5>Images and Diagrams</h5>
+    <h5>Publications</h5>
+    <h5>Links</h5>
+    <h5>Books</h5>-->
   </div>
 {% else %}
 <br/><br/><br/><br/><br/>

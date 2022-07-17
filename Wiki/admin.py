@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Term, List, Resource, Collection
+from .models import Term, List, Resource, Collection, CollectionOrder
 
 @admin.register(Term)
 class FileAdmin(admin.ModelAdmin):
@@ -15,13 +15,6 @@ class FileAdmin(admin.ModelAdmin):
 
     readonly_fields = ['slug']
 
-@admin.register(Resource)
-class FileAdmin(admin.ModelAdmin):
-    search_fields = ['title']
-
-@admin.register(Collection)
-class FileAdmin(admin.ModelAdmin):
-    search_fields = ['title']
-    autocomplete_fields = ['resources']
-
-    readonly_fields = ['slug']
+admin.site.register(Resource)
+admin.site.register(Collection)
+admin.site.register(CollectionOrder)

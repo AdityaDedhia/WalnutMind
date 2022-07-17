@@ -2,15 +2,15 @@
 {% if terms %}
 
 {% if messages %}
-<ul hx-get="{% url 'clear-messages' %}" hx-trigger="load delay:4s">
+<ul hx-get="{% url 'clear-messages' %}" hx-trigger="load delay:3s">
 <div class="alert alert-success">
         {% for message in messages %}
         {{ message }}
         {% endfor %}
 </div>
 </ul>
-
 {% endif %}
+
 <ul>
     <form class="sortable list-group" hx-trigger="end" hx-post="/sort" hx-target="#term-list">
         <div class="htmx-indicator noselect">Updating...</div>

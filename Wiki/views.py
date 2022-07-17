@@ -1,30 +1,27 @@
 from http.client import BAD_REQUEST
-from .models import Term, List, Resource, Collection
-from django.views.generic import DetailView, ListView
-from django.http import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
+from .models import Term, List, Resource, Collection, CollectionOrder
+from django.views.generic import DetailView, ListView, UpdateView
+from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required
-from .forms import NewResourceForm, NewTermForm, NewListForm
+from .forms import ResourceForm, NewTermForm, NewListForm
 from django.contrib import messages
-from django.contrib.auth import logout
 from django.shortcuts import get_object_or_404, render, redirect
-from django.urls import reverse
+from django.urls import reverse_lazy
 from isbnlib import meta, cover,doi
 from django.contrib.postgres.search import SearchQuery, SearchVector, SearchRank, SearchHeadline #Support full-text search
 from taggit.models import Tag
 from django.conf import settings
 from Articles.views import Post as ArticlesPost
 from Commentaries.views import Post as BooksPost
-from .utils import storage_usage
+from .utils import storage_usage, resource_collection_order, resource_collection_reorder
 from Blog.utils import profanity_filter
 from Diaries.views import Post as BlogPost
 from dal import autocomplete
 from pytube import YouTube #Support YT Metadata
 SERVICE = "wiki"
 
-
 def clearMessagesView(request):
     return HttpResponse("")
-
 
 class TermAutoComplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
@@ -32,23 +29,33 @@ class TermAutoComplete(autocomplete.Select2QuerySetView):
 
         if self.q:
             qs = qs.filter(term__icontains=self.q) #case insensitive standard search
-
         return qs
 
 def wikiView(request):
     if request.user.is_authenticated:
         resources = Resource.objects.filter(creator = request.user)
+        collections = Collection.objects.filter(creator = request.user)
+        collectionresources = CollectionOrder.objects.filter(user=request.user)
+
+        unsorted = []
+        for resource in resources:
+            if not collectionresources.filter(resource__pk = resource.pk).exists():
+                unsorted.append(resource)
+
         bytes = storage_usage(request.user)
 
     else:
         resources = None
+        collections = None
+        collectionresources = None
+        unsorted = None
         bytes = None
 
     return render(request, 'Wiki/index.html', {
-        'resources': resources, 'bytes': bytes
+        'collections': collections, 'collectionresources': collectionresources,'resources': resources, 'unsorted': unsorted, 'bytes': bytes,
     })
 
-
+#WM DEFINE ---------------------------------------------------------------
 def searchTermView(request, pk):
     query = request.POST.get('search')
 
@@ -77,7 +84,6 @@ def removeTermView(request, listpk, termpk):
         'terms': terms,'list':list
     })
 
-
 @login_required(login_url='/users/login')
 def existingTermView(request, pk):
     term = request.POST.get("term")
@@ -93,6 +99,7 @@ def existingTermView(request, pk):
     return render(request, 'Wiki/term-list.html', {
         'terms': terms,'list':list
     })
+
 
 @login_required(login_url='/users/login')
 def addTermView(request, pk):
@@ -134,6 +141,76 @@ def addTermView(request, pk):
             'terms': terms,'list':list
         })
   
+#WM COLLECT -----------------------------------------------------------
+def searchResourceView(request, pk):
+    query = request.POST.get('search')
+
+    resources = CollectionOrder.objects.filter(collection__pk = pk)
+
+    results = Resource.objects.filter(title__icontains=query).exclude(title__in=resources.values_list('resource__title', flat=True))
+
+    return render(request, 'Wiki/partials/search-resources-results.html', {
+        'results': results, 'pk': pk
+    })
+
+def resourceSort(request):
+    resource_order = request.POST.getlist('resource_order')
+    collectionpk = request.POST.get('collectionpk')
+    collections = Collection.objects.filter(creator = request.user)
+
+
+    for index, resource_pk in enumerate(resource_order, start=1):
+        resource = CollectionOrder.objects.get(pk=resource_pk, collection__pk = collectionpk, user = request.user)
+        resource.order = index
+        resource.save()
+    
+    collectionresources = CollectionOrder.objects.filter(user=request.user)
+    messages.success(request, "Collection synced.")
+    return render(request, 'Wiki/partials/collection-resource-list.html', {  
+        'collections': collections, 'collectionresources': collectionresources,
+    })
+
+@login_required(login_url='/users/login')
+def removeResourceView(request, collectionpk, resourcepk):
+    collection = Collection.objects.get(pk = collectionpk)
+
+    collections = Collection.objects.filter(creator = request.user)
+
+    item = CollectionOrder.objects.filter(collection__pk = collectionpk, resource__pk = resourcepk, user = request.user)
+
+    item.delete()
+
+    resource_collection_reorder(collection)
+
+    collectionresources = CollectionOrder.objects.filter(user=request.user)
+
+    messages.success(request, f"Removed resource from collection.")
+    return render(request, 'Wiki/partials/collection-resource-list.html', {  
+        'collections': collections, 'collectionresources': collectionresources,
+    })
+
+@login_required(login_url='/users/login')
+def existingResourceView(request, collectionpk, resourcepk):
+    collections = Collection.objects.filter(creator = request.user)
+
+    object = Resource.objects.get(pk = resourcepk)
+    collection = Collection.objects.get(pk = collectionpk)
+
+    if not CollectionOrder.objects.filter(collection__pk=collectionpk, resource__pk=resourcepk).exists():
+
+        CollectionOrder.objects.create(
+            user = request.user,
+            collection = collection,
+            resource = object,
+            order = resource_collection_order(collection),
+        )
+
+    collectionresources = CollectionOrder.objects.filter(user=request.user)
+
+    messages.success(request, "Resource added to collection.")
+    return render(request, 'Wiki/partials/collection-resource-list.html', {  
+        'collections': collections, 'collectionresources': collectionresources,
+    })
 
 class termList(ListView):
     model = Term
@@ -141,7 +218,7 @@ class termList(ListView):
     context_object_name = 'terms'
 
     def get_queryset(self):
-        return Resource.objects.filter(creator = self.request.user)[:10] #MUST MATCH WITH wikiView
+        return Term.objects.filter(creator = self.request.user)[:10] #MUST MATCH WITH wikiView
 
 class resourceList(ListView):
     model = Resource
@@ -203,6 +280,22 @@ def deleteResourceView(request, pk):
 
     return render(request, 'Wiki/resource-list.html', {
         'resources': resources
+    })
+
+@login_required(login_url='/users/login')
+def addCollectionView(request):
+    title = request.POST.get('title')
+    description = request.POST.get('description')
+
+    Collection.objects.create(
+        title = title,
+        creator = request.user, #Not explicitly assigned
+        description = description,
+    )
+    collections = Collection.objects.filter(creator = request.user)
+
+    return render(request, 'Wiki/partials/collection-resource-list.html', {
+        'collections': collections, 'bytes': bytes
     })
 
 def resourceView(request, pk):
@@ -456,20 +549,11 @@ def newListView(request):
         'form': form,
     })
 
-def newResourceView(request):
-    if request.method == 'POST':
-        form = NewResourceForm(request.POST, request.FILES)
 
-        if form.is_valid():
-            form.instance.creator = request.user #Because author field from forms.py was excluded
-            form.save()
-            messages.success(request, ("Resource was successfully added."))
-            latest_id = Resource.objects.latest('pk').pk #Essentially gets latest entry object based on last pk added, and then gets the pk of that entry object.
-            return redirect(f"/wiki/resource-{latest_id}")
-        else:
-            messages.success(request, ("Integrity validation failed. You have attempted to manipulate non-editable fields."))
+class editResourceView(UpdateView):
+    login_required = True
+    model = Resource
+    form_class = ResourceForm
+    template_name = 'Wiki/editresource.html'
+    success_url = None
 
-    form = NewResourceForm(request.POST, instance = request.user)
-    return render(request, 'Wiki/newresource.html', {
-        'form': form,
-    })

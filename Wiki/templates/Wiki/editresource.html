@@ -1,0 +1,61 @@
+<form method="post" class="modal-content" hx-post="{{ request.path }}" hx-encoding="multipart/form-data">
+  {% csrf_token %}
+  {{ form.media }}
+
+  <div class="modal-header">
+    <h5 class="modal-title">Edit Resource</h5>
+  </div>
+
+  <div class="modal-body">
+
+    <div class="row" id="title">
+      <label style="float: left;" for="title">Title</label>
+      {{ form.title }}
+    </div>
+    <div class="row" id = "source">
+      <label style = "float: left;" for="source">Source</label>
+      {{ form.source }}
+    </div>
+    <div class="row" id = "description">
+      <label style = "float: left;" for="source">Description</label>
+      {{ form.description }}
+    </div>
+
+
+    <div class="row" id="isbnlink">
+      <label style="float: left;" for="isbnlink">Book ISBN</label>
+      {{ form.isbnlink }}
+    </div>
+    <div class="row" id="weblink">
+      <label style="float: left;" for="weblink">Webpage</label>
+      {{ form.weblink }}
+    </div>
+    <div class="row" id="videolink">
+      <label style="float: left;" for="videolink">Video</label>
+      {{ form.videolink }}
+    </div>
+    <div class="row" id="filelink">
+      <label style="float: left;" for="filelink">Document (PDF Supported)</label>
+      {{ form.filelink }}
+    </div>
+    <div class="row" id="imagelink">
+      <label style="float: left;" for="imagelink">Image</label>
+      {{ form.imagelink }}
+    </div>
+
+    <div class="row" id="text">
+      <label style="float: left;" for="text">Content Box</label>
+      {{ form.text }}
+    </div>
+
+
+  </div>
+
+  <div class="modal-footer">
+
+    <button type="button" data-bs-dismiss="modal">Cancel</button>
+    <button type="submit" data-bs-dismiss="modal">Save</button>
+
+  </div>
+
+</form>

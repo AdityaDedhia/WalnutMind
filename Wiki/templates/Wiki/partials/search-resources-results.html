@@ -1,0 +1,16 @@
+{% if results %}
+
+<b>Unsorted Resources:</b>
+<ul class="list-group">
+{% for resource in results %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            {{ resource.title }}
+            <span class="btn btn-primary badge-pill" hx-post="{% url 'add-existing-resource' collectionpk=pk resourcepk=resource.pk %}" hx-vals='{"resource": "{{ resource.title }}"}' hx-target="#collection-resource-list">Add</span>
+
+        </li>
+    {% endfor %}
+</ul>
+
+{% else %}
+<p>No resources found.</p>
+{% endif %}

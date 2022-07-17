@@ -6,6 +6,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from Blog.utils import image_resize
 from .validators import validate_file_size, validate_image_size
 from django.db.models.functions import Lower
+from django.urls import reverse
 
 class Term(models.Model):
     term = models.CharField(max_length=128, blank = False, unique=True)
@@ -42,27 +43,52 @@ class List(models.Model):
     def __str__(self):
         return str(self.title)
 
-class Resource(models.Model):
-    title = models.CharField(max_length=100, blank = False, unique=True)
-    creator = models.ForeignKey(User, on_delete=models.DO_NOTHING, null = True, blank = True)
-    source = models.CharField(max_length = 50, blank = True, null = True)
-    isbnlink = models.CharField(null = True, blank = True, max_length=13)
-    weblink = models.URLField(null = True, blank = True)
-    videolink = EmbedVideoField(null = True, blank = True)
-    filelink = models.FileField(upload_to = 'Wiki/Resources', null = True, blank = True)
-    imagelink = models.ImageField(upload_to = 'Wiki/Resources', blank = True, null = True)
-
-    text = RichTextUploadingField(blank = True, null = True)
-    description = models.CharField(max_length = 255, blank = True, null = True)
+class Collection(models.Model):
+    title = models.CharField(max_length=128, blank = False, unique=True)
+    slug = AutoSlugField(populate_from='title', unique = True, null = True, default = None)
+    cover = models.ImageField(upload_to = 'Wiki/collection_covers', blank = True, null = True)
+    description = models.CharField(max_length = 255, null = True, blank = True)
+    creator = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="collectionpublisher")
+    contributors = models.ManyToManyField(User, blank = True)
     public = models.BooleanField(default = False)
     dateCreated = models.DateTimeField(auto_now_add = True)
     dateUpdated = models.DateTimeField(auto_now = True)
 
+    def __str__(self):
+        return str(self.title)
+
     class Meta:
-        ordering = ['-dateCreated']
+        ordering = [Lower('title')] #Case insensitive
+    
+    def save(self, *args, **kwargs):
+        if self.cover:
+            image_resize(self.cover, 2000, 1400)
+        super().save(*args, **kwargs)
+
+class Resource(models.Model):
+    title = models.CharField(max_length=100, blank = False, unique=True)
+    creator = models.ForeignKey(User, on_delete=models.DO_NOTHING, null = True, blank = True)
+    description = models.CharField(max_length = 255, blank = True, null = True)
+    source = models.CharField(max_length = 50, blank = True, null = True)
+    collection = models.ManyToManyField(Collection, related_name="resources", through='CollectionOrder')
+
+    text = RichTextUploadingField(blank = True, null = True)
+    filelink = models.FileField(upload_to = 'Wiki/Resources', null = True, blank = True)
+    imagelink = models.ImageField(upload_to = 'Wiki/Resources', blank = True, null = True)
+
+    weblink = models.URLField(null = True, blank = True)
+    videolink = EmbedVideoField(null = True, blank = True)
+    isbnlink = models.CharField(null = True, blank = True, max_length=13)
+
+    public = models.BooleanField(default = False)
+    dateCreated = models.DateTimeField(auto_now_add = True)
+    dateUpdated = models.DateTimeField(auto_now = True)
 
     def __str__(self):
         return str(self.title)
+
+    class Meta:
+        ordering = ['-dateCreated']
 
     def clean(self):
         if self.filelink:
@@ -74,16 +100,18 @@ class Resource(models.Model):
         self.full_clean()
         return super().save(*args, **kwargs)
 
-class Collection(models.Model):
-    title = models.CharField(max_length=128, blank = False, unique=True)
-    slug = AutoSlugField(populate_from='title', unique = True, null = True, default = None)
-    description = models.CharField(max_length = 255, null = True, blank = True)
-    creator = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="collectionpublisher")
-    contributors = models.ManyToManyField(User, blank = True)
-    resources = models.ManyToManyField(Resource)
-    public = models.BooleanField(default = True)
-    dateCreated = models.DateTimeField(auto_now_add = True)
-    dateUpdated = models.DateTimeField(auto_now = True)
+    def get_absolute_url(self): #REDIRECT TO PAGE WHEN MODEL IS UPDATED
+        return None
 
+
+class CollectionOrder(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    collection = models.ForeignKey(Collection, on_delete=models.CASCADE)
+    resource = models.ForeignKey(Resource, on_delete=models.CASCADE)
+    order = models.PositiveSmallIntegerField()
+    
     def __str__(self):
-        return str(self.title)
+        return str(self.resource.resource)
+
+    class Meta:
+        ordering = ['order']

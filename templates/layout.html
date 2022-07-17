@@ -133,7 +133,7 @@
                     </a>
 
                     {% if request.user.is_staff %}
-                    <a style="box-shadow: 0 0 20px #eee;" class="zoom btn btn-success rounded-pill" href="/&mfHQp04wVAYsorpv9clIsPv0CDq4vEsfB&pdJd^h38T27^A0dsC1UH!54gx8h3dQ7U6p$3QgTyhp8!YrS7o9OFsIfl*eZ4dNxqGI$kq/">
+                    <a style="box-shadow: 0 0 20px #eee;" class="btn btn-success rounded-pill" href="/&mfHQp04wVAYsorpv9clIsPv0CDq4vEsfB&pdJd^h38T27^A0dsC1UH!54gx8h3dQ7U6p$3QgTyhp8!YrS7o9OFsIfl*eZ4dNxqGI$kq/">
                       <i class="bi bi-shield-lock-fill"></i>
                     </a>
                   {% endif %}
@@ -150,7 +150,7 @@
                     <div class="dropdown nav-search">
                       <a class="nav-link btn-mystic-purple rounded-pill zoom" role="button" style="color:white; font-weight:bold;" href="#" id="navSearch" data-bs-toggle="dropdown" aria-expanded="false">SEARCH</a>
                       <div class="dropdown-menu dropdown-menu-end" style="background-color: transparent; border:none" aria-labelledby="navSearch">
-                        <form class="input-group" method="post" action="{% url 'search' %}" style="width:275px;">
+                        <form class="input-group" method="post" action="{% url 'search' %}" style="width:250px;">
                           {% csrf_token %}
                           <input class="form-control border-secondary" style="z-index:9; border-radius:16px;" type="search" placeholder="Powered by WM Wiki" aria-label="Search" name="searchedterm">
                           <button class="btn btn-primary m-0" style="z-index:10; left:-25px; border-radius:16px;" type="submit">Find</button>

@@ -30,7 +30,7 @@ class NewListForm(forms.ModelForm):
             #'terms': forms.SelectMultiple(attrs={'class': 'form-control'}),
         }
 
-class NewResourceForm(forms.ModelForm):
+class ResourceForm(forms.ModelForm):
     class Meta:
         model = Resource
         fields = ('title', 'source', 'isbnlink', 'weblink', 'videolink', 'filelink', 'imagelink', 'text', 'description')
