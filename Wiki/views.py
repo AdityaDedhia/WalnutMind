@@ -165,10 +165,7 @@ def resourceSort(request):
             updatedresources.append(resource)
 
     CollectionOrder.objects.bulk_update(updatedresources, ['order']) #Only update order field for only resources that have changed order.
-    
-
-
-    collectionresources = CollectionOrder.objects.filter(user=request.user)
+    collectionresources = CollectionOrder.objects.prefetch_related('resource').filter(user=request.user) #Prefetch resources of collection object in collectionresources
     messages.success(request, "Collection synced.")
     return render(request, 'Wiki/partials/collection-resource-list.html', {  
         'collections': collections, 'collectionresources': collectionresources,
@@ -297,9 +294,11 @@ def addCollectionView(request):
         description = description,
     )
     collections = Collection.objects.filter(creator = request.user)
+    collectionresources = CollectionOrder.objects.prefetch_related('resource').filter(user=request.user) #Prefetch resources of collection object in collectionresources
+
 
     return render(request, 'Wiki/partials/collection-resource-list.html', {
-        'collections': collections, 'bytes': bytes
+        'collections': collections, 'collectionresources': collectionresources, 'bytes': bytes
     })
 
 
@@ -308,8 +307,7 @@ def editCollectionView(request, pk_slug):
     collection = Collection.objects.get(pk = pk_slug)
 
     if request.method == 'POST':
-        data = QueryDict(request.body).dict()
-        form = CollectionForm(data, instance=collection)
+        form = CollectionForm(request.POST, request.FILES, instance=collection)
         if form.is_valid():
             form.save()
             return render(request,'Wiki/partials/collection-details.html', {
@@ -348,12 +346,16 @@ def resourceModalView(request, collectionpk, resourcepk, order):
 
     orders = CollectionOrder.objects.filter(collection__pk=collectionpk, user=request.user)
 
-    if order >1 and order <len(orders):
+    if order <= 1 and len(orders) <= 1:
+        next = None #For collections with only 1 resource
+        previous = None
+    elif order <= 2:
+        next = orders.get(order = int(order+1))
+        previous = None
+    elif order > 2 and order < len(orders):
         next = orders.get(order = int(order+1))
         previous = orders.get(order = int(order-1))
-    elif order <2:
-        previous = None
-        next = orders.get(order = int(order+1))
+ 
     elif order >= len(orders):
             next = None
             previous = orders.get(order = int(order-1))

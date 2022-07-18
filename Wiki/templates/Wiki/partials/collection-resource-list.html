@@ -32,13 +32,11 @@
                     <div style="flex-grow:1"></div>             
                     <i style="color:gray;" class="bi bi-arrow-down-up"></i>
 
-                    <span style="margin-left:20px;" class="btn btn-primary btn-sm" hx-get="{% url 'resourcemodalview' collectionpk=collection.pk resourcepk=resource.resource.pk order=resource.order %}" hx-target="#detail-dialog">Info</span>
+                    <span style="margin-left:20px;" class="btn btn-success btn-sm" hx-get="{% url 'resourcemodalview' collectionpk=collection.pk resourcepk=resource.resource.pk order=resource.order %}" hx-target="#detail-dialog"><i class="bi bi-info-circle"></i></span>
 
-                    <span style="margin-left:8px;" class="btn btn-secondary btn-sm" hx-get="{% url 'editresource' pk=resource.resource.pk %}" hx-target="#dialog">Edit</span>
+                    <span style="margin-left:8px;" class="btn btn-primary btn-sm" hx-get="{% url 'editresource' pk=resource.resource.pk %}" hx-target="#dialog"><i class="bi bi-pen"></i></span>
 
-                    <span style="margin-left:8px;" class="btn btn-danger btn-sm" hx-delete="{% url 'remove-resource' collectionpk=collection.pk resourcepk=resource.resource.pk %}" hx-target="#collection-resource-list" hx-confirm="Are you sure you want to remove the resource from this collection?">Remove</span>
-
-                </div>
+                    <span style="margin-left:8px;" class="btn btn-danger btn-sm" hx-delete="{% url 'remove-resource' collectionpk=collection.pk resourcepk=resource.resource.pk %}" hx-target="#collection-resource-list" hx-confirm="Are you sure you want to remove the resource from this collection?"><i class="bi bi-x-lg"></i></span></div>
 
                 {% endif %}
                 </div>
@@ -52,8 +50,6 @@
 <hr/>
 {% endfor %}
 
-
-  
 </div>
 <div class="card bg-light col-3" style="padding:10px" id="resource-results">
 <b>Unsorted Resources:</b>
@@ -73,7 +69,6 @@
 <p>No collections created yet.</p>
 {% endif %}
 
-
 <div id="modal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
     <div id="dialog" class="modal-dialog modal-dialog-centered" hx-target="this"></div>
 </div>
@@ -83,7 +78,6 @@
 </div>
 
 <script>
-const modal1 = new bootstrap.Modal(document.getElementById("modal"))
 
 $('#modal').appendTo("body") 
 
@@ -104,13 +98,6 @@ htmx.on("htmx:beforeSwap", (e) => {
   }
 })
 
-htmx.on("hidden.bs.modal", () => {
-  document.getElementById("dialog").innerHTML = ""
-})
-
-
-const modal2 = new bootstrap.Modal(document.getElementById("detailmodal"))
-
 htmx.on("htmx:afterSwap", (e) => {
   // Response targeting #dialog => show the modal
   if (e.detail.target.id === "detail-dialog") {
@@ -125,9 +112,14 @@ htmx.on("htmx:beforeSwap", (e) => {
     e.detail.shouldSwap = false
   }
 })
-
-htmx.on("hidden.bs.modal", () => {
-  document.getElementById("detail-dialog").innerHTML = ""
-})
-
 </script>
+
+<style>
+  .modal {
+      transform: scale(1.2);
+    
+      transition:
+        transform 0.4s cubic-bezier(0.465, 0.183, 0.153, 0.946),
+        opacity 0.4s cubic-bezier(0.465, 0.183, 0.153, 0.946);
+    }
+</style>

@@ -1,13 +1,14 @@
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, DetailView, UpdateView
+from django.views.generic import UpdateView
 from .models import Post, Comment
 from .forms import PostForm
 from django.urls import reverse
 from django.contrib import messages
+from Blog.utils import profanity_filter
 from datetime import datetime
-from Users.models import Profile, Log
+from Users.models import Profile, Log, Infraction
 from taggit.models import Tag
 from datetime import datetime, date
 from Users.serializers import ProfileSerializer
@@ -146,6 +147,15 @@ def newCommentView(request, username, pk):
     if request.method == 'POST':
         content = request.POST.get('content')
         post = Post.objects.get(pk=pk)
+
+        if profanity_filter(content) == True:
+                messages.success(request, ("Your comment could not be posted, please refrain from the use of explicit language."))
+                Infraction.objects.create(
+                    user = request.user,
+                    reason = f"Used explicit language in blog post ID {pk} with the comment: {content}",
+                    datelog = datetime.now()
+                )
+                return HttpResponseRedirect(reverse('blogview', args =[username,str(post.slug)]))
 
         comment = Comment.objects.create(
             post = post,

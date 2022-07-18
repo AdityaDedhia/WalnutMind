@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Profile, Highlight, Blacklist, Log
+from .models import Profile, Highlight, Blacklist, Log, Infraction
 
 
 admin.site.register(Highlight)
@@ -21,3 +21,9 @@ class FileAdmin(admin.ModelAdmin):
 class FileAdmin(admin.ModelAdmin):
     search_fields = ['description']
     list_display = ['user','datelog','description','link']
+
+
+@admin.register(Infraction)
+class FileAdmin(admin.ModelAdmin):
+    search_fields = ['reason']
+    list_display = ['user','datelog','reason']

@@ -1,14 +1,15 @@
 from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, render
 from datetime import datetime, date
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from .models import Post, Comment
 from django.contrib import messages
-from django.views.generic import ListView, DetailView, UpdateView, DeleteView
+from django.views.generic import ListView, UpdateView, DeleteView
 from .forms import PostForm
 from django.urls import reverse, reverse_lazy
-from Users.models import Blacklist, Log
+from Users.models import Blacklist, Log, Infraction
+from Blog.utils import profanity_filter
 from taggit.models import Tag
 from .serializers import ArticleSerializer
 from rest_framework.generics import ListAPIView
@@ -234,6 +235,15 @@ def newCommentView(request, pk):
     if request.method == 'POST':
         content = request.POST.get('content')
         post = Post.objects.get(pk=pk)
+
+        if profanity_filter(content) == True:
+                messages.success(request, ("Your comment could not be posted, please refrain from the use of explicit language."))
+                Infraction.objects.create(
+                    user = request.user,
+                    reason = f"Used explicit language in article ID {pk} with the comment: {content}",
+                    datelog = datetime.now()
+                )
+                return HttpResponseRedirect(reverse('articleview', args =[str(post.slug)]))
 
         comment = Comment.objects.create(
             post = post,

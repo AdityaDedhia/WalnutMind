@@ -62,7 +62,7 @@ class Collection(models.Model):
     
     def save(self, *args, **kwargs):
         if self.cover:
-            image_resize(self.cover, 2000, 1400)
+            image_resize(self.cover, 1000, 700)
         super().save(*args, **kwargs)
 
 class Resource(models.Model):

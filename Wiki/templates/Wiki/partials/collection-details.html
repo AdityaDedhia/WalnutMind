@@ -1,23 +1,33 @@
-<div style="display:flex">
 
-    <div>
-        <h4><a href="{% url 'collectionview' pk_slug=collection.slug %}" style="text-decoration:none; color:black; font-weight:bold;" target="_blank" rel="noopener noreferrer">{{ collection.title }}</a></h4>
+    <div style="width:100%">
+    {% if collection.cover %}
+    <img src="{{ collection.cover.url }}" style="width:100%; height:125px; border-radius:10px; object-fit:cover;">
+    {% endif %}
+
+        <h4>
+        <a href="{% url 'collectionview' pk_slug=collection.slug %}" style="text-decoration:none; color:black; font-weight:bold;" target="_blank" rel="noopener noreferrer">{{ collection.title }}</a>
+        <i class="bi bi-pencil-square fs-5" style="cursor: pointer;" hx-get="{% url 'editcollection' pk_slug=collection.pk %}" hx-target="#collection-details"></i>
+        </h4>
+
     </div>
 
-    <div style="flex-grow:1"></div>
 
-    <div><button class="btn btn-primary" hx-get="{% url 'editcollection' pk_slug=collection.pk %}" hx-target="#collection-details">Edit</button></div>
+<div style="display:flex">
 
-    <div>
-    <input type="text"
-    hx-post="{% url 'search-resource' pk=collection.pk %} "
-    hx-target="#resource-results"
-    hx-trigger="keydown changed delay:50ms"
-    name="search"
-    class="form-control"
-    style="border-radius:10px; width:150px; margin-left:8px;"
-    placeholder="Add resources"/></div>
+<div><i><b>Description:</b> {{ collection.description }}</i></div>
 
+<div style="flex-grow:1"></div>
+
+<div>
+<input type="text"
+hx-post="{% url 'search-resource' pk=collection.pk %} "
+hx-target="#resource-results"
+hx-trigger="keydown changed delay:50ms"
+name="search"
+class="form-control"
+style="border-radius:10px; width:150px; margin-left:8px;"
+placeholder="Add resources"/>
 </div>
 
-<p>Description: {{ collection.description }}</p>
+
+</div>

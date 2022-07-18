@@ -12,15 +12,15 @@
     </div>
 
     <div class="modal-footer">
-        {% if next %}
-        <span style="margin-left:20px;" class="btn btn-primary btn-sm" hx-get="{% url 'resourcemodalview' collectionpk=collectionpk resourcepk=next.resource.pk order=next.order %}" hx-target="#detail-dialog" data-bs-dismiss="modal">Next</span>
-        {% endif %}
+        <button class="btn btn-secondary btn-sm" type="button" data-bs-dismiss="modal">Return</button>
+
         {% if previous %}
-        <span style="margin-left:20px;" class="btn btn-primary btn-sm" hx-get="{% url 'resourcemodalview' collectionpk=collectionpk resourcepk=previous.resource.pk order=previous.order %}" hx-target="#detail-dialog" data-bs-dismiss="modal">Previous</span>
+        <span style="margin-left:20px;" class="btn btn-primary btn-sm" hx-get="{% url 'resourcemodalview' collectionpk=collectionpk resourcepk=previous.resource.pk order=previous.order %}" hx-target="#detail-dialog">Previous</span>
         {% endif %}
         
-
-        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Return</button>
+        {% if next %}
+        <span style="margin-left:20px;" class="btn btn-primary btn-sm" hx-get="{% url 'resourcemodalview' collectionpk=collectionpk resourcepk=next.resource.pk order=next.order %}" hx-target="#detail-dialog" >Next</span>
+        {% endif %}
 
     </div>
 

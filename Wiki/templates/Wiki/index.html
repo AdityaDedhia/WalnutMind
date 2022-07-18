@@ -622,7 +622,11 @@
       <div id="collection-resource-list">
         {% include 'Wiki/partials/collection-resource-list.html' %}
       </div>
-
+      <script>
+        const modal1 = new bootstrap.Modal(document.getElementById("modal"))
+        const modal2 = new bootstrap.Modal(document.getElementById("detailmodal"))
+      </script>
+      
     </div>
    <!-- <h3>Categories:</h3>
     <h5>Files and Docs</h5>
@@ -636,5 +640,6 @@
 <p style="text-align:center; font-weight:bold;"><a href="{% url 'loginn' %}">Login</a> or <a href="{% url 'registerr' %}">register</a> to upload, find, and share your content.</p>
 {% endif %}
 <br/>
+
 
 {% endblock body %}
