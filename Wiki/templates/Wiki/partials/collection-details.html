@@ -6,7 +6,11 @@
 
         <h4>
         <a href="{% url 'collectionview' pk_slug=collection.slug %}" style="text-decoration:none; color:black; font-weight:bold;" target="_blank" rel="noopener noreferrer">{{ collection.title }}</a>
+
         <i class="bi bi-pencil-square fs-5" style="cursor: pointer;" hx-get="{% url 'editcollection' pk_slug=collection.pk %}" hx-target="#collection-details"></i>
+
+        <i class="bi bi-x-square" hx-delete="{% url 'delete-collection' pk=collection.pk %}" style="cursor: pointer;" hx-target="#collection-resource-list" hx-confirm="Are you sure you want to delete this collection (your resources will not be affected)?"></i>
+
         </h4>
 
     </div>
@@ -22,12 +26,11 @@
 <input type="text"
 hx-post="{% url 'search-resource' pk=collection.pk %} "
 hx-target="#resource-results"
-hx-trigger="keydown changed delay:50ms"
+hx-trigger="keydown changed delay:100ms"
 name="search"
 class="form-control"
 style="border-radius:10px; width:150px; margin-left:8px;"
-placeholder="Add resources"/>
+placeholder="Search for a resource"/>
 </div>
-
 
 </div>

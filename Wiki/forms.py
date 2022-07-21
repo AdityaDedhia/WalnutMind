@@ -33,7 +33,7 @@ class NewListForm(forms.ModelForm):
 class ResourceForm(forms.ModelForm):
     class Meta:
         model = Resource
-        fields = ('title', 'source', 'isbnlink', 'weblink', 'videolink', 'filelink', 'imagelink', 'text', 'description')
+        fields = ('title', 'source', 'isbnlink', 'weblink', 'videolink','videochannel', 'filelink', 'filetype', 'imagelink', 'text', 'description', 'public')
 
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
@@ -45,6 +45,20 @@ class ResourceForm(forms.ModelForm):
             'imagelink': forms.FileInput(attrs={'class': 'form-control'}),
             'text': forms.Textarea(attrs={'class': 'form-control'}),
             'description': forms.TextInput(attrs={'class': 'form-control'}),
+            'public': forms.CheckboxInput(attrs = {'class': 'form-check-input'}),
+        }
+
+
+class DocForm(forms.ModelForm):
+    class Meta:
+        model = Resource
+        fields = ('title','source','text','description','public')
+
+        widgets = {
+            'source': forms.TextInput(attrs={'class': 'form-control'}),
+            'text': forms.Textarea(attrs={'class': 'form-control'}),
+            'description': forms.TextInput(attrs={'class': 'form-control'}),
+            'public': forms.CheckboxInput(attrs = {'class': 'form-check-input'}),
         }
 
 class CollectionForm(forms.ModelForm):

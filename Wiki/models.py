@@ -66,18 +66,25 @@ class Collection(models.Model):
         super().save(*args, **kwargs)
 
 class Resource(models.Model):
-    title = models.CharField(max_length=100, blank = False, unique=True)
+    title = models.CharField(max_length=100, blank = True, unique=False)
     creator = models.ForeignKey(User, on_delete=models.DO_NOTHING, null = True, blank = True)
     description = models.CharField(max_length = 255, blank = True, null = True)
     source = models.CharField(max_length = 50, blank = True, null = True)
     collection = models.ManyToManyField(Collection, related_name="resources", through='CollectionOrder')
 
     text = RichTextUploadingField(blank = True, null = True)
+
     filelink = models.FileField(upload_to = 'Wiki/Resources', null = True, blank = True)
+    filetype = models.CharField(max_length = 10, blank = True, null = True)
+
+
     imagelink = models.ImageField(upload_to = 'Wiki/Resources', blank = True, null = True)
 
     weblink = models.URLField(null = True, blank = True)
+
     videolink = EmbedVideoField(null = True, blank = True)
+    videochannel = models.CharField(max_length = 200, blank = True, null = True)
+
     isbnlink = models.CharField(null = True, blank = True, max_length=13)
 
     public = models.BooleanField(default = False)
@@ -89,6 +96,7 @@ class Resource(models.Model):
 
     class Meta:
         ordering = ['-dateCreated']
+
 
     def clean(self):
         if self.filelink:
@@ -109,9 +117,10 @@ class CollectionOrder(models.Model):
     collection = models.ForeignKey(Collection, on_delete=models.CASCADE)
     resource = models.ForeignKey(Resource, on_delete=models.CASCADE)
     order = models.PositiveSmallIntegerField()
+    dateCreated = models.DateField(auto_now_add = True)
     
     def __str__(self):
-        return str(self.resource.resource)
+        return str(self.resource.title)
 
     class Meta:
         ordering = ['order']

@@ -1,24 +1,30 @@
+from datetime import datetime
 from http.client import BAD_REQUEST
 from .models import Term, List, Resource, Collection, CollectionOrder
 from django.views.generic import DetailView, ListView, UpdateView
-from django.http import Http404, HttpResponse, HttpResponseBadRequest, QueryDict
+from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required
-from .forms import ResourceForm, NewTermForm, NewListForm, CollectionForm
-from django.core.paginator import Paginator
+from django.db.models import Q
+from .forms import DocForm, ResourceForm, NewTermForm, NewListForm, CollectionForm
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect
-from isbnlib import meta, cover,doi
-from django.contrib.postgres.search import SearchQuery, SearchVector, SearchRank, SearchHeadline #Support full-text search
+from django.contrib.postgres.search import SearchQuery, SearchVector, SearchRank, SearchHeadline
 from taggit.models import Tag
 from django.conf import settings
 from Articles.views import Post as ArticlesPost
 from Commentaries.views import Post as BooksPost
-from .utils import storage_usage, resource_collection_order, resource_collection_reorder
+from .utils import storage_usage, resource_collection_order, resource_collection_reorder, get_resource_heatmap
 from Blog.utils import profanity_filter
 from Diaries.views import Post as BlogPost
+import plotly.express as px
+import calendar
 from dal import autocomplete
-from pytube import YouTube #Support YT Metadata
+
+from pytube import YouTube, Channel #Support YT Metadata
+from django.utils import timezone
+from isbnlib import meta, cover,doi
 SERVICE = "wiki"
+
 
 def clearMessagesView(request):
     return HttpResponse("")
@@ -33,21 +39,23 @@ class TermAutoComplete(autocomplete.Select2QuerySetView):
 
 def wikiView(request):
     if request.user.is_authenticated:
-        resources = Resource.objects.filter(creator = request.user)
+        resources = Resource.objects.filter(creator = request.user)[:10]
         collections = Collection.objects.filter(creator = request.user)
         collectionresources = CollectionOrder.objects.prefetch_related('resource').filter(user=request.user) #Prefetch resources of collection object in collectionresources
-
-
         bytes = storage_usage(request.user)
-
+        form = ResourceForm()
+        docform = DocForm()
+        heatmap = get_resource_heatmap(request.user)
     else:
         resources = None
         collections = None
         collectionresources = None
         bytes = None
+        form = None
+        docform = None
 
     return render(request, 'Wiki/index.html', {
-        'collections': collections, 'collectionresources': collectionresources,'resources': resources, 'bytes': bytes,
+        'collections': collections, 'collectionresources': collectionresources,'resources': resources, 'bytes': bytes, 'form': form, 'docform': docform, 'heatmap': heatmap,
     })
 
 #WM DEFINE ---------------------------------------------------------------
@@ -142,7 +150,7 @@ def searchResourceView(request, pk):
 
     resources = CollectionOrder.objects.filter(collection__pk = pk)
 
-    results = Resource.objects.filter(title__icontains=query).exclude(title__in=resources.values_list('resource__title', flat=True))
+    results = Resource.objects.filter(title__icontains=query).exclude(~Q(creator = request.user), public = False).exclude(title__in=resources.values_list('resource__title', flat=True))[:10] #Filter public resources
 
     return render(request, 'Wiki/partials/search-resources-results.html', {
         'results': results, 'pk': pk,
@@ -209,6 +217,7 @@ def existingResourceView(request, collectionpk, resourcepk):
     collectionresources = CollectionOrder.objects.filter(user=request.user)
 
     messages.success(request, "Resource added to collection.")
+
     return render(request, 'Wiki/partials/collection-resource-list.html', {  
         'collections': collections, 'collectionresources': collectionresources,
     })
@@ -229,47 +238,98 @@ class resourceList(ListView):
     def get_queryset(self):
         return Resource.objects.filter(creator = self.request.user)[:10] #MUST MATCH WITH wikiView
 
+
+@login_required(login_url='/users/login')
+def addDocView(request):
+    docform = DocForm(request.POST, request.FILES)
+
+    if docform.instance.text:
+        if docform.is_valid():
+            docform.instance.creator = request.user
+            docform.instance.title = datetime.date.today().strftime("%Y-%M-%D")
+
+            docform.save()
+
+            docform = DocForm(request.GET)
+            return render(request, 'Wiki/resource-list.html', {
+                'docform': docform,
+            })
+        else:
+            messages.success=(request, "An error occured while trying to save your document.")
+            return HttpResponseBadRequest(status=204)
+    else:
+        messages.success=(request, "No data is present in your document.")
+        return HttpResponseBadRequest(status=204)
+            
 @login_required(login_url='/users/login')
 def addResourceView(request):
+    if request.method == 'POST':
 
-    title = request.POST.get('title')
-    description = request.POST.get('description')
-    source = request.POST.get('source')
-    text = request.POST.get('text')
-    file = request.FILES.get('filelink')
-    image = request.FILES.get('imagelink')
-    web = request.POST.get('weblink')
-    video = request.POST.get('videolink')
-    book = request.POST.get('isbnlink')
-    public = bool(request.POST.get('public'))
+        form = ResourceForm(request.POST, request.FILES)
+   
+        if form.is_valid():
+            form.instance.creator = request.user
 
-    #VALIDATE TOTAL FILE STORAGE
-    bytes = storage_usage(request.user)
-    if bytes > settings.BASIC_STORAGE:
-        messages.success(request, ("You have exceeded your maximum file storage capacity of 200MB. Please delete some files before adding more."))
-        return render(request, 'Wiki/resource-list.html', {
-            'resources': resources
-        })
+            #attempt to fill in missing fields
+            
+            if form.instance.filelink:
+                form.instance.title = str(form.instance.filelink).split('.')[-2]
+                form.instance.filetype = str(form.instance.filelink).split('.')[-1]
 
-    Resource.objects.create(
-        title = title,
-        creator = request.user,
-        description = description,
-        source = source,
-        text = text,
-        filelink = file,
-        imagelink = image,
-        weblink = web,
-        videolink = video,
-        isbnlink = book,
-        public = public,
-    )
+            elif form.instance.imagelink:
+                form.instance.title = str(form.instance.imagelink)
+                form.instance.filetype = str(form.instance.imagelink).split('.')[-1]
 
-    resources = Resource.objects.filter(creator = request.user)
+            elif form.instance.weblink is not None:
+                url = str(form.instance.weblink)
 
-    return render(request, 'Wiki/resource-list.html', {
-        'resources': resources, 'bytes': bytes
-    })
+                #procedurally clean URL
+                url=url.replace('http://','')
+                url=url.replace('https://','')
+                url=url.replace('www.','')
+
+                source = form.instance.source = url.split('/')[0]
+                url=url.replace(form.instance.source+'/','')
+
+                if source == url: #if remaining url is the source itself, do not elipse
+                    form.instance.title = url[-40:]
+                else:
+                    form.instance.title = "..." + url[-40:]
+      
+            elif form.instance.videolink is not None:
+                url = str(form.instance.videolink)
+                yt = YouTube(url)
+                
+                form.instance.title = str(yt.title)[:40]
+                form.instance.source = yt.author
+                form.instance.videochannel = yt.channel_url
+
+            elif form.instance.isbnlink is not None:
+                isbnlink = form.instance.isbnlink
+                metadata = meta(isbnlink, SERVICE)
+                form.instance.title = metadata['Title']
+                form.instance.source = metadata['Authors'][0]
+
+
+            form.save()
+
+            form = ResourceForm()
+            docform = DocForm()
+
+
+            #VALIDATE TOTAL FILE STORAGE
+            bytes = storage_usage(request.user)
+            if bytes > settings.BASIC_STORAGE:
+                messages.success(request, ("You have exceeded your maximum file storage capacity of 200MB. Please delete some files before adding more."))
+
+            heatmap = get_resource_heatmap(request.user)
+            resources = Resource.objects.filter(creator = request.user)[:10]
+            return render(request, 'Wiki/resource-list.html', {
+                'resources': resources, 'bytes': bytes, 'form': form,'docform': docform,  'heatmap': heatmap,
+            })
+        else:
+            messages.success=(request, "An error occured while trying to save your document.")
+            return HttpResponseBadRequest(status=204)
 
 @login_required(login_url='/users/login')
 def deleteResourceView(request, pk):
@@ -277,10 +337,12 @@ def deleteResourceView(request, pk):
     if resource.creator == request.user:
         resource.delete()
 
-    resources = Resource.objects.filter(creator = request.user)
+    resources = Resource.objects.filter(creator = request.user)[:10]
+    bytes = storage_usage(request.user)
+    heatmap = get_resource_heatmap(request.user)
 
     return render(request, 'Wiki/resource-list.html', {
-        'resources': resources
+        'resources': resources, 'bytes': bytes, 'heatmap': heatmap,
     })
 
 @login_required(login_url='/users/login')
@@ -321,6 +383,19 @@ def editCollectionView(request, pk_slug):
             'form': form, 'collection': collection
         })
 
+@login_required(login_url='/users/login')
+def deleteCollectionView(request, pk):
+    collection = Collection.objects.get(pk = pk)
+    if collection.creator == request.user:
+        collection.delete()
+    
+    collections = Collection.objects.filter(creator = request.user)
+    collectionresources = CollectionOrder.objects.prefetch_related('resource').filter(user=request.user) #Prefetch resources of collection object in collectionresources
+
+    return render(request, 'Wiki/partials/collection-resource-list.html', {
+        'collections': collections, 'collectionresources': collectionresources
+    })
+
 def resourceView(request, pk):
     resource = Resource.objects.get(pk = pk)
     if resource.weblink is not None:
@@ -346,19 +421,26 @@ def resourceModalView(request, collectionpk, resourcepk, order):
 
     orders = CollectionOrder.objects.filter(collection__pk=collectionpk, user=request.user)
 
-    if order <= 1 and len(orders) <= 1:
+    if order == 1 and len(orders) == 1:
         next = None #For collections with only 1 resource
         previous = None
-    elif order <= 2:
+    elif order ==1 and len(orders) > 1:
         next = orders.get(order = int(order+1))
         previous = None
+    elif order ==2 and len(orders) == 2:
+        next = None
+        previous = orders.get(order = int(order-1))
+ 
     elif order > 2 and order < len(orders):
         next = orders.get(order = int(order+1))
         previous = orders.get(order = int(order-1))
- 
-    elif order >= len(orders):
-            next = None
-            previous = orders.get(order = int(order-1))
+    
+    elif order == len(orders)-1:
+        next = orders.get(order = int(order+1))
+        previous = orders.get(order = int(order-1))
+    else:
+        next = None
+        previous = orders.get(order = int(order-1))
 
 
     resource = object.resource #Input is order

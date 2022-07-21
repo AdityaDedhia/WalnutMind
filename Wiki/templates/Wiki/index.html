@@ -7,6 +7,11 @@
 
 {% block body %}
 
+{% load static %}
+<script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+<script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+
+
     <ol class="breadcrumb" style = "background-color:white">
         <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
         <li class="breadcrumb-item active">Wiki</li>
@@ -38,11 +43,12 @@
       .resource-card {
         box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.25);
         transition: all 0.2s;
+        transform:scale(0.9);
       }
       
       .resource-card:hover {
         box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.4);
-        transform: scale(1.01);
+        transform: scale(1.005);
       }
       
       .resource-card__link,
@@ -144,9 +150,7 @@
     
         mask-repeat: no-repeat, no-repeat;
     }
-    </style>
 
-    <style>
       ::placeholder {
         text-align: center; 
       }
@@ -178,10 +182,10 @@
         font-weight: 800;
       }
       .marquee-inner.to-left{
-        animation: marqueeLeft 60s linear infinite;
+        animation: marqueeLeft 90s linear infinite;
       }
       .marquee-inner.to-right{
-        animation: marqueeRight 60s linear infinite;
+        animation: marqueeRight 90s linear infinite;
       }
       .marquee-item{
         width: 230px;
@@ -533,64 +537,53 @@
 
   <!--ADD RESOURCE-->
 
-    <div class="form-group col-sm-5 col-md-4 col-lg-3 col-xl-2 card bg-light" style="border-radius:10px; padding:25px">
+    <div class="form-group col-sm-5 col-md-4 col-lg-3 col-xl-2 card bg-light" style="border-radius:10px; font-size: 14px; padding:15px">
       <h4><b>Quick Entry:</b></h4>
       <h6><i>Save now; edit later</i></h6>
       <hr/>
-    <form method="post" enctype="multipart/form-data">
+    <form enctype="multipart-formdata" hx-post="{% url 'add-resource' %}" hx-encoding="multipart/form-data" hx-target="#resource-list">
         {% csrf_token %}
         {{ form.media }}
 
           <div class="form-group row">
-            <input class="btn-vivid-red" style="margin-left:2px; font-weight:bold;" type='reset' value='Clear' name='reset'> 
-
-            <label style="float: left;" for="title">Title</label>
-            <input class="form-control" type="text" name="title" placeholder="Required"/>
-          </div>
-
-          <div class="form-group row">
-            <label style="float: left;" for="description">Description</label>
-            <input class="form-control" type="text" name="description" placeholder="Optional"/>
-          </div>
-
-          <div class="form-group row">
-            <label style="float: left;" for="source">Source</label>
-            <input class="form-control" type="text" name="source" placeholder="Optional"/>
-          </div><br/>
 
         <!--RESOURCE TYPES-->
           <h6>Content Type</h6>
-          <cap style="font-size:13px; color:gray">With multiple sources, precedence is given in this order:</cap><hr/>
+            {{ form.title.as_hidden }}
           <div class="form-group row">
-            <label for="text">Rich Text Doc</label>
-            <input class="form-control" type="textarea" name="text" placeholder="Type some text..."/>
-          </div>
-          <div class="form-group row">
+            <input class="btn-vivid-red" style="margin-left:2px; font-weight:bold;" type='reset' value='Clear' name='reset'> 
             <label for="filelink">File (10MB Limit)</label>
-            <input class="form-control" type="file" accept=".pdf" name="filelink"/>
+            {{ form.filelink }}
+            {{ form.filetype.as_hidden }}
           </div>
           <div class="form-group row">
             <label for="imagelink">Image (5MB Limit)</label>
-            <input class="form-control" type="file" accept="image/*" name="imagelink"/>
+            {{ form.imagelink }}
           </div>
           <div class="form-group row">
-            <label for="weblink">Webpage</label>
-            <input class="form-control" type="url" name="weblink"/>
+            <label for="weblink">Web Page URL</label>
+            {{ form.weblink }}
           </div>
           <div class="form-group row">
-            <label for="videolink">Video (YT, Vimeo)</label>
-            <input class="form-control" type="url" name="videolink"/>
+            <label for="videolink">YT/Vimeo Video URL</label>
+            {{ form.videolink }}
+            {{ form.videochannel.as_hidden }}
           </div>
           <div class="form-group row">
             <label for="isbnlink">Book (ISBN-13)</label>
-            <input class="form-control" type="number" name="isbnlink"/>
+            {{ form.isbnlink }}
           </div>
           <div class="form-group row">
-            Make public?&nbsp;<input class="form-control form-check-input" type="checkbox" name="public"/>
+            <label style="float: left;" for="description"><i>Context (Optional)</i></label>
+            {{ form.description }}
+          </div>
+          
+          <div class="form-group row">
+            Make public?&nbsp;{{ form.public }}
 
-            <button hx-post="{% url 'add-resource' %}" hx-encoding="multipart/form-data" hx-target="#resource-list" hx-swap="outerhtml" type="submit" style="margin-left:2px" class=" btn-warm-blue"><b>SUBMIT</b></button>
-
+          <button type="submit" style="margin-left:2px" class=" btn-warm-blue"><b>SUBMIT</b></button>
         </div>
+      </div>
 
       </form>
     </div>
@@ -606,11 +599,33 @@
       <a href="{% url 'collectionsview' %}" class="btn-dark-violet">Collections</a>
       </div>
       <br/>
-      <h3>Your latest additions:</h3>
-      <div id="resource-list">
-        {% include 'Wiki/resource-list.html' %}
-      </div><hr/>
+      <div class="row">
 
+        <div id="resource-list" class="col-xl-8 col-lg-7 col-md-12">
+          {% include 'Wiki/resource-list.html' %}
+        </div>
+
+        <div class="col-xl-3 col-lg-4 col-md-12">
+          <form hx-post="{% url 'add-resource' %}" enctype="multipart-formdata" hx-encoding="multipart/form-data" hx-target="#resource-list">
+            {% csrf_token %}
+            {{ docform.media }}
+            <div style="display:flex">
+              <div><b>Doc Title:&nbsp;</b></div>
+              <div style="width:100px">{{ docform.title }}</div>
+            </div>
+            <div class="form-group row">
+              {{ docform.text }}
+            </div>
+      
+            <div style="display:flex">
+             <button type="submit" style="margin-left:2px" class="btn btn-primary btn-sm"><b>Create</b></button>
+            </div>
+            </form>
+        </div>
+
+      </div>
+
+      <hr/>
       <h3>Your Collections:</h3>
 
       <form class="form-group" style="display:flex">

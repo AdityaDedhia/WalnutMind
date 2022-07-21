@@ -1,12 +1,17 @@
 {% load humanize %}
 
+<div class="row">
 {% if resources %}
+<div style="opacity:0.85">
+{{ heatmap|safe }}
+</div>
+<h5 style="color:gray">Your latest additions →</h5>
+<hr/>
 <div class="masked-overflow-x">
-    
     {% for resource in resources %}
       <!--TEXT LINK-->
     {% if resource.text %}
-    <span class="resource-card card-5 btn btn-sm mb-2" style="margin:10px;  border-radius:10px">
+    <span class="resource-card card-5 btn btn-sm mb-2" style="margin:5px;  border-radius:10px">
       <a style="text-decoration:none; color:black" href="{% url 'resourceview' pk=resource.pk %}" target="_blank" rel="noopener noreferrer">
       <b class="title resource-card__link" style="overflow:hidden">{{ resource.title }}</b></a>
   
@@ -18,12 +23,12 @@
         {% else %}
         <span class="badge bg-secondary rounded-pill">PRIVATE</span>
         {% endif %}</p>
-        <i class="bi bi-file-text"></i> <b>DOC</b> | Word Count: {{ resource.text|wordcount }}
+        <i class="bi bi-file-text"></i><i>WM </i><b>DOC</b> | Word Count: {{ resource.text|wordcount }}
 
     </span>
       <!--FILE LINK-->
     {% elif resource.filelink %}
-    <span class="resource-card card-5 btn btn-sm mb-2" style="margin:10px; border-radius:10px">
+    <span class="resource-card card-5 btn btn-sm mb-2" style="margin:5px; border-radius:10px">
         <a style="text-decoration:none; color:white;" href="{% url 'resourceview' pk=resource.pk %}" target="_blank" rel="noopener noreferrer">
         <b class="title resource-card__link" style="overflow:hidden">{{ resource.title }}</b></a>
         <span class="exit badge bg-danger" hx-delete="{% url 'delete-resource' pk=resource.pk %}" hx-target="#resource-list" hx-confirm="Are you sure you want to delete this resource?"><i class="bi bi-x"></i></span>
@@ -34,11 +39,11 @@
           <span class="badge bg-secondary rounded-pill">PRIVATE</span>
           {% endif %}</p>
 
-          <i class="bi bi-paperclip"></i> <b>FILE</b> | File Size: {{ resource.filelink.size|filesizeformat }}
+          <i class="bi bi-paperclip"></i><i> {{ resource.filetype }} </i><b>FILE</b> | Size: {{ resource.filelink.size|filesizeformat }}
       </span>
       <!--IMAGE LINK-->
       {% elif resource.imagelink %}
-      <span class="resource-card card-4 btn btn-sm mb-2" style="margin:10px;  border-radius:10px">
+      <span class="resource-card card-4 btn btn-sm mb-2" style="margin:5px;  border-radius:10px">
           <a style="text-decoration:none; color:black" href="{% url 'resourceview' pk=resource.pk %}" target="_blank" rel="noopener noreferrer">
           <b class="title resource-card__link" style="overflow:hidden">{{ resource.title }}</b></a>
           <span class="badge bg-danger" hx-delete="{% url 'delete-resource' pk=resource.pk %}" hx-target="#resource-list" hx-confirm="Are you sure you want to delete this resource?"><i class="bi bi-x"></i></span>
@@ -49,7 +54,7 @@
             <span class="badge bg-secondary rounded-pill">PRIVATE</span>
             {% endif %}</p>
   
-            <i class="bi bi-image"></i> <b>IMG</b> | Image Size: {{ resource.imagelink.size|filesizeformat }}
+            <i class="bi bi-image"></i><i> {{ resource.filetype }} </i><b>IMG</b> | Size: {{ resource.imagelink.size|filesizeformat }}
         </span>
   
       <!--VIDEO LINK-->
@@ -57,7 +62,7 @@
     <span class="resource-card card-2 btn btn-sm mb-2" style="margin:10px; border-radius:10px">
         <a style="text-decoration:none; color:white" href="{% url 'resourceview' pk=resource.pk %}" target="_blank" rel="noopener noreferrer">
         <b class="title resource-card__link" style="overflow:hidden">{{ resource.title }}</b></a>
-        <span class="badge bg-danger" hx-delete="{% url 'delete-resource' pk=resource.pk %}" hx-target="#resource-list" hx-confirm="Are you sure you want to delete this resource?"><i class="bi bi-x"></i></span>
+        <span class="badge bg-danger" hx-delete="{% url 'delete-resource' pk=resource.pk %}" hx-target="#resource-list" hx-confirm="Are you sure you want to permanently delete this resource?"><i class="bi bi-x"></i></span>
 
       <p style="padding-top:8px">{{ resource.dateCreated|naturaltime }}
         {% if resource.public %}
@@ -66,11 +71,11 @@
         <span class="badge bg-secondary rounded-pill">PRIVATE</span>
         {% endif %}</p>
 
-        <i class="bi bi-play-btn"></i> <b>VIDEO</b> | Source: {{ resource.source }}
+        <i class="bi bi-play-btn"></i><i> YT </i><b>VIDEO</b> | Source: <a href="{{ resource.videochannel }}" target="_blank" rel="noopener noreferrer">{{ resource.source }}</a>
     </span>
 
     {% elif resource.weblink %}
-    <span class="resource-card card-1 btn btn-sm mb-2" style="margin:10px; border-radius:10px">
+    <span class="resource-card card-1 btn btn-sm mb-2" style="margin:5px; border-radius:10px">
         <a style="text-decoration:none; color:white" href="{% url 'resourceview' pk=resource.pk %}" target="_blank" rel="noopener noreferrer">
         <b class="title resource-card__link" style="overflow:hidden">{{ resource.title }}</b></a>
         <span class="badge bg-danger" hx-delete="{% url 'delete-resource' pk=resource.pk %}" hx-target="#resource-list" hx-confirm="Are you sure you want to delete this resource?"><i class="bi bi-x"></i></span>
@@ -82,7 +87,23 @@
         <span class="badge bg-secondary rounded-pill">PRIVATE</span>
         {% endif %}</p>
 
-        <i class="bi bi-globe"></i> <b>WEBPAGE</b> | Source: {{ resource.source }}
+        <i class="bi bi-globe"></i><i> WEB </i><b>PAGE</b> | Source: <a href="https://www.{{ resource.source }}" target="_blank" rel="noopener noreferrer">{{ resource.source }}</a>
+    </span>
+
+    {% elif resource.isbnlink %}
+    <span class="resource-card card-5 btn btn-sm mb-2" style="margin:5px; border-radius:10px">
+        <a style="text-decoration:none; color:white" href="{% url 'resourceview' pk=resource.pk %}" target="_blank" rel="noopener noreferrer">
+        <b class="title resource-card__link" style="overflow:hidden">{{ resource.title }}</b></a>
+        <span class="badge bg-danger" hx-delete="{% url 'delete-resource' pk=resource.pk %}" hx-target="#resource-list" hx-confirm="Are you sure you want to delete this resource?"><i class="bi bi-x"></i></span>
+
+      <p style="padding-top:8px">{{ resource.dateCreated|naturaltime }}
+        {% if resource.public %}
+        <span class="badge bg-success rounded-pill">PUBLIC</span>
+        {% else %}
+        <span class="badge bg-secondary rounded-pill">PRIVATE</span>
+        {% endif %}</p>
+
+        <i class="bi bi-globe"></i><i> ISBN </i><b>Book</b> | Author: <a href="{% url 'resourceview' pk=resource.pk %}" target="_blank" rel="noopener noreferrer">{{ resource.source }}</a>
     </span>
 
     {% endif %}
@@ -90,6 +111,8 @@
   </div>
   <h6 class="noselect" style="color:gray">Total cloud storage used: {{ bytes|filesizeformat }} / 200MB</h6>
 
-{% else %}
-<p>No resources added yet...</p>
-{% endif %}
+  {% else %}
+  <p>No resources added yet...</p>
+  
+  {% endif %}
+</div>

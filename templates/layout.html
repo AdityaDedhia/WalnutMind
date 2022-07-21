@@ -61,6 +61,7 @@
         <div class="col-12">
           <nav
             class="navbar navbar-expand-lg blur blur-rounded position-fixed top-0 border-bottom py-3 shadow my-2 start-0 end-0 mx-5">
+            
 
             <div class="container">
               <!-- NAVBAR BRAND-->
@@ -290,8 +291,6 @@
             });
         }
     })
-
-
 
       document.body.addEventListener('htmx:configRequest', (event)=> {
         event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';

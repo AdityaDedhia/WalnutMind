@@ -109,7 +109,7 @@ class bookView(HitCountDetailView):
         return super(bookView, self).dispatch(request, *args, **kwargs)
 
 def post_json(request):
-    data = list(Post.objects.values())
+    data = list(Post.objects.values('content'))
     return JsonResponse(data, safe = False)
 
 #---------------------------------------------------------------------------------
@@ -154,9 +154,7 @@ def commentaryupvote(request, pk):
     messages.success(request, ("Commentary liked, thank you for your feedback."))
     return HttpResponseRedirect(reverse('bookview', args =[str(post.slug)]))
 
-
 #---------------------------------------------------------------------------------
-
 
 @login_required(login_url='/users/login')
 def newCommentView(request, pk):
@@ -206,8 +204,6 @@ def deleteCommentView(request, pk, id):
     else:
         messages.success(request, ("An unknown error occured attempting to delete your comment."))
         return HttpResponseRedirect(reverse('bookindex'))
-
-
 
 @login_required(login_url='/users/login')
 def newPostView(request):

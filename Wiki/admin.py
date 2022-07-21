@@ -15,6 +15,16 @@ class FileAdmin(admin.ModelAdmin):
 
     readonly_fields = ['slug']
 
-admin.site.register(Resource)
+
+@admin.register(Resource)
+class FileAdmin(admin.ModelAdmin):
+    list_display = ['title', 'creator', 'dateCreated']
+
+    readonly_fields = ['dateCreated']
+
+
 admin.site.register(Collection)
-admin.site.register(CollectionOrder)
+
+@admin.register(CollectionOrder)
+class FileAdmin(admin.ModelAdmin):
+    list_display = ['resource', 'collection','order', 'dateCreated']

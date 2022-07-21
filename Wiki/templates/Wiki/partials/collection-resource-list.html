@@ -27,7 +27,15 @@
                 <div class="list-group-item-action" style="display:flex; padding:8px; margin:8px;">
 
                     <input type="hidden" name="resource_order" value="{{ resource.pk }}"/>
-                    {{ resource.order }}:&nbsp;<a class="noselect" href="{% url 'resourceview' pk=resource.resource.pk %}" style="color:black;" target="_blank" rel="noopener noreferrer">{{ resource.resource.title }}&nbsp;<i class="bi bi-box-arrow-in-up-right"></i></a>
+                    {{ resource.order }}:&nbsp;
+                    {% if resource.resource.public == True %}
+                    <i class="bi bi-globe2" style="color:green"></i>
+                    {% else %}
+                    <i class="bi bi-file-lock2" style="color:gray"></i>
+                    {% endif %}&nbsp;
+                    
+                    <a class="noselect" href="{% url 'resourceview' pk=resource.resource.pk %}" style="color:black;" target="_blank" rel="noopener noreferrer">{{ resource.resource.title }}&nbsp;<i class="bi bi-box-arrow-in-up-right"></i></a>
+
 
                     <div style="flex-grow:1"></div>             
                     <i style="color:gray;" class="bi bi-arrow-down-up"></i>
@@ -52,7 +60,7 @@
 
 </div>
 <div class="card bg-light col-3" style="padding:10px" id="resource-results">
-<b>Unsorted Resources:</b>
+<b><i class="bi bi-search fs-6"></i> Resources Finder</b>
 <ul class="list-group">
     {% for resource in unsorted %}
     <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -113,13 +121,3 @@ htmx.on("htmx:beforeSwap", (e) => {
   }
 })
 </script>
-
-<style>
-  .modal {
-      transform: scale(1.2);
-    
-      transition:
-        transform 0.4s cubic-bezier(0.465, 0.183, 0.153, 0.946),
-        opacity 0.4s cubic-bezier(0.465, 0.183, 0.153, 0.946);
-    }
-</style>

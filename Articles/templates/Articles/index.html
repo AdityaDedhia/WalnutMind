@@ -11,6 +11,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.2/min/tiny-slider.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/tiny-slider.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.4/min/tiny-slider.js" integrity="sha512-j+F4W//4Pu39at5I8HC8q2l1BNz4OF3ju39HyWeqKQagW6ww3ZF9gFcu8rzUbyTDY7gEo/vqqzGte0UPpo65QQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.2.2/particles.min.js"></script>
 
 
 <style>
@@ -264,6 +265,8 @@
 <h6>Peform a full-text search on anything and everything in our catalog and <b>beyond</b> using <a href="{% url 'wikiindex' %}">WM Wiki</a>.</h6>
 </div>
 
+
+
 </div>
 
 {% if not user.is_authenticated %}
@@ -439,8 +442,40 @@
 
 {% endif %}
 
-
-
 <br/>
 <br/>
+
+<canvas class="background" style="z-index:-10; opacity: 0.65"></canvas>
+
+<style>
+  html, body {
+  
+    margin: 0;
+    padding: 0;
+    }
+
+  .background {
+      position: absolute;
+      display: block;
+      top: 0;
+      left: 0;
+      z-index: 0;
+  }
+</style>
+
+<script>
+
+  window.onload = function() {
+    Particles.init({
+      selector: '.background',
+      maxParticles: 500,
+      sizeVariations: 8,
+      speed: 0.15,
+      color: '#d6d6d6',
+      minDistance: 65,
+      connectParticles: true,
+    });
+  };
+</script>
+
 {% endblock body %}
