@@ -53,6 +53,7 @@ def wikiView(request):
         bytes = None
         form = None
         docform = None
+        heatmap = None
 
     return render(request, 'Wiki/index.html', {
         'collections': collections, 'collectionresources': collectionresources,'resources': resources, 'bytes': bytes, 'form': form, 'docform': docform, 'heatmap': heatmap,
