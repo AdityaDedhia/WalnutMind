@@ -8,9 +8,8 @@
 {% block body %}
 
 {% load static %}
-<script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
-<script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
-
+<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 
     <ol class="breadcrumb" style = "background-color:white">
         <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
@@ -523,8 +522,6 @@
             </div>
           </div>
         </div>
-        
-   
 
   </div>
 </div>
@@ -537,52 +534,113 @@
 
   <!--ADD RESOURCE-->
 
-    <div class="form-group col-sm-5 col-md-4 col-lg-3 col-xl-2 card bg-light" style="border-radius:10px; font-size: 14px; padding:15px">
-      <h4><b>Quick Entry:</b></h4>
-      <h6><i>Save now; edit later</i></h6>
+  <style>
+    .dropzone {
+      border: 4px dashed #929292 !important;
+      border-radius:10px;
+      background-color: #212121;
+      min-width: 100%;
+      min-height:200px;
+      font-size:10px;
+      color:#d6d6d6;
+    }
+
+  
+    .dropzone:hover {
+      background-color: #929292;
+      box-shadow: #c0c0c0 0px 4px 8px 0px;
+      box-shadow: inset 0 0 150px black;
+
+    }
+
+    .btn-warm-blue {
+      background-image: linear-gradient(to right, #1FA2FF 0%, #12D8FA  51%, #1FA2FF  100%);
+      margin: 10px;
+      padding: 8px 26px;
+      text-align: center;
+      text-transform: uppercase;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.5s;
+      background-size: 200% auto;
+      color: white;            
+      box-shadow: 0 0 15px #797979;
+      border-radius: 10px;
+    }
+    
+    .btn-warm-blue:hover {
+      background-position: right center;
+      color: #fff;
+      text-decoration: none;
+    }
+         
+    .btn-vivid-red {
+      background-image: linear-gradient(to right, #D31027 0%, #EA384D  51%, #D31027  100%);
+      margin: 10px;
+      padding: 8px 26px;
+      text-align: center;
+      text-transform: uppercase;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.5s;
+      background-size: 200% auto;
+      color: white;            
+      box-shadow: 0 0 15px #797979;
+      border-radius: 10px;
+    }
+    
+    .btn-vivid-red:hover {
+      background-position: right center;
+      color: #fff;
+      text-decoration: none;
+    }
+  </style>
+
+    <div class="form-group col-sm-5 col-md-4 col-lg-3 col-xl-2 card bg-dark" style="border-radius:10px; font-size: 14px; padding:15px">
+      <h4 class="text-white"><b>Quick Entry:</b></h4>
+      <h6 class="text-white"><i>Save now; edit later</i></h6>
       <hr/>
     <form enctype="multipart-formdata" hx-post="{% url 'add-resource' %}" hx-encoding="multipart/form-data" hx-target="#resource-list">
         {% csrf_token %}
         {{ form.media }}
 
-          <div class="form-group row">
+          <div class="form-group row" style="transform:translateX(12px);">
 
         <!--RESOURCE TYPES-->
-          <h6>Content Type</h6>
+          <h5 class="text-white">CONTENT TYPE</h5>
             {{ form.title.as_hidden }}
+            {{ form.category.as_hidden }}
           <div class="form-group row">
-            <input class="btn-vivid-red" style="margin-left:2px; font-weight:bold;" type='reset' value='Clear' name='reset'> 
-            <label for="filelink">File (10MB Limit)</label>
+            <hr style="color:white"/>
+            <input class="btn btn-vivid-red" style="margin-left:2px;" type='reset' value='Clear' name='reset'> 
+            <label class="text-white" for="filelink"><b>Files / Images (25MB)</b></label>
             {{ form.filelink }}
             {{ form.filetype.as_hidden }}
+
           </div>
           <div class="form-group row">
-            <label for="imagelink">Image (5MB Limit)</label>
-            {{ form.imagelink }}
-          </div>
-          <div class="form-group row">
-            <label for="weblink">Web Page URL</label>
+            <label class="text-white" for="weblink"><b>Web Pages / Videos</b></label>
             {{ form.weblink }}
-          </div>
-          <div class="form-group row">
-            <label for="videolink">YT/Vimeo Video URL</label>
-            {{ form.videolink }}
+            {{ form.webdescription.as_hidden }}
+            {{ form.videolink.as_hidden }}
             {{ form.videochannel.as_hidden }}
           </div>
+
           <div class="form-group row">
-            <label for="isbnlink">Book (ISBN-13)</label>
+            <label class="text-white" for="isbnlink"><b>Books</b></label>
             {{ form.isbnlink }}
           </div>
           <div class="form-group row">
-            <label style="float: left;" for="description"><i>Context (Optional)</i></label>
+            <label style="float: left;" class="text-white" for="description"><b><i>Context (Optional)</i></b></label>
             {{ form.description }}
           </div>
           
+          <div class="form-group form-check form-switch row">
+            <label class="text-white" for="public"><b>Make public?</b>{{ form.public }}</label>
+          </div>
           <div class="form-group row">
-            Make public?&nbsp;{{ form.public }}
-
-          <button type="submit" style="margin-left:2px" class=" btn-warm-blue"><b>SUBMIT</b></button>
-        </div>
+          <button type="submit" style="margin-left:2px" class="btn btn-warm-blue"><b>SUBMIT</b></button>
+          </div>
       </div>
 
       </form>

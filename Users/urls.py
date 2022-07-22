@@ -3,13 +3,14 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
+from ratelimit.decorators import ratelimit
 
 urlpatterns = [
     #AUTH RELATED PATTERNS
     path('register',views.registerView, name = "registerr"),
     path('activate-user/<uidb64>/<token>',views.activate_user, name = 'activate'),
     path('password/', auth_views.PasswordChangeView.as_view(template_name = 'Users/change-password.html', success_url = reverse_lazy('index')), name = "update_password"),
-    path('reset_password/', auth_views.PasswordResetView.as_view(template_name = 'Users/password-reset.html'), name = "reset_password"),
+    path('reset_password/', ratelimit(key='ip', method='POST', rate='3/d', block=True)(auth_views.PasswordResetView.as_view(template_name = 'Users/password-reset.html')), name = "reset_password"),
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name = 'Users/reset-sent.html'), name = "password_reset_done"),
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name = 'Users/change-password.html'), name = "password_reset_confirm"),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name = 'Users/reset-success.html'), name = "password_reset_complete"),

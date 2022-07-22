@@ -33,21 +33,18 @@ class NewListForm(forms.ModelForm):
 class ResourceForm(forms.ModelForm):
     class Meta:
         model = Resource
-        fields = ('title', 'source', 'isbnlink', 'weblink', 'videolink','videochannel', 'filelink', 'filetype', 'imagelink', 'text', 'description', 'public')
+        fields = ('title', 'source', 'isbnlink', 'weblink','webdescription', 'videolink','videochannel', 'filelink', 'filetype', 'text', 'category', 'description', 'public')
 
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'source': forms.TextInput(attrs={'class': 'form-control'}),
-            'isbnlink': forms.TextInput(attrs={'class': 'form-control'}),
-            'weblink': forms.TextInput(attrs={'class': 'form-control'}),
-            'videolink': forms.TextInput(attrs={'class': 'form-control'}),
-            'filelink': forms.FileInput(attrs={'class': 'form-control'}),
-            'imagelink': forms.FileInput(attrs={'class': 'form-control'}),
+            'isbnlink': forms.TextInput(attrs={'class': 'form-control','placeholder': 'Enter an ISBN-13 code'}),
+            'weblink': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter a valid web URL'}),
+            'filelink': forms.FileInput(attrs={'class': 'dropzone', 'type': 'file', 'accept': 'image/*, video/*, audio/*, application/pdf'}),
             'text': forms.Textarea(attrs={'class': 'form-control'}),
-            'description': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter a description'}),
             'public': forms.CheckboxInput(attrs = {'class': 'form-check-input'}),
         }
-
 
 class DocForm(forms.ModelForm):
     class Meta:

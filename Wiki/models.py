@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from embed_video.fields import EmbedVideoField
 from ckeditor_uploader.fields import RichTextUploadingField
 from Blog.utils import image_resize
-from .validators import validate_file_size, validate_image_size
+from .validators import validate_file_size
 from django.db.models.functions import Lower
 from django.urls import reverse
 
@@ -77,10 +77,8 @@ class Resource(models.Model):
     filelink = models.FileField(upload_to = 'Wiki/Resources', null = True, blank = True)
     filetype = models.CharField(max_length = 10, blank = True, null = True)
 
-
-    imagelink = models.ImageField(upload_to = 'Wiki/Resources', blank = True, null = True)
-
     weblink = models.URLField(null = True, blank = True)
+    webdescription = models.CharField(max_length = 255, blank = True, null = True)
 
     videolink = EmbedVideoField(null = True, blank = True)
     videochannel = models.CharField(max_length = 200, blank = True, null = True)
@@ -91,8 +89,29 @@ class Resource(models.Model):
     dateCreated = models.DateTimeField(auto_now_add = True)
     dateUpdated = models.DateTimeField(auto_now = True)
 
+    FILE = 'FILE'
+    DOC = 'DOC'
+    IMG = 'IMG'
+    WEB = 'WEB'
+    VIDEO = 'VIDEO'
+    BOOK = 'BOOK'
+    
+    CHOICES = [
+        (FILE, 'File'),
+        (DOC, 'WM Document'),
+        (IMG, 'Image'),
+        (WEB, 'Web Page'),
+        (VIDEO, 'YT Video'),
+        (BOOK, 'Book'),
+    ]
+    category = models.CharField(
+        max_length=5,
+        choices=CHOICES,
+        default=FILE,
+    )
+    
     def __str__(self):
-        return str(self.title)
+        return str(self.category) + str(self.title)
 
     class Meta:
         ordering = ['-dateCreated']
@@ -101,8 +120,6 @@ class Resource(models.Model):
     def clean(self):
         if self.filelink:
             validate_file_size(self.filelink)
-        if self.imagelink:
-            validate_image_size(self.imagelink)
 
     def save(self, *args, **kwargs):
         self.full_clean()
@@ -117,7 +134,7 @@ class CollectionOrder(models.Model):
     collection = models.ForeignKey(Collection, on_delete=models.CASCADE)
     resource = models.ForeignKey(Resource, on_delete=models.CASCADE)
     order = models.PositiveSmallIntegerField()
-    dateCreated = models.DateField(auto_now_add = True)
+    dateCreated = models.DateTimeField(auto_now_add = True)
     
     def __str__(self):
         return str(self.resource.title)

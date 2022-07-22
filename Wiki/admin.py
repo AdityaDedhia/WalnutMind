@@ -18,7 +18,8 @@ class FileAdmin(admin.ModelAdmin):
 
 @admin.register(Resource)
 class FileAdmin(admin.ModelAdmin):
-    list_display = ['title', 'creator', 'dateCreated']
+    search_fields = ['title']
+    list_display = ['title', 'category', 'creator', 'dateCreated']
 
     readonly_fields = ['dateCreated']
 

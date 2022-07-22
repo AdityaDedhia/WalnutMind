@@ -8,7 +8,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
-from .utils import generate_token
+from .utils import generate_token, verify_email, verify_ip #APIS
 from django.core.mail import EmailMessage
 from django.views.decorators.debug import sensitive_variables
 from django.http import HttpResponseRedirect
@@ -20,7 +20,7 @@ from datetime import datetime
 import os
 import requests
 import json
-
+from ratelimit.decorators import ratelimit
 
 class EmailThread(threading.Thread):
     def __init__(self,email):
@@ -100,7 +100,7 @@ def activate_user(request, uidb64, token):
         'user':user
     })
 
-
+@ratelimit(key='ip', rate='8/d', block=True)
 @sensitive_variables('password')
 def registerView(request):
     #GET USER LOCATION and RUN through Blacklisted IPs
@@ -111,7 +111,23 @@ def registerView(request):
         ip = request.META.get('REMOTE_ADDR')
     if Blacklist.objects.filter(ip = ip):
         return render(request, "blacklist.html")
+    
+    
     if request.method == "POST":
+        #Second IP check is verifying from legitimate identity
+        status = verify_ip(ip)
+        if status == "malicious":
+            blacklistform = Blacklist(
+            ip = ip,
+            reason = "Attempted registration from a malicious IP",
+            datelog = datetime.now()
+            )
+            blacklistform.save()
+            return redirect('index')
+        if status == "anonymous":
+            messages.success(request, 'An error occured whilst attempting to verify your origin. Please ensure that you are not using IP rerouting services such as VPNs and try again.')
+            return redirect('registerr')
+        
         form = RegisterUserForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
@@ -138,6 +154,11 @@ def registerView(request):
                     else:
                         existingUser.delete() #DELETE THE ORPHAN ACCOUNT AND PROCEED WITH REGISTRATION
 
+            #VERIFY EMAIL AUTHENTICITY
+            if verify_email(email) == False:
+                messages.success(request, 'An error occured whilst attempting to verify your email address. Please ensure you have entered a valid and non-disposable personal email address and try again.')
+                return redirect('registerr')
+
             form.save()
             user = authenticate(request=request, username = username, password = password)
             #DEACTIVATE ACCOUNT UNTIL ACTIVATION
@@ -156,7 +177,7 @@ def registerView(request):
             'form': form
         })
 
-
+@ratelimit(key='ip', rate='3/h', block=True)
 @sensitive_variables('password')
 def loginView(request):
     #Prevent user from logging in if they are already logged in

@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.postgres.search import SearchQuery, SearchVector, SearchRank, SearchHeadline
 from taggit.models import Tag
 from django.conf import settings
+from django.urls import reverse
 from Articles.views import Post as ArticlesPost
 from Commentaries.views import Post as BooksPost
 from .utils import storage_usage, resource_collection_order, resource_collection_reorder, get_resource_heatmap
@@ -18,13 +19,14 @@ from Blog.utils import profanity_filter
 from Diaries.views import Post as BlogPost
 import plotly.express as px
 import calendar
+import imghdr
 from dal import autocomplete
-
 from pytube import YouTube, Channel #Support YT Metadata
+from linkpreview import link_preview
+from ratelimit.decorators import ratelimit
 from django.utils import timezone
 from isbnlib import meta, cover,doi
 SERVICE = "wiki"
-
 
 def clearMessagesView(request):
     return HttpResponse("")
@@ -36,13 +38,14 @@ class TermAutoComplete(autocomplete.Select2QuerySetView):
         if self.q:
             qs = qs.filter(term__icontains=self.q) #case insensitive standard search
         return qs
-
+    
 def wikiView(request):
     if request.user.is_authenticated:
         resources = Resource.objects.filter(creator = request.user)[:10]
         collections = Collection.objects.filter(creator = request.user)
         collectionresources = CollectionOrder.objects.prefetch_related('resource').filter(user=request.user) #Prefetch resources of collection object in collectionresources
         bytes = storage_usage(request.user)
+
         form = ResourceForm()
         docform = DocForm()
         heatmap = get_resource_heatmap(request.user)
@@ -263,60 +266,86 @@ def addDocView(request):
         return HttpResponseBadRequest(status=204)
             
 @login_required(login_url='/users/login')
+@ratelimit(key='ip', rate='6/m', block=True)
+@ratelimit(key='ip', rate='60/h', block=True)
 def addResourceView(request):
     if request.method == 'POST':
 
         form = ResourceForm(request.POST, request.FILES)
-   
         if form.is_valid():
             form.instance.creator = request.user
 
             #attempt to fill in missing fields
             
+            #FILE CHECK
             if form.instance.filelink:
-                form.instance.title = str(form.instance.filelink).split('.')[-2]
-                form.instance.filetype = str(form.instance.filelink).split('.')[-1]
+                filelink = str(form.instance.filelink)
+                form.instance.title = filelink.split('.')[-2]
+                filetype = filelink.split('.')[-1]
+                form.instance.filetype = filetype
 
-            elif form.instance.imagelink:
-                form.instance.title = str(form.instance.imagelink)
-                form.instance.filetype = str(form.instance.imagelink).split('.')[-1]
-
+                if filelink.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif', '.svg', '.webp')):
+                    form.instance.category = 'IMG'
+                else:
+                    form.instance.category = 'FILE'
+                    
+            #URL CHECK
             elif form.instance.weblink is not None:
                 url = str(form.instance.weblink)
-
-                #procedurally clean URL
-                url=url.replace('http://','')
-                url=url.replace('https://','')
-                url=url.replace('www.','')
-
-                source = form.instance.source = url.split('/')[0]
-                url=url.replace(form.instance.source+'/','')
-
-                if source == url: #if remaining url is the source itself, do not elipse
-                    form.instance.title = url[-40:]
-                else:
-                    form.instance.title = "..." + url[-40:]
-      
-            elif form.instance.videolink is not None:
-                url = str(form.instance.videolink)
-                yt = YouTube(url)
                 
-                form.instance.title = str(yt.title)[:40]
-                form.instance.source = yt.author
-                form.instance.videochannel = yt.channel_url
+                #If video, reroute
+                if "youtube" in url:
+                    form.instance.category = 'VIDEO'
+                    
+                    form.instance.videolink = url
+                    form.instance.weblink = None #replace weblink with videolink field
+                    yt = YouTube(url)
+                    form.instance.title = str(yt.title)[:40]
+                    form.instance.source = yt.author
+                    form.instance.videochannel = yt.channel_url
+                else:    
+                    form.instance.category = 'WEB'
+                    preview = link_preview(url)
+
+                    #procedurally clean URL
+                    url=url.replace('http://','')
+                    url=url.replace('https://','')
+                    url=url.replace('www.','')
+
+                    source = form.instance.source = url.split('/')[0]
+                    url=url.replace(form.instance.source+'/','')
+                    
+                    #Add title
+                    title = preview.title
+                    if title:
+                        form.instance.title = title
+                    else:
+                        if source == url: #if remaining url is the source itself, do not elipse
+                            form.instance.title = url[-40:]
+                        else:
+                            form.instance.title = "..." + url[-40:]
+                    #Add description
+                    description = preview.description[:255] #Limit description to charfield 255 limit
+                    if description != '':
+                        form.instance.webdescription = description
+                    else:
+                        form.instance.webdescription = "No description available."
 
             elif form.instance.isbnlink is not None:
+                form.instance.category = 'BOOK'
                 isbnlink = form.instance.isbnlink
                 metadata = meta(isbnlink, SERVICE)
                 form.instance.title = metadata['Title']
                 form.instance.source = metadata['Authors'][0]
-
+                
+            else:
+                messages.success(request, "A foreign resource was added, please try again later.")
+                return HttpResponseBadRequest(status=204)
 
             form.save()
 
             form = ResourceForm()
             docform = DocForm()
-
 
             #VALIDATE TOTAL FILE STORAGE
             bytes = storage_usage(request.user)
@@ -532,6 +561,8 @@ def tagView(request, tag):
     })
 
 #FULL-TEXT SEARCH FUNCTION
+@ratelimit(key='post:searchedterm', rate='5/10m', block=True) #Limit search for same query to 5 queries per 10 minutes
+@ratelimit(key='ip', rate='60/h', block=True) #Limit searches to 60 per hour
 def searchView(request):
     if request.method == "POST":
         searchedterm = request.POST['searchedterm'] #Get the searched term
@@ -572,10 +603,7 @@ def searchView(request):
             'noinput': True
         })
     else:
-        return render(request, 'Wiki/search.html', {
-            'noinput': False}
-            )
-
+        return wikiView(request)
 
 class definitionView(DetailView):
     model = Term

@@ -13,9 +13,6 @@ def storage_usage(User):
         if resource.filelink:
             bytes += resource.filelink.size
 
-        if resource.imagelink:
-            bytes += resource.imagelink.size
-
     return bytes
 
 def resource_collection_order(collection) -> int:
@@ -83,13 +80,12 @@ def get_resource_heatmap(User):
     )
     fig.update_layout(
         plot_bgcolor='#ffffff',
-        title = 'Activity Heatmap',
+        title = 'Your Activity Heatmap',
         autosize = True,
         )
   
     fig.update_traces(
         {'xgap': 5, 'ygap': 5},
-
         )
  
     chart = fig.to_html(
