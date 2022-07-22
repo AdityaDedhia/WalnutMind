@@ -100,7 +100,7 @@ def activate_user(request, uidb64, token):
         'user':user
     })
 
-@ratelimit(key='ip', rate='8/d', block=True)
+@ratelimit(key='ip', rate='3/d', block=True)
 @sensitive_variables('password')
 def registerView(request):
     #GET USER LOCATION and RUN through Blacklisted IPs
@@ -165,7 +165,7 @@ def registerView(request):
             user.is_active = False
             user.save()
             send_activation_email(user, request)
-            messages.success(request, ("Your registration is almost complete. Check your email for a verification link."))
+            messages.success(request, "Your registration is almost complete. Check your email for a verification link.")
             return redirect('index')
         else:
             messages.success(request, ("The form details you entered were invalid. Please verify them again."))
