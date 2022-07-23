@@ -34,12 +34,15 @@
                     <i class="bi bi-file-lock2" style="color:gray"></i>
                     {% endif %}&nbsp;
                     
-                    <a class="noselect" href="{% url 'resourceview' pk=resource.resource.pk %}" style="color:black;" target="_blank" rel="noopener noreferrer">{{ resource.resource.title }}&nbsp;<i class="bi bi-box-arrow-in-up-right"></i></a>
+                    <a class="noselect" href="{% url 'resourceview' pk=resource.resource.pk %}" style="color:black; text-decoration: none;" target="_blank" rel="noopener noreferrer">{{ resource.resource.title }}
+                      <i class="bi bi-box-arrow-in-up-right"></i>
 
+                      <span class="badge bg-info" style="margin-left:10px;">{{ resource.resource.category.title }}</span>
+                    </a>
 
-                    <div style="flex-grow:1"></div>             
+                    <div style="flex-grow:1"></div>      
+       
                     <i style="color:gray;" class="bi bi-arrow-down-up"></i>
-
                     <span style="margin-left:20px;" class="btn btn-success btn-sm" hx-get="{% url 'resourcemodalview' collectionpk=collection.pk resourcepk=resource.resource.pk order=resource.order %}" hx-target="#detail-dialog"><i class="bi bi-info-circle"></i></span>
 
                     <span style="margin-left:8px;" class="btn btn-primary btn-sm" hx-get="{% url 'editresource' pk=resource.resource.pk %}" hx-target="#dialog"><i class="bi bi-pen"></i></span>

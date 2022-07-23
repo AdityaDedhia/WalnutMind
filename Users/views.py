@@ -165,7 +165,7 @@ def registerView(request):
             'form': form
         })
 
-@ratelimit(key='ip', rate='6/h', block=True)
+@ratelimit(key='ip', rate='3/h', block=True)
 @sensitive_variables('password')
 def loginView(request):
     #Prevent user from logging in if they are already logged in

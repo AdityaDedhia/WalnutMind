@@ -37,6 +37,8 @@ htmx_urlpatterns = [
     path('remove-term/<int:listpk>/<int:termpk>', views.removeTermView, name = "remove-term"),
     path('remove-resource/<int:collectionpk>/<int:resourcepk>', views.removeResourceView, name = "remove-resource"),
     path('add-resource/', views.addResourceView, name = "add-resource"),
+    path('add-doc/', views.addDocView, name = "add-doc"),
+
     path('delete-resource/<int:pk>', views.deleteResourceView, name = "delete-resource"),
 
     path('add-collection/', views.addCollectionView, name = "add-collection"),

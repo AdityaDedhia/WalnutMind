@@ -1,10 +1,19 @@
 {% if results %}
 
-<b>Unsorted Resources:</b>
+<b>Add Resources:</b>
 <ul class="list-group">
 {% for resource in results %}
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            {{ resource.title }}
+            <p style="font-size:13px;">
+
+                {% if resource.public == True %}
+                <i class="bi bi-globe2" style="color:green"></i>
+                {% else %}
+                <i class="bi bi-file-lock2" style="color:gray"></i>
+                {% endif %}
+                {{ resource.title }}
+                <span class="badge bg-info" style="margin-left:5px;">{{ resource.category.title }}</span>
+            </p>
             <span class="btn btn-primary badge-pill" hx-post="{% url 'add-existing-resource' collectionpk=pk resourcepk=resource.pk %}" hx-vals='{"resource": "{{ resource.title }}"}' hx-target="#collection-resource-list">Add</span>
 
         </li>

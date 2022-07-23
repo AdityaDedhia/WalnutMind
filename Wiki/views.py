@@ -247,20 +247,20 @@ class resourceList(ListView):
 def addDocView(request):
     docform = DocForm(request.POST, request.FILES)
 
-    if docform.instance.text:
-        if docform.is_valid():
-            docform.instance.creator = request.user
-            docform.instance.title = datetime.date.today().strftime("%Y-%M-%D")
+    if docform.is_valid():
+        docform.instance.creator = request.user
+        docform.instance.category = 'DOC'
+        docform.instance.title = "New Doc " + datetime.now().strftime("%S%M_%y-%m-%d")
 
-            docform.save()
+        docform.save()
 
-            docform = DocForm(request.GET)
-            return render(request, 'Wiki/resource-list.html', {
-                'docform': docform,
-            })
-        else:
-            messages.success=(request, "An error occured while trying to save your document.")
-            return HttpResponseBadRequest(status=204)
+        docform = DocForm(request.GET)
+        heatmap = get_resource_heatmap(request.user)
+        resources = Resource.objects.filter(creator = request.user)[:10]
+        return render(request, 'Wiki/resource-list.html', {
+            'resources': resources, 'bytes': bytes, 'docform': docform, 'heatmap': heatmap,
+        })
+     
     else:
         messages.success=(request, "No data is present in your document.")
         return HttpResponseBadRequest(status=204)
