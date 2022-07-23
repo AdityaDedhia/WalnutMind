@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.contrib.auth import authenticate, logout, login
 from django.contrib import messages
 from .forms import RegisterUserForm, UpdateProfileForm, UpdateUserForm
 from .models import User, Profile, Highlight, Blacklist, Log
@@ -8,7 +8,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
-from .utils import generate_token, verify_email, verify_ip #APIS
+from .utils import generate_token, verify_email, verify_ip, get_ip #APIS
 from django.core.mail import EmailMessage
 from django.views.decorators.debug import sensitive_variables
 from django.http import HttpResponseRedirect
@@ -55,11 +55,7 @@ def activate_user(request, uidb64, token):
 
     if user and generate_token.check_token(user, token):
         #GET USER LOCATION
-        x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
-        if x_forw_for is not None:
-            ip = x_forw_for.split(',')[0]
-        else:
-            ip = request.META.get('REMOTE_ADDR')
+        ip = get_ip(request)
         #BYPASS IP CHECK IF SERVED ON LOCAL HOST
         if ip =='127.0.0.1':
             location = settings.HOSTCOUNTRY_CODE #THIS NEEDS TO BE CHANGED WHEN LOCALHOST LOCATION CHANGES
@@ -103,18 +99,10 @@ def activate_user(request, uidb64, token):
 @ratelimit(key='ip', rate='3/d', block=True)
 @sensitive_variables('password')
 def registerView(request):
-    #GET USER LOCATION and RUN through Blacklisted IPs
-    x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forw_for is not None:
-        ip = x_forw_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    if Blacklist.objects.filter(ip = ip):
-        return render(request, "blacklist.html")
-    
     
     if request.method == "POST":
-        #Second IP check is verifying from legitimate identity
+        #Complete IP check to verify legitimate identity
+        ip = get_ip(request)
         status = verify_ip(ip)
         if status == "malicious":
             blacklistform = Blacklist(
@@ -177,30 +165,28 @@ def registerView(request):
             'form': form
         })
 
-@ratelimit(key='ip', rate='3/h', block=True)
+@ratelimit(key='ip', rate='6/h', block=True)
 @sensitive_variables('password')
 def loginView(request):
     #Prevent user from logging in if they are already logged in
     if request.user is not None and request.user.is_authenticated:
         messages.success(request, ("You are already logged in."))
         return redirect('index')
-    #GET USER LOCATION and RUN through Blacklisted IPs
-    x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forw_for is not None:
-        ip = x_forw_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    if Blacklist.objects.filter(ip = ip):
-        return render(request, "blacklist.html")
 
     if request.method == "POST":
         #BYPASS ALL SECURITY if served on localhost
+        ip = get_ip(request)
         if ip =='127.0.0.1':
             username = request.POST['username']
             password = request.POST['password']
-            user = authenticate(request, username=username, password=password)
-            messages.success(request, 'Login security bypassed from localhost: %s. For additional security, please re-enter your credentials.'% ip)
-            return redirect('two_factor:login')
+            user = authenticate(request=request, username=username, password=password)
+            if user is not None:
+                login(request,user)
+                messages.success(request, 'Login security bypassed from localhost: %s.'% ip)
+                return redirect('index')
+            else:
+                messages.success(request, 'Your username or password is incorrect, please try again.')
+                return redirect('loginn')      
         #IF NO IPBLOCK DETECTED CHECK FOR BOT LOGIN ATTEMPT
         captcha_token = request.POST.get("g-recaptcha-response")
         captcha_url = "https://www.google.com/recaptcha/api/siteverify"

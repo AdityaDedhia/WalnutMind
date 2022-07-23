@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from datetime import datetime
 from django.views.generic import ListView, UpdateView
 from Blog.utils import profanity_filter
@@ -8,8 +8,7 @@ from django.http import HttpResponseRedirect, JsonResponse, Http404
 from django.contrib import messages
 from django.conf import settings
 from .forms import PostForm
-from Users.models import Blacklist, Log, Infraction
-from django.contrib.auth import logout
+from Users.models import Log, Infraction
 from isbnlib import is_isbn13
 from django.urls import reverse
 import readtime
@@ -29,15 +28,7 @@ class booksView(ListView):
         return context
 
     def dispatch(self, request, *args, **kwargs):
-        #GET USER LOCATION and RUN through Blacklisted IPs.
-        x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
-        if x_forw_for is not None:
-            ip = x_forw_for.split(',')[0]
-        else:
-            ip = request.META.get('REMOTE_ADDR')
-        if Blacklist.objects.filter(ip = ip):
-            logout(request)
-            return render(request, "blacklist.html")
+        #additional code before the view is called
         return super(booksView, self).dispatch(request, *args, **kwargs)
 
 
@@ -97,15 +88,7 @@ class bookView(HitCountDetailView):
         return obj
 
     def dispatch(self, request, *args, **kwargs):
-        #GET USER LOCATION and RUN through Blacklisted IPs.
-        x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
-        if x_forw_for is not None:
-            ip = x_forw_for.split(',')[0]
-        else:
-            ip = request.META.get('REMOTE_ADDR')
-        if Blacklist.objects.filter(ip = ip):
-            logout(request)
-            return render(request, "blacklist.html")
+        #additional code before view is called.
         return super(bookView, self).dispatch(request, *args, **kwargs)
 
 def post_json(request):
@@ -229,13 +212,11 @@ def newPostView(request):
                 )
                 logitem.save()
                 return HttpResponseRedirect(reverse('bookview', args =[str(post_slug)]))
-                return redirect(f"/books/{latest_id}")
         else:
             form = PostForm()
         return render(request, 'Commentaries/post.html', {
                 'form': form
             })
-
 class updatePostView(UpdateView):
     login_required = True
     model = Post

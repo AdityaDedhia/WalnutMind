@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.views.generic import ListView, UpdateView, DeleteView
 from .forms import PostForm
 from django.urls import reverse, reverse_lazy
-from Users.models import Blacklist, Log, Infraction
+from Users.models import Log, Infraction
 from Blog.utils import profanity_filter
 from taggit.models import Tag
 from .serializers import ArticleSerializer
@@ -17,21 +17,9 @@ from django.contrib.auth import logout
 import readtime
 from hitcount.views import HitCountDetailView
 
-
 def indexView(request):
-    #GET USER LOCATION and RUN through Blacklisted IPs.
-    x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forw_for is not None:
-        ip = x_forw_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    if Blacklist.objects.filter(ip = ip):
-        logout(request)
-        return render(request, "blacklist.html")
-
     recent = Post.objects.filter(public = True).order_by('-dateCreated')[:5] #Get last 5 entries
     tags = Tag.objects.all() #return all tags
-
 
     if request.user.is_authenticated: #Send custom feed to logged in users:
         user = request.user
@@ -78,15 +66,7 @@ class searchView(ListView):
         return context
 
     def dispatch(self, request, *args, **kwargs):
-        #GET USER LOCATION and RUN through Blacklisted IPs.
-        x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
-        if x_forw_for is not None:
-            ip = x_forw_for.split(',')[0]
-        else:
-            ip = request.META.get('REMOTE_ADDR')
-        if Blacklist.objects.filter(ip = ip):
-            logout(request)
-            return render(request, "blacklist.html")
+        #additional code before view is called
         return super(searchView, self).dispatch(request, *args, **kwargs)
 
 class ArticleListAPIView(ListAPIView):
@@ -146,15 +126,7 @@ class articleView(HitCountDetailView):
         return obj
 
     def dispatch(self, request, *args, **kwargs):
-        #GET USER LOCATION and RUN through Blacklisted IPs.
-        x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
-        if x_forw_for is not None:
-            ip = x_forw_for.split(',')[0]
-        else:
-            ip = request.META.get('REMOTE_ADDR')
-        if Blacklist.objects.filter(ip = ip):
-            logout(request)
-            return render(request, "blacklist.html")
+        #additional code before view is called
         return super(articleView, self).dispatch(request, *args, **kwargs)
 
 
@@ -294,7 +266,6 @@ class updatePostView(UpdateView):
             )
             logitem.save()
         return context
-
 
 class deletePostView(DeleteView):
     login_required = True
