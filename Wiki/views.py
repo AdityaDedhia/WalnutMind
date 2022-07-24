@@ -25,7 +25,6 @@ from pytube import YouTube, Channel #Support YT Metadata
 from linkpreview import link_preview
 from ratelimit.decorators import ratelimit
 from rake_nltk import Rake
-import nltk; nltk.download('stopwords'); nltk.download('punkt')
 
 from isbnlib import meta, cover,doi
 SERVICE = "wiki"
