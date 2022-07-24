@@ -11,20 +11,22 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.postgres.search import SearchQuery, SearchVector, SearchRank, SearchHeadline
 from taggit.models import Tag
 from django.conf import settings
+import requests
+import textwrap
 from django.urls import reverse
 from Articles.views import Post as ArticlesPost
 from Commentaries.views import Post as BooksPost
 from .utils import storage_usage, resource_collection_order, resource_collection_reorder, get_resource_heatmap
 from Blog.utils import profanity_filter
 from Diaries.views import Post as BlogPost
-import plotly.express as px
-import calendar
-import imghdr
+import re
 from dal import autocomplete
 from pytube import YouTube, Channel #Support YT Metadata
 from linkpreview import link_preview
 from ratelimit.decorators import ratelimit
-from django.utils import timezone
+from rake_nltk import Rake
+#import nltk; nltk.download('stopwords'); nltk.download('punkt')
+
 from isbnlib import meta, cover,doi
 SERVICE = "wiki"
 
@@ -303,6 +305,33 @@ def addResourceView(request):
                     form.instance.title = str(yt.title)[:40]
                     form.instance.source = yt.author
                     form.instance.videochannel = yt.channel_url
+                    
+                    videodescription = re.sub(r'http\S+', '', yt.description)
+                    videodescription = re.sub(r'https\S+', '', videodescription)[:255] #Limit to 255 characters
+
+                    
+                    form.instance.videodescription = videodescription
+                    
+                    #Clean phrase for key word NLP
+                    cleanedphrase = yt.description
+                    cleanedphrase = ''.join([i for i in cleanedphrase if not i.isdigit()]) #Remove numbers
+                    cleanedphrase = re.sub(r'http\S+', '', cleanedphrase)
+                        
+                    r = Rake()
+                    r.extract_keywords_from_text(cleanedphrase)
+                    
+                    keywords = yt.keywords
+                    print(keywords)
+                    
+                    description = ""
+                    
+                    for rating, phrase in r.get_ranked_phrases_with_scores()[:3]:
+                        if rating > 5:
+                            phrase = textwrap.shorten(phrase, width=25, placeholder="")
+                            description += "# " + phrase
+                            print(phrase)
+
+                    form.instance.description = description
                 else:    
                     form.instance.category = 'WEB'
                     preview = link_preview(url)
@@ -314,6 +343,14 @@ def addResourceView(request):
 
                     source = form.instance.source = url.split('/')[0]
                     url=url.replace(form.instance.source+'/','')
+                    imgurl = "https://logo.clearbit.com/"+source+"?size=100" #get logo from clearbit
+                    
+                    image_formats = ("image/png", "image/jpeg", "image/jpg")
+                    r = requests.head(imgurl)
+                    if r.headers["content-type"] in image_formats:
+                        form.instance.webicon = imgurl
+                    else:
+                        form.instance.imgurl = None
                     
                     #Add title
                     title = preview.title
@@ -325,8 +362,8 @@ def addResourceView(request):
                         else:
                             form.instance.title = "..." + url[-40:]
                     #Add description
-                    description = preview.description[:255] #Limit description to charfield 255 limit
-                    if description != '':
+                    description = preview.description #Limit description to charfield 255 limit
+                    if description != None:
                         form.instance.webdescription = description
                     else:
                         form.instance.webdescription = "No description available."

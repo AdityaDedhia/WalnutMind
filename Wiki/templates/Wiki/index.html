@@ -95,7 +95,10 @@
       .card-5 {
         background: radial-gradient(#f588d8, #c0a3e5);
       }
-      
+      .card-6 {
+        background: radial-gradient(#ebebeb, #d6d6d6);
+      }
+       
       /* RESPONSIVE */
       
       @media (max-width: 1600px) {
@@ -234,6 +237,7 @@
         left: 0;
         z-index: -100;
     }
+
     </style>
 
     <h3 style="font-family: 'Josefin Sans', sans-serif;">WM <b style="color:gray">Wiki</b></h3>
@@ -243,6 +247,7 @@
     <!--SEARCH-->
     <section class="pt-4">
       <div>
+        
         <!--<h5><i class="bi bi-globe"></i> Published live:</h5>-->
   
       </div>
@@ -596,7 +601,7 @@
     }
   </style>
 
-    <div class="form-group col-sm-5 col-md-4 col-lg-3 col-xl-2 card bg-dark" style="border-radius:10px; border:none; font-size: 14px; padding:15px;     box-shadow: #797979 0px -23px 25px 0px inset, #212121 0px -18px 15px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 16px 16px;">
+    <div class="form-group col-sm-5 col-md-4 col-lg-3 col-xl-2 card bg-dark" style="border-radius:10px; border:none; font-size: 14px; padding:15px;   box-shadow: #797979 0px -23px 25px 0px inset, #212121 0px -18px 15px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 16px 16px;">
       <h4 class="text-white"><b>Quick Entry:</b></h4>
       <h6 class="text-white"><i>Save now; edit later</i></h6>
       <hr/>
@@ -622,6 +627,7 @@
             <label class="text-white" for="weblink"><b>Web Pages / Videos</b></label>
             {{ form.weblink }}
             {{ form.webdescription.as_hidden }}
+            {{ form.webicon.as_hidden }}
             {{ form.videolink.as_hidden }}
             {{ form.videochannel.as_hidden }}
           </div>
@@ -648,19 +654,17 @@
     <!--MAIN AREA-->
     <div class="col-sm-7 col-md-8 col-lg-9 col-xl-10">
       <br/>
-      <div style="display:flex; flex-wrap: wrap; background-color:#ffffff; border-radius:10px;
-
-      box-shadow: #ffffff 0px -23px 25px 0px inset, #f8f8f8 0px -18px 15px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 16px 16px;
+      <div style="display:flex; flex-wrap: wrap; background-color: #e7e7e7; border-radius:10px;
       
-      ">
+      box-shadow: rgba(243,243,243,0.3) 0px -23px 25px 5px inset, rgba(243,243,243,0.3) 0px -18px 15px 0px inset, rgba(0, 0, 0, 0.02) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.02) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 10px 5px, rgba(0, 0, 0, 0.05) 0px 16px 16px;">
       <a href="{% url 'newblogpost' %}" class="btn-dreamy-purple">WM Publish</a>
       <a href="{% url 'newterm' %}" class="btn-dreamy-blue">WM Define</a>
       <a href="{% url 'collectionsview' %}" class="btn-mystic-peach">WM Collect</a>
       <b style="flex-grow:1; padding:15px;"></b>
       <a href="{% url 'listsview' %}" class="btn-dark-violet">Lists</a>
       <a href="{% url 'collectionsview' %}" class="btn-dark-violet">Collections</a>
-      </div>
-      <br/>
+      </div><br/>
+  
       <div class="row">
 
         <div id="resource-list" class="col-xl-8 col-lg-7 col-md-12">
@@ -714,5 +718,10 @@
 {% endif %}
 <br/>
 
+<script>
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
 
+</script>
 {% endblock body %}

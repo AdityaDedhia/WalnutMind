@@ -33,7 +33,7 @@ class NewListForm(forms.ModelForm):
 class ResourceForm(forms.ModelForm):
     class Meta:
         model = Resource
-        fields = ('title', 'source', 'isbnlink', 'weblink','webdescription', 'videolink','videochannel', 'filelink', 'filetype', 'text', 'category', 'description', 'public')
+        fields = ('title', 'source', 'isbnlink', 'weblink', 'webicon', 'webdescription', 'videolink','videochannel', 'videodescription', 'filelink', 'filetype', 'text', 'category', 'description', 'public')
 
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),

@@ -78,10 +78,12 @@ class Resource(models.Model):
     filetype = models.CharField(max_length = 10, blank = True, null = True)
 
     weblink = models.URLField(null = True, blank = True)
+    webicon = models.URLField(null = True, blank = True)
     webdescription = models.CharField(max_length = 255, blank = True, null = True)
 
     videolink = EmbedVideoField(null = True, blank = True)
-    videochannel = models.CharField(max_length = 200, blank = True, null = True)
+    videochannel = models.CharField(max_length = 255, blank = True, null = True)
+    videodescription = models.CharField(max_length = 255, blank = True, null = True)
 
     isbnlink = models.CharField(null = True, blank = True, max_length=13)
 
