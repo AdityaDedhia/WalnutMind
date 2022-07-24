@@ -43,7 +43,7 @@ class ResourceForm(forms.ModelForm):
             'filelink': forms.FileInput(attrs={'class': 'dropzone', 'type': 'file', 'accept': 'image/*, video/*, audio/*, application/pdf'}),
             'text': forms.Textarea(attrs={'class': 'form-control'}),
             'description': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter a description'}),
-            'public': forms.CheckboxInput(attrs = {'class': 'form-check-input'}),
+            'public': forms.CheckboxInput(attrs = {'class': 'form-check-input form-control'}),
         }
 
 class DocForm(forms.ModelForm):
@@ -52,9 +52,8 @@ class DocForm(forms.ModelForm):
         fields = ('title','source','text','description','public')
 
         widgets = {
-            'source': forms.TextInput(attrs={'class': 'form-control'}),
             'text': forms.Textarea(attrs={'class': 'form-control'}),
-            'description': forms.TextInput(attrs={'class': 'form-control'}),
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Title (Optional)'}),
             'public': forms.CheckboxInput(attrs = {'class': 'form-check-input'}),
         }
 

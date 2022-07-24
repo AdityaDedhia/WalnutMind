@@ -608,9 +608,16 @@
     <form enctype="multipart-formdata" hx-post="{% url 'add-resource' %}" hx-encoding="multipart/form-data" hx-target="#resource-list">
         {% csrf_token %}
         {{ form.media }}
-
+        {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %} 
+               <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+               </div>
+            {% endfor %}
+        {% endfor %}
+     {% endif %}
           <div class="form-group row" style="transform:translateX(12px);">
-
         <!--RESOURCE TYPES-->
           <h5 class="text-white">CONTENT TYPE</h5>
             {{ form.title.as_hidden }}
@@ -675,26 +682,34 @@
           <form hx-post="{% url 'add-doc' %}" enctype="multipart-formdata" hx-encoding="multipart/form-data" hx-target="#resource-list">
             {% csrf_token %}
             {{ docform.media }}
+
+              <div style="white-space:nowrap; display:flex;">
+                <div>{{ docform.title }}</div>
+                <div style="flex-grow:1"></div>
+                <button type="submit" style="width:100%; display:inline; margin-right:0px;" class="btn btn-outline-secondary"><b>Create Doc</b></button>
+
+              </div>
+
             <div class="form-group row">
               {{ docform.text }}
             </div>
-      
-            <div style="display:flex">
-             <button type="submit" style="margin-left:2px" class="btn btn-primary btn-sm"><b>Create Doc</b></button>
-            </div>
+
             </form>
         </div>
 
       </div>
 
       <hr/>
-      <h3>Your Collections:</h3>
+    <div style="display:inline;">
 
-      <form class="form-group" style="display:flex">
-        <div><input class="form-control" type="text" name="title" placeholder="Collection Title"/></div>
-        <div><input class="form-control" type="text" name="description" placeholder="Description"/></div>
-        <button hx-post="{% url 'add-collection' %}" hx-encoding="multipart/form-data" hx-target="#collection-resource-list" hx-swap="outerhtml" type="submit" class="btn-warm-blue btn-sm">SUBMIT</button>
+      <form class="form-group" style="display:flex; padding:8px;">
+        <h3 style="margin-top:5px">Your Collections:</h3>
+        <div style="flex-grow:1;"></div>
+        <div style="padding:5px;"><input class="form-control" style="width:150px" type="text" name="title" placeholder="Enter title"/></div>
+        <div style="padding:5px;"><input class="form-control" type="text" name="description" placeholder="Description (Optional)"/></div>
+        <div style="padding:5px; padding-right:0px"><button  hx-post="{% url 'add-collection' %}" hx-encoding="multipart/form-data" hx-target="#collection-resource-list" hx-swap="outerhtml" type="submit" class="btn btn-primary">Create New</button></div>
       </form>
+    </div>
 
       <div id="collection-resource-list">
         {% include 'Wiki/partials/collection-resource-list.html' %}
@@ -721,7 +736,9 @@
 <script>
   $(function () {
     $('[data-toggle="tooltip"]').tooltip()
-  })
+  });
+
+
 
 </script>
 {% endblock body %}

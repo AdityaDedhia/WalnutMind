@@ -13,7 +13,7 @@
     {% if resource.category == 'DOC' %}
     <span class="resource-card card-5 btn btn-sm mb-2" style="margin:5px;  border-radius:10px">
       <a style="text-decoration:none; color:black" href="{% url 'resourceview' pk=resource.pk %}" target="_blank" rel="noopener noreferrer">
-      <b class="title resource-card__link" style="overflow:hidden">{{ resource.title }}</b></a>
+      <b class="title resource-card__link" style="overflow:hidden" data-toggle="tooltip" data-html="true" title="{{ resource.text|truncatewords:50 }}">{{ resource.title }}</b></a>
   
       <span class="badge bg-danger" hx-delete="{% url 'delete-resource' pk=resource.pk %}" hx-target="#resource-list" hx-confirm="Are you sure you want to delete this resource?"><i class="bi bi-x"></i></span>
 

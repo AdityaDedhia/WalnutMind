@@ -12,7 +12,6 @@ from django.contrib.postgres.search import SearchQuery, SearchVector, SearchRank
 from taggit.models import Tag
 from django.conf import settings
 import requests
-import textwrap
 from django.urls import reverse
 from Articles.views import Post as ArticlesPost
 from Commentaries.views import Post as BooksPost
@@ -42,24 +41,33 @@ class TermAutoComplete(autocomplete.Select2QuerySetView):
 def wikiView(request):
     if request.user.is_authenticated:
         resources = Resource.objects.filter(creator = request.user)[:10]
-        collections = Collection.objects.filter(creator = request.user)
-        collectionresources = CollectionOrder.objects.prefetch_related('resource').filter(user=request.user) #Prefetch resources of collection object in collectionresources
+        collections = Collection.objects.prefetch_related('resourcesorder').filter(creator = request.user)
+        #collectionresources = CollectionOrder.objects.prefetch_related('resource').filter(user=request.user) #Prefetch resources of collection object in collectionresources
         bytes = storage_usage(request.user)
 
         form = ResourceForm()
         docform = DocForm()
         heatmap = get_resource_heatmap(request.user)
+        
+        #for collection in collections.all():
+        #    collection_resources = collectionresources.filter(collection__pk = collection.pk)
+        #    for resource in collection_resources.iterator():
+        #        collection.resourcesorder.add(resource)
+    
+            
+            
     else:
         resources = None
         collections = None
-        collectionresources = None
         bytes = None
         form = None
         docform = None
         heatmap = None
+        
+
 
     return render(request, 'Wiki/index.html', {
-        'collections': collections, 'collectionresources': collectionresources,'resources': resources, 'bytes': bytes, 'form': form, 'docform': docform, 'heatmap': heatmap,
+        'collections': collections, 'resources': resources, 'bytes': bytes, 'form': form, 'docform': docform, 'heatmap': heatmap,
     })
 
 #WM DEFINE ---------------------------------------------------------------
@@ -163,7 +171,7 @@ def searchResourceView(request, pk):
 def resourceSort(request):
     resource_order = request.POST.getlist('resource_order')
     collectionpk = request.POST.get('collectionpk')
-    collections = Collection.objects.filter(creator = request.user)
+    collections = Collection.objects.prefetch_related('resourcesorder').filter(creator = request.user)
 
     updatedresources = []
 
@@ -177,53 +185,50 @@ def resourceSort(request):
             updatedresources.append(resource)
 
     CollectionOrder.objects.bulk_update(updatedresources, ['order']) #Only update order field for only resources that have changed order.
-    collectionresources = CollectionOrder.objects.prefetch_related('resource').filter(user=request.user) #Prefetch resources of collection object in collectionresources
     messages.success(request, "Collection synced.")
     return render(request, 'Wiki/partials/collection-resource-list.html', {  
-        'collections': collections, 'collectionresources': collectionresources,
+        'collections': collections,
     })
 
 @login_required(login_url='/users/login')
 def removeResourceView(request, collectionpk, resourcepk):
     collection = Collection.objects.get(pk = collectionpk)
 
-    collections = Collection.objects.filter(creator = request.user)
+    collections = Collection.objects.prefetch_related('resourcesorder').filter(creator = request.user)
 
-    item = CollectionOrder.objects.filter(collection__pk = collectionpk, resource__pk = resourcepk, user = request.user)
+    resource = CollectionOrder.objects.filter(collection__pk = collectionpk, resource__pk = resourcepk, user = request.user)
 
-    item.delete()
+    resource.delete()
 
     resource_collection_reorder(collection)
 
-    collectionresources = CollectionOrder.objects.filter(user=request.user)
 
     messages.success(request, f"Removed resource from collection.")
     return render(request, 'Wiki/partials/collection-resource-list.html', {  
-        'collections': collections, 'collectionresources': collectionresources,
+        'collections': collections,
     })
 
 @login_required(login_url='/users/login')
 def existingResourceView(request, collectionpk, resourcepk):
-    collections = Collection.objects.filter(creator = request.user)
+    collections = Collection.objects.prefetch_related('resourcesorder').filter(creator = request.user)
 
-    object = Resource.objects.get(pk = resourcepk)
+    resource = Resource.objects.get(pk = resourcepk)
     collection = Collection.objects.get(pk = collectionpk)
 
     if not CollectionOrder.objects.filter(collection__pk=collectionpk, resource__pk=resourcepk).exists():
 
-        CollectionOrder.objects.create(
+        resource = CollectionOrder(
             user = request.user,
             collection = collection,
-            resource = object,
+            resource = resource,
             order = resource_collection_order(collection),
         )
-
-    collectionresources = CollectionOrder.objects.filter(user=request.user)
+        resource.save()
+        collection.resourcesorder.add(resource)
 
     messages.success(request, "Resource added to collection.")
-
     return render(request, 'Wiki/partials/collection-resource-list.html', {  
-        'collections': collections, 'collectionresources': collectionresources,
+        'collections': collections,
     })
 
 class termList(ListView):
@@ -250,7 +255,9 @@ def addDocView(request):
     if docform.is_valid():
         docform.instance.creator = request.user
         docform.instance.category = 'DOC'
-        docform.instance.title = "New Doc " + datetime.now().strftime("%S%M_%y-%m-%d")
+        
+        if not docform.instance.title:
+            docform.instance.title = "Untitled Doc " + datetime.now().strftime("%S%M_%y-%m-%d")
 
         docform.save()
 
@@ -406,12 +413,11 @@ def addCollectionView(request):
         creator = request.user, #Not explicitly assigned
         description = description,
     )
-    collections = Collection.objects.filter(creator = request.user)
-    collectionresources = CollectionOrder.objects.prefetch_related('resource').filter(user=request.user) #Prefetch resources of collection object in collectionresources
+    collections = Collection.objects.prefetch_related('resourcesorder').filter(creator = request.user)
 
 
     return render(request, 'Wiki/partials/collection-resource-list.html', {
-        'collections': collections, 'collectionresources': collectionresources, 'bytes': bytes
+        'collections': collections, 'bytes': bytes
     })
 
 
@@ -440,11 +446,10 @@ def deleteCollectionView(request, pk):
     if collection.creator == request.user:
         collection.delete()
     
-    collections = Collection.objects.filter(creator = request.user)
-    collectionresources = CollectionOrder.objects.prefetch_related('resource').filter(user=request.user) #Prefetch resources of collection object in collectionresources
+    collections = Collection.objects.prefetch_related('resourcesorder').filter(creator = request.user)
 
     return render(request, 'Wiki/partials/collection-resource-list.html', {
-        'collections': collections, 'collectionresources': collectionresources
+        'collections': collections,
     })
 
 def resourceView(request, pk):
@@ -508,11 +513,10 @@ class editResourceView(UpdateView):
     success_url = None
 
 def collectionsView(request):
-    resources = Resource.objects.all()
-    collections = Collection.objects.all()
-    collectionsCount = collections.count()
+    resources = Resource.objects.filter(public = True)
+    collections = Collection.objects.filter(public = True)
     return render(request, 'Wiki/collections.html', {
-        'resources':resources, 'collections':collections, 'collectionsCount': collectionsCount
+        'resources':resources, 'collections':collections,
     })
 
 def listsView(request):

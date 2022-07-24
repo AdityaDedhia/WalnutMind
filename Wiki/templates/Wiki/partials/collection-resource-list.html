@@ -13,28 +13,25 @@
           {% include 'Wiki/partials/collection-details.html' %}
         </div>
 
-            {% if collectionresources %}
-
             {% csrf_token %}
             <form class="sortable list-group" hx-trigger="end" hx-post="{% url 'resource-sort' %}" hx-target="#collection-resource-list">
                 <input type="hidden" name="collectionpk" value="{{ collection.pk }}" />
                 <div class="htmx-indicator">Updating...</div>
 
-                {% for resource in collectionresources %}
+                {% for resource in collection.resourcesorder.all %}
                 <div class="list-group">
-                {% if resource.collection.pk == collection.pk %}
 
                 <div class="list-group-item-action" style="display:flex; padding:8px; margin:8px;">
 
                     <input type="hidden" name="resource_order" value="{{ resource.pk }}"/>
                     {{ resource.order }}:&nbsp;
-                    {% if resource.resource.public == True %}
+                    {% if resource.public == True %}
                     <i class="bi bi-globe2" style="color:green"></i>
                     {% else %}
                     <i class="bi bi-file-lock2" style="color:gray"></i>
                     {% endif %}&nbsp;
                     
-                    <a class="noselect" href="{% url 'resourceview' pk=resource.resource.pk %}" style="color:black; text-decoration: none;" target="_blank" rel="noopener noreferrer">{{ resource.resource.title }}
+                    <a class="noselect" href="{% url 'resourceview' pk=resource.resource.pk %}" style="color:black; text-decoration: none;" target="_blank" rel="noopener noreferrer">{{ resource }}
                       <i class="bi bi-box-arrow-in-up-right"></i>
 
                       <span class="badge bg-info" style="margin-left:10px;">{{ resource.resource.category.title }}</span>
@@ -49,13 +46,10 @@
 
                     <span style="margin-left:8px;" class="btn btn-danger btn-sm" hx-delete="{% url 'remove-resource' collectionpk=collection.pk resourcepk=resource.resource.pk %}" hx-target="#collection-resource-list" hx-confirm="Are you sure you want to remove the resource from this collection?"><i class="bi bi-x-lg"></i></span></div>
 
-                {% endif %}
                 </div>
 
                 {% endfor %}
             </form>
-
-            {% endif %}
 
     </div>
 <hr/>
@@ -123,4 +117,5 @@ htmx.on("htmx:beforeSwap", (e) => {
     e.detail.shouldSwap = false
   }
 })
+
 </script>

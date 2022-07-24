@@ -53,6 +53,7 @@ class Collection(models.Model):
     public = models.BooleanField(default = False)
     dateCreated = models.DateTimeField(auto_now_add = True)
     dateUpdated = models.DateTimeField(auto_now = True)
+    resourcesorder = models.ManyToManyField('CollectionOrder', blank = True, related_name='collectionresourceorder')
 
     def __str__(self):
         return str(self.title)

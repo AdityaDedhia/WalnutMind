@@ -1,19 +1,25 @@
 
     <div style="width:100%">
     {% if collection.cover %}
-    <img src="{{ collection.cover.url }}" style="width:100%; height:125px; border-radius:10px; object-fit:cover;">
+    <img class="collectionbanner" src="{{ collection.cover.url }}" style="width:100%; height:125px; border-radius:10px; object-fit:cover;">
     {% endif %}
 
         <h4>
-        <a href="{% url 'collectionview' pk_slug=collection.slug %}" style="text-decoration:none; color:black; font-weight:bold;" target="_blank" rel="noopener noreferrer">{{ collection.title }}</a>
+        <a href="{% url 'collectionview' pk_slug=collection.slug %}" style="text-decoration:none; color:black; font-weight:bold;" target="_blank" rel="noopener noreferrer">
 
+        {% if collection.public == True %}
+        <i class="bi bi-globe2 fs-5" style="color:green"></i>
+        {% else %}
+        <i class="bi bi-lock fs-5" style="color:gray"></i>
+        {% endif %}
+        {{ collection.title }}
+        </a>
         <i class="bi bi-pencil-square fs-5" style="cursor: pointer;" hx-get="{% url 'editcollection' pk_slug=collection.pk %}" hx-target="#collection-details"></i>
 
         <i class="bi bi-x-square" hx-delete="{% url 'delete-collection' pk=collection.pk %}" style="cursor: pointer;" hx-target="#collection-resource-list" hx-confirm="Are you sure you want to delete this collection (your resources will not be affected)?"></i>
-
         </h4>
-
     </div>
+    <hr/>
 
 
 <div style="display:flex">
@@ -29,8 +35,8 @@ hx-target="#resource-results"
 hx-trigger="keydown changed delay:100ms"
 name="search"
 class="form-control"
-style="border-radius:10px; width:150px; margin-left:8px;"
-placeholder="Search for a resource"/>
+style="border-radius:10px; width:200px; margin-left:8px;"
+placeholder="Search for resources"/>
 </div>
 
 </div>
