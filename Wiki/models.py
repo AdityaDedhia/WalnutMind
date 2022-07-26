@@ -51,6 +51,7 @@ class Collection(models.Model):
     creator = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="collectionpublisher")
     contributors = models.ManyToManyField(User, blank = True)
     public = models.BooleanField(default = False)
+    archived = models.BooleanField(default = False)
     dateCreated = models.DateTimeField(auto_now_add = True)
     dateUpdated = models.DateTimeField(auto_now = True)
     resourcesorder = models.ManyToManyField('CollectionOrder', blank = True, related_name='collectionresourceorder')
@@ -83,6 +84,8 @@ class Resource(models.Model):
     webdescription = models.CharField(max_length = 255, blank = True, null = True)
 
     videolink = EmbedVideoField(null = True, blank = True)
+    videolength = models.PositiveSmallIntegerField(null = True, blank = True)
+    videothumbnail = models.URLField(null = True, blank = True)
     videochannel = models.CharField(max_length = 255, blank = True, null = True)
     videodescription = models.CharField(max_length = 255, blank = True, null = True)
 
@@ -94,17 +97,17 @@ class Resource(models.Model):
 
     FILE = 'FILE'
     DOC = 'DOC'
-    IMG = 'IMG'
+    IMAGE = 'IMAGE'
     WEB = 'WEB'
     VIDEO = 'VIDEO'
     BOOK = 'BOOK'
     
     CHOICES = [
         (FILE, 'File'),
-        (DOC, 'WM Document'),
-        (IMG, 'Image'),
-        (WEB, 'Web Page'),
-        (VIDEO, 'YT Video'),
+        (DOC, 'Doc'),
+        (IMAGE, 'Image'),
+        (WEB, 'Web'),
+        (VIDEO, 'Video'),
         (BOOK, 'Book'),
     ]
     category = models.CharField(

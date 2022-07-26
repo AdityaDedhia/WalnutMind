@@ -40,9 +40,10 @@
       /* CARDS */
       
       .resource-card {
-        box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.25);
+        box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.35);
         transition: all 0.2s;
         transform:scale(0.9);
+        height:12rem;
       }
       
       .resource-card:hover {
@@ -601,9 +602,11 @@
     }
   </style>
 
-    <div class="form-group col-sm-5 col-md-4 col-lg-3 col-xl-2 card bg-dark" style="border-radius:10px; border:none; font-size: 14px; padding:15px;   box-shadow: #797979 0px -23px 25px 0px inset, #212121 0px -18px 15px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 16px 16px;">
-      <h4 class="text-white"><b>Quick Entry:</b></h4>
-      <h6 class="text-white"><i>Save now; edit later</i></h6>
+  <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+
+    <div class="form-group card bg-dark noselect" style="border-radius:10px; border:none; font-size: 14px; padding:15px;   box-shadow: #797979 0px -23px 25px 0px inset, #212121 0px -18px 15px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 16px 16px;">
+      <h5 class="text-white"><b>Quick Entry:</b></h5>
+      <h6 class="text-white"><i>save now; edit later</i></h6>
       <hr/>
     <form enctype="multipart-formdata" hx-post="{% url 'add-resource' %}" hx-encoding="multipart/form-data" hx-target="#resource-list">
         {% csrf_token %}
@@ -636,7 +639,9 @@
             {{ form.webdescription.as_hidden }}
             {{ form.webicon.as_hidden }}
             {{ form.videolink.as_hidden }}
+            {{ form.videothumbnail.as_hidden }}
             {{ form.videochannel.as_hidden }}
+            {{ form.videolength.as_hidden }}
           </div>
 
           <div class="form-group row">
@@ -657,7 +662,26 @@
       </div>
 
       </form>
+    </div><br/>
+
+    <!--All resources-->
+    {% if resources %}
+    <div class="card bg-info"  style="border-radius:10px; border:none; height:auto; font-size: 14px; padding:15px; box-shadow: #d6d6d6 0px -13px 25px 0px inset">
+      <h5 class="text-white"><b>Your Resources:</b></h5>
+      <h6 class="text-white"><i>manage at a glance</i></h6>
+
+      <ul>
+        {% for resource in resources %}
+        <li>
+          <a href="{{ resource.get_absolute_url }}" class="text-white">{{ resource.title }}</a>
+        </li>
+        {% endfor %}
+      <ul>
     </div>
+    {% endif %}
+  </div>
+
+
     <!--MAIN AREA-->
     <div class="col-sm-7 col-md-8 col-lg-9 col-xl-10">
       <br/>
@@ -671,7 +695,7 @@
       <a href="{% url 'listsview' %}" class="btn-dark-violet">Lists</a>
       <a href="{% url 'collectionsview' %}" class="btn-dark-violet">Collections</a>
       </div><br/>
-  
+
       <div class="row">
 
         <div id="resource-list" class="col-xl-8 col-lg-7 col-md-12">
@@ -714,6 +738,19 @@
       <div id="collection-resource-list">
         {% include 'Wiki/partials/collection-resource-list.html' %}
       </div>
+
+      {% if archived %}
+      <h3>Your archived collections:</h3>
+      <hr/>
+      <div>
+        {% for collection in archived %}
+        {{ collection.title }}
+        <i class="bi bi-folder-minus fs-5" style="cursor: pointer;" hx-get="{% url 'archivecollection' pk_slug=collection.pk %}" hx-target="#collection-details"></i>
+
+        {% endfor %}
+      </div>
+      {% endif %}
+
       <script>
         const modal1 = new bootstrap.Modal(document.getElementById("modal"))
         const modal2 = new bootstrap.Modal(document.getElementById("detailmodal"))

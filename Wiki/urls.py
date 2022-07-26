@@ -19,6 +19,8 @@ urlpatterns = [
     path('collections', views.collectionsView, name = "collectionsview"),
     path('collections/<slug:pk_slug>', views.collectionView.as_view(), name = "collectionview"),
     path('collections/<slug:pk_slug>/edit', views.editCollectionView, name = "editcollection"),
+    path('collections/<slug:pk_slug>/copy', views.copyCollectionView, name = "copycollection"),
+    path('collections/<slug:pk_slug>/archive', views.archiveCollectionView, name = "archivecollection"),
 
     path('topics/<tag>', views.tagView, name = "tagview"),
     path('search', views.searchView, name = "search"),

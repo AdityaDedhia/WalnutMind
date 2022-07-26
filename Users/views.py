@@ -96,7 +96,7 @@ def activate_user(request, uidb64, token):
         'user':user
     })
 
-@ratelimit(key='ip', rate='3/d', block=True)
+@ratelimit(key='ip', rate='3/12h', block=True)
 @sensitive_variables('password')
 def registerView(request):
     
@@ -165,7 +165,7 @@ def registerView(request):
             'form': form
         })
 
-@ratelimit(key='ip', rate='3/h', block=True)
+@ratelimit(key='ip', rate='5/h', block=True)
 @sensitive_variables('password')
 def loginView(request):
     #Prevent user from logging in if they are already logged in
