@@ -15,8 +15,10 @@
         {{ collection.title }}
         </a>
         <i class="bi bi-pencil-square fs-5" style="cursor: pointer;" hx-get="{% url 'editcollection' pk_slug=collection.pk %}" hx-target="#collection-details"></i>
+        <i class="bi bi-clipboard fs-5" style="cursor: pointer;" hx-get="{% url 'copycollection' pk_slug=collection.pk %}" hx-target="#collection-details"></i>
+        <i class="bi bi-archive fs-5" style="cursor: pointer;" hx-get="{% url 'archivecollection' pk_slug=collection.pk %}" hx-target="#collection-details"></i>
 
-        <i class="bi bi-x-square" hx-delete="{% url 'delete-collection' pk=collection.pk %}" style="cursor: pointer;" hx-target="#collection-resource-list" hx-confirm="Are you sure you want to delete this collection (your resources will not be affected)?"></i>
+        <i class="bi bi-x-square fs-5" hx-delete="{% url 'delete-collection' pk=collection.pk %}" style="cursor: pointer;" hx-target="#collection-resource-list" hx-confirm="Are you sure you want to delete this collection (your resources will not be affected)?"></i>
         </h4>
     </div>
     <hr/>
@@ -32,7 +34,7 @@
 <input type="text"
 hx-post="{% url 'search-resource' pk=collection.pk %} "
 hx-target="#resource-results"
-hx-trigger="keydown changed delay:100ms"
+hx-trigger="keydown changed delay:400ms"
 name="search"
 class="form-control"
 style="border-radius:10px; width:200px; margin-left:8px;"

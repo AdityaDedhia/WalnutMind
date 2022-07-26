@@ -10,9 +10,10 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.postgres.search import SearchQuery, SearchVector, SearchRank, SearchHeadline
 from taggit.models import Tag
+from django.contrib.auth.models import User
 from django.conf import settings
 import requests
-from django.urls import reverse
+from copy import deepcopy
 from Articles.views import Post as ArticlesPost
 from Commentaries.views import Post as BooksPost
 from .utils import storage_usage, resource_collection_order, resource_collection_reorder, get_resource_heatmap
@@ -40,8 +41,13 @@ class TermAutoComplete(autocomplete.Select2QuerySetView):
     
 def wikiView(request):
     if request.user.is_authenticated:
-        resources = Resource.objects.filter(creator = request.user)[:10]
-        collections = Collection.objects.prefetch_related('resourcesorder').filter(creator = request.user)
+        resources = Resource.objects.filter(creator = request.user)
+        
+        unsorted = resources.filter(collectionorder = None)
+        recents = resources[:10]
+        
+        collections = Collection.objects.prefetch_related('resourcesorder').filter(creator = request.user, archived = False)
+        archived = Collection.objects.filter(creator = request.user, archived = True).only('title', 'pk')
         #collectionresources = CollectionOrder.objects.prefetch_related('resource').filter(user=request.user) #Prefetch resources of collection object in collectionresources
         bytes = storage_usage(request.user)
 
@@ -49,25 +55,26 @@ def wikiView(request):
         docform = DocForm()
         heatmap = get_resource_heatmap(request.user)
         
+
+        
         #for collection in collections.all():
         #    collection_resources = collectionresources.filter(collection__pk = collection.pk)
         #    for resource in collection_resources.iterator():
         #        collection.resourcesorder.add(resource)
     
-            
-            
     else:
         resources = None
         collections = None
+        archived = None
         bytes = None
         form = None
         docform = None
         heatmap = None
-        
-
+        unsorted = None
+        recents = None
 
     return render(request, 'Wiki/index.html', {
-        'collections': collections, 'resources': resources, 'bytes': bytes, 'form': form, 'docform': docform, 'heatmap': heatmap,
+        'collections': collections, 'archived': archived, 'resources': recents, 'bytes': bytes, 'form': form, 'docform': docform, 'heatmap': heatmap,'unsorted':unsorted,
     })
 
 #WM DEFINE ---------------------------------------------------------------
@@ -159,23 +166,94 @@ def addTermView(request, pk):
 #WM COLLECT -----------------------------------------------------------
 def searchResourceView(request, pk):
     query = request.POST.get('search')
-
     resources = CollectionOrder.objects.filter(collection__pk = pk)
+    help = False
+    
+    if query.startswith(('-', '#', '@')): #Tuple for filtered searches
+        if query.startswith('-'):
+            category = query[1:] #Remove operator from query
+            category = str(category.split(' ')[0]) #Extract first word or 'category' from query
+            if category == 'orphan':
+                message = "Results in orphaned resources"
+                if ' ' in query:
+                    query = query.replace(f'-{category} ','') #Query, intentional space after type
+                    results = Resource.objects.filter(title__search=query, collectionorder = None)[:10]
 
-    results = Resource.objects.filter(title__icontains=query).exclude(~Q(creator = request.user), public = False).exclude(title__in=resources.values_list('resource__title', flat=True))[:10] #Filter public resources
+                else:
+                    results = Resource.objects.filter(collectionorder = None)[:10]
+                    
+            else:
+                message = "Invalid class specified"
+                help = True
+                results = None
+                
+            
+        elif query.startswith('#'):
+            type = query[1:] #Remove operator from query
+            type = str(type.split(' ')[0]) #Extract first word or 'tag' from query
+            
+            choices = Resource.category.field.choices
+            message = ""
+            for choice in choices:
+                if choice[0] == type.upper():
+                    message = "Results by type " + type
+                    break
+            if message == "":
+                message = "Invalid category specified"
+                help = True
+
+            if ' ' in query:
+                query = query.replace(f'#{type} ','') #Query, intentional space after type
+            else:
+                query = None
+            type = type.upper()
+            
+            if query is None:
+                results = Resource.objects.filter(category = type).exclude(~Q(creator = request.user), public = False).exclude(title__in=resources.values_list('resource__title', flat=True))[:10]
+            else:
+                results = Resource.objects.filter(title__search=query, category = type).exclude(~Q(creator = request.user), public = False).exclude(title__in=resources.values_list('resource__title', flat=True))[:10]
+        else:
+            creator = query[1:] #Remove operator from query
+            creator = str(creator.split(' ')[0]) #Extract first word or 'creator' from query
+            
+            if User.objects.filter(username = creator).exists():
+                message = "Results by creator " + creator
+            else:
+                message = "Invalid username specified"
+                help = True
+                
+            if ' ' in query:
+                query = query.replace(f'@{creator} ','') #Query, intentional space after type
+            else:
+                query = None
+                                
+            if query is None:
+                results = Resource.objects.filter(creator__username = creator).exclude(~Q(creator = request.user), public = False).exclude(title__in=resources.values_list('resource__title', flat=True))[:10]
+            else:
+                results = Resource.objects.filter(title__search=query, creator__username = creator).exclude(~Q(creator = request.user), public = False).exclude(title__in=resources.values_list('resource__title', flat=True))[:10]
+    else:
+        if query == '':
+            message = "Waiting for a query"
+            help = True
+            results = None
+        else:
+            message = f"Results for '{query}'"
+            results = Resource.objects.filter(title__search=query).exclude(~Q(creator = request.user), public = False).exclude(title__in=resources.values_list('resource__title', flat=True))[:10] #Filter public false resources which are not created by user and are not in collection
 
     return render(request, 'Wiki/partials/search-resources-results.html', {
-        'results': results, 'pk': pk,
+        'results': results, 'pk': pk, 'message': message, 'help': help
     })
+
 
 def resourceSort(request):
     resource_order = request.POST.getlist('resource_order')
     collectionpk = request.POST.get('collectionpk')
-    collections = Collection.objects.prefetch_related('resourcesorder').filter(creator = request.user)
+    collections = Collection.objects.prefetch_related('resourcesorder').filter(creator = request.user, archived = False)
 
     updatedresources = []
 
     collectionresources = CollectionOrder.objects.prefetch_related('resource').filter(collection__pk = collectionpk, user=request.user) #Prefetch resources of collection object in collectionresources
+    print(collectionresources)
 
     for index, resource_pk in enumerate(resource_order, start=1):
         resource = next(x for x in collectionresources if x.pk == int(resource_pk))
@@ -185,16 +263,19 @@ def resourceSort(request):
             updatedresources.append(resource)
 
     CollectionOrder.objects.bulk_update(updatedresources, ['order']) #Only update order field for only resources that have changed order.
+
+    results = Resource.objects.filter(creator = request.user, collectionorder = None)[:10]
+
     messages.success(request, "Collection synced.")
     return render(request, 'Wiki/partials/collection-resource-list.html', {  
-        'collections': collections,
+        'collections': collections, 'unsorted': results,
     })
 
 @login_required(login_url='/users/login')
 def removeResourceView(request, collectionpk, resourcepk):
     collection = Collection.objects.get(pk = collectionpk)
 
-    collections = Collection.objects.prefetch_related('resourcesorder').filter(creator = request.user)
+    collections = Collection.objects.prefetch_related('resourcesorder').filter(creator = request.user, archived = False)
 
     resource = CollectionOrder.objects.filter(collection__pk = collectionpk, resource__pk = resourcepk, user = request.user)
 
@@ -210,7 +291,7 @@ def removeResourceView(request, collectionpk, resourcepk):
 
 @login_required(login_url='/users/login')
 def existingResourceView(request, collectionpk, resourcepk):
-    collections = Collection.objects.prefetch_related('resourcesorder').filter(creator = request.user)
+    collections = Collection.objects.prefetch_related('resourcesorder').filter(creator = request.user, archived = False)
 
     resource = Resource.objects.get(pk = resourcepk)
     collection = Collection.objects.get(pk = collectionpk)
@@ -287,12 +368,14 @@ def addResourceView(request):
             #FILE CHECK
             if form.instance.filelink:
                 filelink = str(form.instance.filelink)
-                form.instance.title = filelink.split('.')[-2]
                 filetype = filelink.split('.')[-1]
                 form.instance.filetype = filetype
+                title = filelink.replace(f'{filetype}','')
+                title = title.replace('.','')
+                form.instance.title = title
 
                 if filelink.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.gif', '.svg', '.webp')):
-                    form.instance.category = 'IMG'
+                    form.instance.category = 'IMAGE'
                 else:
                     form.instance.category = 'FILE'
                     
@@ -307,22 +390,30 @@ def addResourceView(request):
                     form.instance.videolink = url
                     form.instance.weblink = None #replace weblink with videolink field
                     yt = YouTube(url)
-                    form.instance.title = str(yt.title)[:40]
+                    form.instance.title = str(yt.title)
                     form.instance.source = yt.author
                     form.instance.videochannel = yt.channel_url
-                    
+                    form.instance.videolength = round((yt.length/60))
+                                        
                     videodescription = re.sub(r'http\S+', '', yt.description)
-                    videodescription = re.sub(r'https\S+', '', videodescription)[:255] #Limit to 255 characters
+                    videodescription = re.sub(r'https\S+', '', videodescription)[:200] #Limit to 200 characters
+                    videodate = yt.publish_date.strftime("%Y-%m-%d")
 
-                    form.instance.videodescription = videodescription
+                    form.instance.videodescription = str(videodate)+ ": " + videodescription
+                    form.instance.videothumbnail = yt.thumbnail_url
                     
+                    print(yt.metadata)
+
                     #Clean phrase for key word NLP
                     cleanedphrase = yt.description
                     cleanedphrase = ''.join([i for i in cleanedphrase if not i.isdigit()]) #Remove numbers
                     cleanedphrase = re.sub(r'http\S+', '', cleanedphrase)
                         
                     keywords = yt.keywords
-                    form.instance.description = keywords
+                    if keywords:
+                        form.instance.description = keywords
+                    else:
+                        form.instance.keywords = yt.metadata
                 else:    
                     form.instance.category = 'WEB'
                     preview = link_preview(url)
@@ -367,8 +458,21 @@ def addResourceView(request):
                 form.instance.source = metadata['Authors'][0]
                 
             else:
-                messages.success(request, "A foreign resource was added, please try again later.")
+                messages.success(request, "An unidentified resource was added, please try again later.")
                 return HttpResponseBadRequest(status=204)
+            
+            
+            #Fix public access
+            if form.instance.public == True:
+                if form.instance.category != 'WEB' and form.instance.category != 'VIDEO' and form.instance.category != 'BOOK':
+                    title = str(form.instance.title).lower()
+                    if Resource.objects.filter(title__iexact=title).exists():
+                        messages.success(request, "Unable to publish live, we have found a similar public resource that already exists.")
+                        return HttpResponseBadRequest(status=204)
+                else:
+                    messages.success(request, "You must be the original author of the resource to publish live.")
+                    return HttpResponseBadRequest(status=204)         
+
 
             form.save()
 
@@ -413,8 +517,7 @@ def addCollectionView(request):
         creator = request.user, #Not explicitly assigned
         description = description,
     )
-    collections = Collection.objects.prefetch_related('resourcesorder').filter(creator = request.user)
-
+    collections = Collection.objects.prefetch_related('resourcesorder').filter(creator = request.user, archived = False)
 
     return render(request, 'Wiki/partials/collection-resource-list.html', {
         'collections': collections, 'bytes': bytes
@@ -441,12 +544,61 @@ def editCollectionView(request, pk_slug):
         })
 
 @login_required(login_url='/users/login')
+def copyCollectionView(request, pk_slug):
+    collection = deepcopy(Collection.objects.get(pk = pk_slug))
+    collectionresources = CollectionOrder.objects.prefetch_related('resource').filter(collection__pk = collection.pk, user=request.user) #Prefetch resources of collection object in collectionresources
+    
+    collection.pk = None    
+    collection.id = None
+    collection._state.adding = True
+    
+    collection.title = "Copy of " + collection.title
+    collection.cover = None
+    collection.public = False
+
+    collection.save()
+        
+
+    for resource in collectionresources.iterator(): 
+        
+        newresource = CollectionOrder(
+            user = request.user,
+            collection = collection,
+            resource = resource.resource,
+            order = resource_collection_order(collection),
+        )
+        newresource.save()
+        collection.resourcesorder.add(newresource)
+
+    collections = Collection.objects.prefetch_related('resourcesorder').filter(creator = request.user, archived = False)
+
+    return render(request,'Wiki/partials/collection-resource-list.html', {
+        'collections': collections, 'collection': collection,
+    })
+    
+@login_required(login_url='/users/login')
+def archiveCollectionView(request, pk_slug):
+    collection = Collection.objects.get(pk = pk_slug)
+    if collection.creator == request.user:
+        if collection.archived == True:
+            collection.archived = False
+        else:
+            collection.archived = True
+        collection.save()
+        
+    collections = Collection.objects.prefetch_related('resourcesorder').filter(creator = request.user, archived = False)
+
+    return render(request, 'Wiki/partials/collection-resource-list.html', {
+        'collections': collections,
+    })
+
+@login_required(login_url='/users/login')
 def deleteCollectionView(request, pk):
     collection = Collection.objects.get(pk = pk)
     if collection.creator == request.user:
         collection.delete()
     
-    collections = Collection.objects.prefetch_related('resourcesorder').filter(creator = request.user)
+    collections = Collection.objects.prefetch_related('resourcesorder').filter(creator = request.user, archived = False)
 
     return render(request, 'Wiki/partials/collection-resource-list.html', {
         'collections': collections,
