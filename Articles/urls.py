@@ -12,7 +12,7 @@ urlpatterns = [
     path('articles/<int:pk>/<int:id>/delete',deleteCommentView, name = "deletecomment"),
 
 
-    #if pk recieved, reroute to slug article url
+    # if pk recieved, reroute to slug article url
     path('articles/<slug:pk_slug>', articleView.as_view(), name = 'articleview'),
 
     path('article-list',views.ArticleListAPIView.as_view(), name = 'article-list'),

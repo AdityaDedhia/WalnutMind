@@ -23,6 +23,7 @@ click-plugins==1.1.1
 click-repl==0.2.0
 colorama==0.4.5
 coverage==6.4.1
+cryptography==37.0.4
 cssselect==1.1.0
 dj-database-url==0.5.0
 Django==4.0.6
@@ -58,6 +59,7 @@ geoip2==4.6.0
 gunicorn==20.1.0
 html-tag-names==0.1.2
 html-void-elements==0.1.0
+httplib2==0.20.4
 idna==3.3
 importlib-metadata==4.11.4
 isbnlib==3.10.10
@@ -76,11 +78,13 @@ phonenumbers==8.12.51
 Pillow==9.1.1
 plotly==5.9.0
 prompt-toolkit==3.0.30
+psutil==5.9.1
 psycopg2==2.9.3
 pycares==4.2.1
 pycparser==2.21
 PyJWT==2.4.0
 PyMySQL==1.0.2
+pyparsing==3.0.9
 pyquery==1.4.3
 python-dateutil==2.8.2
 python-decouple==3.6

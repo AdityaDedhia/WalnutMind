@@ -5,7 +5,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('',views.wikiView, name = "wikiindex"),
+    path('',views.wiki_view, name = "wikiindex"),
     path('define-<slug:pk_slug>', views.definitionView.as_view(), name = "definition"),
     path('lists', views.listsView, name = "listsview"),
     path('lists/new', views.newListView, name = "newlist"),

@@ -19,7 +19,7 @@
                     <a style="color:black;" href="{% url 'resourceview' pk=resource.pk %}" target="_blank" rel="noopener noreferrer">{{ resource.title }}</a>
                     <span class="badge bg-info" style="margin-left:5px;">{{ resource.category.title }}</span>
                 </p>
-                <span class="btn btn-sm btn-primary badge-pill" hx-post="{% url 'add-existing-resource' collectionpk=pk resourcepk=resource.pk %}" hx-vals='{"resource": "{{ resource.title }}"}' hx-target="#collection-resource-list">Add</span>
+                <span class="btn btn-sm btn-primary badge-pill" hx-post="{% url 'add-existing-resource' collectionpk=pk resourcepk=resource.pk %}" hx-vals='{"resource": "{{ resource.title }}"}' hx-target="#collection-resource-list" >Add</span>
 
             </li>
         {% endfor %}
