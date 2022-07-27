@@ -9,7 +9,6 @@ from two_factor.gateways.twilio.urls import urlpatterns as tf_twilio_urls
 
 import debug_toolbar
 
-
 admin.site.__class__ = AdminSiteOTPRequired #ADMIN SITE MAY ONLY BE ACCESSED BY STAFF IF THEY HAVE MFA ENABLED
 
 urlpatterns = [

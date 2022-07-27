@@ -9,6 +9,7 @@ sentry_sdk.init(
     integrations=[DjangoIntegration()],
     send_default_pii=True,  # Associate users with errors
     traces_sample_rate=1.0,
+
 )
 
 DEBUG = False
@@ -28,5 +29,3 @@ DATABASES = {
 }
 
 AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_BUCKET_NAME']
-AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
-AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']

@@ -29,7 +29,6 @@ from isbnlib import meta, cover, doi
 
 SERVICE = "wiki"
 
-
 def clearMessagesView(request):
     return HttpResponse("")
 
