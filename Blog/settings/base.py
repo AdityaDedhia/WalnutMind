@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 dotenv_file = os.path.join(BASE_DIR, ".env")
 if os.path.isfile(dotenv_file):
-	dotenv.load_dotenv(dotenv_file)
+    dotenv.load_dotenv(dotenv_file)
 SECRET_KEY = os.environ['SECRET_KEY']
 
 WSGI_APPLICATION = 'Blog.wsgi.application'
@@ -18,7 +18,7 @@ DEBUG = False
 SECURE_SSL_REDIRECT = True
 
 INTERNAL_IPS = [  # Debugging IPs
-	'127.0.0.1', 'localhost', 'www.halflife-edu-dev.herokuapp.com', 'halflife-edu-dev.herokuapp.com',
+    '127.0.0.1', 'localhost', 'www.halflife-edu-dev.herokuapp.com', 'halflife-edu-dev.herokuapp.com',
 ]
 
 # ARCHIVE SETTINGS -----------------------------------------------------------manage.py archive
@@ -28,16 +28,16 @@ ARCHIVE_FORMAT = archivers.ZIP
 
 DBBACKUP_STORAGE = "django.core.files.storage.FileSystemStorage"
 DBBACKUP_STORAGE_OPTIONS = {
-	"location": "archives/",
+    "location": "archives/",
 }
 
 DBBACKUP_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 DBBACKUP_STORAGE_OPTIONS = {
-	'access_key': os.environ['AWS_ACCESS_KEY_ID'],
-	'secret_key': os.environ['AWS_SECRET_ACCESS_KEY'],
-	'bucket_name': os.environ['AWS_STORAGE_BUCKET_NAME'],
-	'default_acl': 'private',
-	'location': 'archives/',
+    'access_key': os.environ['AWS_ACCESS_KEY_ID'],
+    'secret_key': os.environ['AWS_SECRET_ACCESS_KEY'],
+    'bucket_name': os.environ['AWS_STORAGE_BUCKET_NAME'],
+    'default_acl': 'private',
+    'location': 'archives/',
 }
 
 # USER SETTINGS (MODIFIABLE)
@@ -93,98 +93,98 @@ AXES_ENABLE_ACCESS_FAILURE_LOG = True
 
 
 INSTALLED_APPS = [
-	'dal',  # BEFORE django.contrib.admin
-	'dal_select2',  # BEFORE django.contrib.admin
-	'django.contrib.admin',
-	'django.contrib.auth',
-	'axes',  # AFTER django.contrib.admin
-	'django_otp',  # 2FA
-	'django_otp.plugins.otp_static',  # 2FA
-	'django_otp.plugins.otp_totp',  # 2FA
-	'django_otp.plugins.otp_email',  # 2FA
-	'two_factor.plugins.email',  # 2FA
-	'two_factor.plugins.phonenumber',  # 2FA
-	'two_factor',  # 2FA
+    'dal',  # BEFORE django.contrib.admin
+    'dal_select2',  # BEFORE django.contrib.admin
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'axes',  # AFTER django.contrib.admin
+    'django_otp',  # 2FA
+    'django_otp.plugins.otp_static',  # 2FA
+    'django_otp.plugins.otp_totp',  # 2FA
+    'django_otp.plugins.otp_email',  # 2FA
+    'two_factor.plugins.email',  # 2FA
+    'two_factor.plugins.phonenumber',  # 2FA
+    'two_factor',  # 2FA
 
-	'django.contrib.contenttypes',
-	'django.contrib.sessions',
-	'django.contrib.messages',
-	'whitenoise.runserver_nostatic',
-	'django.contrib.staticfiles',
-	'django_cleanup.apps.CleanupConfig',
-	'django.contrib.postgres',
-	'django_countries',
-	'ckeditor',
-	'ckeditor_uploader',
-	'django.contrib.humanize',
-	'storages',
-	'taggit',
-	'rest_framework',
-	'embed_video',
-	'widget_tweaks',
-	'hitcount',
-	'dbbackup',  # automated S3 db archive
-	'django_archive',  # manual archives using: manage.py archive
-	'Users',
-	'Articles',
-	'Commentaries',
-	'Diaries',
-	'Wiki',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
+    'django.contrib.staticfiles',
+    'django_cleanup.apps.CleanupConfig',
+    'django.contrib.postgres',
+    'django_countries',
+    'ckeditor',
+    'ckeditor_uploader',
+    'django.contrib.humanize',
+    'storages',
+    'taggit',
+    'rest_framework',
+    'embed_video',
+    'widget_tweaks',
+    'hitcount',
+    'dbbackup',  # automated S3 db archive
+    'django_archive',  # manual archives using: manage.py archive
+    'Users',
+    'Articles',
+    'Commentaries',
+    'Diaries',
+    'Wiki',
 ]
 
 MIDDLEWARE = [
-	'django.middleware.security.SecurityMiddleware',
-	'whitenoise.middleware.WhiteNoiseMiddleware',
-	'django.contrib.sessions.middleware.SessionMiddleware',
-	'django.middleware.common.CommonMiddleware',
-	'django.middleware.csrf.CsrfViewMiddleware',
-	'django.contrib.auth.middleware.AuthenticationMiddleware',
-	'django_otp.middleware.OTPMiddleware',  # AFTER AUTHMIDDLEWARE
-	'two_factor.middleware.threadlocals.ThreadLocals',  # AFTER AUTHMIDDLEWARE
-	'django.contrib.messages.middleware.MessageMiddleware',
-	'django.middleware.clickjacking.XFrameOptionsMiddleware',
-	'django.middleware.common.BrokenLinkEmailsMiddleware',
-	'Blog.middleware.BlacklistBlockMiddleware',
-	'axes.middleware.AxesMiddleware',  # AFTER AUTHMIDDLEWARE
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django_otp.middleware.OTPMiddleware',  # AFTER AUTHMIDDLEWARE
+    'two_factor.middleware.threadlocals.ThreadLocals',  # AFTER AUTHMIDDLEWARE
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.common.BrokenLinkEmailsMiddleware',
+    'Blog.middleware.BlacklistBlockMiddleware',
+    'axes.middleware.AxesMiddleware',  # AFTER AUTHMIDDLEWARE
 ]
 
 ROOT_URLCONF = 'Blog.urls'
 
 TEMPLATES = [
-	{
-		'BACKEND': 'django.template.backends.django.DjangoTemplates',
-		'DIRS': [os.path.join(BASE_DIR, 'templates')],
-		'APP_DIRS': True,
-		'OPTIONS': {
-			'context_processors': [
-				'django.template.context_processors.debug',
-				'django.template.context_processors.request',
-				'django.template.context_processors.media',
-				'django.contrib.auth.context_processors.auth',
-				'django.contrib.messages.context_processors.messages',
-			],
-		},
-	},
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.template.context_processors.media',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
 ]
 
 
 AUTH_PASSWORD_VALIDATORS = [
-	{
-		'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-	},
-	{
-		'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-	},
-	{
-		'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-	},
-	{
-		'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-	},
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
 ]
 AUTHENTICATION_BACKENDS = [
-	'axes.backends.AxesBackend',
-	'django.contrib.auth.backends.ModelBackend',
+    'axes.backends.AxesBackend',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 LANGUAGE_CODE = 'en-us'
@@ -198,46 +198,46 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # RICH TEXT EDITOR-------------
 CKEDITOR_CONFIGS = {
-	'default': {
-		'skin': 'kama',
-		'height': 375,
-		'width': 300,
-		'toolbarCanCollapse': True,
-		'toolbarStartupExpanded': False,
-		'tabSpaces': 4,
-		'toolbar': 'custom',
-		'toolbar_custom': [
-			{'name': 'document', 'items': ['Maximize', 'Source', '-', 'Templates']},
-			{'name': 'clipboard', 'items': ['Undo', 'Redo']},
-			{'name': 'editing', 'items': ['Find', 'Replace']},
+    'default': {
+        'skin': 'kama',
+        'height': 375,
+        'width': 300,
+        'toolbarCanCollapse': True,
+        'toolbarStartupExpanded': False,
+        'tabSpaces': 4,
+        'toolbar': 'custom',
+        'toolbar_custom': [
+            {'name': 'document', 'items': ['Maximize', 'Source', '-', 'Templates']},
+            {'name': 'clipboard', 'items': ['Undo', 'Redo']},
+            {'name': 'editing', 'items': ['Find', 'Replace']},
 
-			{'name': 'links',
-			 'items': ['Link', 'Unlink', 'Anchor']},
-			{'name': 'insert',
-			 'items': ['Image', 'Flash', 'Table', 'HorizontalRule', 'SpecialChar', 'Iframe']},
+            {'name': 'links',
+             'items': ['Link', 'Unlink', 'Anchor']},
+            {'name': 'insert',
+             'items': ['Image', 'Flash', 'Table', 'HorizontalRule', 'SpecialChar', 'Iframe']},
 
-			{'name': 'paragraph',
-			 'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-',
-			           'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
+            {'name': 'paragraph',
+             'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-',
+                       'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
 
-			{'name': 'styles',
-			 'items': ['Bold', 'Italic', 'Underline', 'Strike', 'TextColor', 'BGColor', 'Subscript', 'Superscript',
-			           'Format', 'Font', 'FontSize', '-', 'RemoveFormat']},
+            {'name': 'styles',
+             'items': ['Bold', 'Italic', 'Underline', 'Strike', 'TextColor', 'BGColor', 'Subscript', 'Superscript',
+                       'Format', 'Font', 'FontSize', '-', 'RemoveFormat']},
 
-		],
-		'extraPlugins': ','.join([
-			'uploadimage',  # the upload image feature
-			# your extra plugins here
-			'div',
-			'autolink',
-			'autoembed',
-			'embedsemantic',
-			'find',
-			'notification',
-		]),
-		'removePlugins': 'exportpdf',
+        ],
+        'extraPlugins': ','.join([
+            'uploadimage',  # the upload image feature
+            # your extra plugins here
+            'div',
+            'autolink',
+            'autoembed',
+            'embedsemantic',
+            'find',
+            'notification',
+        ]),
+        'removePlugins': 'exportpdf',
 
-	},
+    },
 
 }
 
@@ -253,7 +253,7 @@ STATIC_URL = STATIC_HOST + '/static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_DIRS = [
-	BASE_DIR / "static",
+    BASE_DIR / "static",
 ]
 
 MEDIA_URL = '/user_content/'
@@ -281,3 +281,50 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'support@walnutmind.org'
 EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 DEFAULT_FROM_EMAIL = 'support@walnutmind.org'
+
+def get_cache():
+  import os
+  try:
+    servers = os.environ['MEMCACHIER_SERVERS']
+    username = os.environ['MEMCACHIER_USERNAME']
+    password = os.environ['MEMCACHIER_PASSWORD']
+    return {
+      'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+        # TIMEOUT is not the connection timeout! It's the default expiration
+        # timeout that should be applied to keys! Setting it to `None`
+        # disables expiration.
+        'TIMEOUT': None,
+        'LOCATION': servers,
+        'OPTIONS': {
+          'binary': True,
+          'username': username,
+          'password': password,
+          'behaviors': {
+            # Enable faster IO
+            'no_block': True,
+            'tcp_nodelay': True,
+            # Keep connection alive
+            'tcp_keepalive': True,
+            # Timeout settings
+            'connect_timeout': 2000, # ms
+            'send_timeout': 750 * 1000, # us
+            'receive_timeout': 750 * 1000, # us
+            '_poll_timeout': 2000, # ms
+            # Better failover
+            'ketama': True,
+            'remove_failed': 1,
+            'retry_timeout': 2,
+            'dead_timeout': 30,
+          }
+        }
+      }
+    }
+  except:
+    return {
+      'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
+      }
+    }
+
+CACHES = get_cache()
