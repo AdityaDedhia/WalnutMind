@@ -26,19 +26,7 @@ ARCHIVE_DIRECTORY = 'archives/'
 ARCHIVE_FILENAME = '%Y-%m-%d--%H-%M'
 ARCHIVE_FORMAT = archivers.ZIP
 
-DBBACKUP_STORAGE = "django.core.files.storage.FileSystemStorage"
-DBBACKUP_STORAGE_OPTIONS = {
-    "location": "archives/",
-}
 
-DBBACKUP_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-DBBACKUP_STORAGE_OPTIONS = {
-    'access_key': os.environ['AWS_ACCESS_KEY_ID'],
-    'secret_key': os.environ['AWS_SECRET_ACCESS_KEY'],
-    'bucket_name': os.environ['AWS_STORAGE_BUCKET_NAME'],
-    'default_acl': 'private',
-    'location': 'archives/',
-}
 
 # USER SETTINGS (MODIFIABLE)
 
