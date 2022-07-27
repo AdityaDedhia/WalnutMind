@@ -115,3 +115,4 @@ wcwidth==0.2.5
 whitenoise==6.1.0
 yarl==1.7.2
 zipp==3.8.0
+pylibmc==1.5.2
