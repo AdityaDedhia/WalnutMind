@@ -24,7 +24,7 @@ from dal import autocomplete
 from pytube import YouTube, Channel  # Support YT Metadata
 from linkpreview import link_preview
 from ratelimit.decorators import ratelimit
-
+from django.core.cache import cache
 from isbnlib import meta, cover, doi
 
 SERVICE = "wiki"
@@ -41,16 +41,26 @@ class TermAutoComplete(autocomplete.Select2QuerySetView):
             qs = qs.filter(term__icontains=self.q)  # case insensitive standard search
         return qs
 
+RESOURCES_KEY = "resources.all"
+COLLECTIONS_KEY = "collections.all"
 
 def wiki_view(request):
     if request.user.is_authenticated:
-        resources = Resource.objects.filter(creator=request.user)
+        resources = cache.get(RESOURCES_KEY)
+        if not resources:
+            resources = Resource.objects.filter(creator=request.user)
+            cache.set(RESOURCES_KEY, resources, settings.RESOURCES_LIFESPAN)
 
         unsorted = resources.filter(collectionorder=None)
         recents = resources[:10]
 
-        collections = Collection.objects.prefetch_related('resourcesorder').filter(creator=request.user, archived=False)
-        archived = Collection.objects.filter(creator=request.user, archived=True).only('title', 'pk')
+        collections = cache.get(COLLECTIONS_KEY)
+        if not collections:
+            collections = Collection.objects.filter(creator=request.user)
+            cache.set(COLLECTIONS_KEY, collections, settings.RESOURCES_LIFESPAN)
+
+        collections = collections.filter(creator=request.user, archived=False)
+        archived = collections.filter(creator=request.user, archived=True).only('title', 'pk')
         # collectionresources = CollectionOrder.objects.prefetch_related('resource').filter(user=request.user) #Prefetch resources of collection object in collectionresources
         bytes = storage_usage(request.user)
 
@@ -264,7 +274,7 @@ def searchResourceView(request, pk):
 def resourceSort(request):
     resource_order = request.POST.getlist('resource_order')
     collectionpk = request.POST.get('collectionpk')
-    collections = Collection.objects.prefetch_related('resourcesorder').filter(creator=request.user, archived=False)
+    collections = cache.get(COLLECTIONS_KEY).prefetch_related('resourcesorder').filter(creator=request.user, archived=False)
 
     updatedresources = []
 
@@ -282,7 +292,8 @@ def resourceSort(request):
     CollectionOrder.objects.bulk_update(updatedresources, [
         'order'])  # Only update order field for only resources that have changed order.
 
-    results = Resource.objects.filter(creator=request.user, collectionorder=None)[:10]
+    resources = cache.get(RESOURCES_KEY)
+    results = resources.filter(creator=request.user, collectionorder=None)[:10]
 
     messages.success(request, "Collection synced.")
     return render(request, 'Wiki/partials/collection-resource-list.html', {
@@ -417,24 +428,23 @@ def addResourceView(request):
                     form.instance.videolength = round((yt.length / 60))
 
                     videodescription = re.sub(r'http\S+', '', yt.description)
-                    videodescription = re.sub(r'https\S+', '', videodescription)[:200]  # Limit to 200 characters
+                    videodescription = re.sub(r'https\S+', '', videodescription)
                     videodate = yt.publish_date.strftime("%Y-%m-%d")
 
-                    form.instance.videodescription = str(videodate) + ": " + videodescription
+                    form.instance.videodescription = str(videodate) + ": " + videodescription[:220]
                     form.instance.videothumbnail = yt.thumbnail_url
-
-                    print(yt.metadata)
 
                     # Clean phrase for key word NLP
                     cleanedphrase = yt.description
                     cleanedphrase = ''.join([i for i in cleanedphrase if not i.isdigit()])  # Remove numbers
                     cleanedphrase = re.sub(r'http\S+', '', cleanedphrase)
 
-                    keywords = yt.keywords
+                    keywords = yt.keywords[:5]
+                    print(keywords)
                     if keywords:
-                        form.instance.description = keywords
+                        form.instance.description = keywords[:255]
                     else:
-                        form.instance.keywords = yt.metadata
+                        form.instance.keywords = yt.metadata[:255]
                 else:
                     form.instance.category = 'WEB'
                     preview = link_preview(url)
@@ -468,7 +478,7 @@ def addResourceView(request):
                     # Add description
                     description = preview.description  # Limit description to charfield 255 limit
                     if description != None:
-                        form.instance.webdescription = description
+                        form.instance.webdescription = description[:255]
                     else:
                         form.instance.webdescription = "No description available."
 
@@ -507,7 +517,10 @@ def addResourceView(request):
                     "You have exceeded your maximum file storage capacity of 200MB. Please delete some files before adding more."))
 
             heatmap = get_resource_heatmap(request.user)
-            resources = Resource.objects.filter(creator=request.user)[:10]
+
+            resources = Resource.objects.filter(creator=request.user)
+            resources = cache.set(RESOURCES_KEY, resources, settings.RESOURCES_LIFESPAN)
+            resources = cache.get(RESOURCES_KEY)[:10]
             return render(request, 'Wiki/resource-list.html', {
                 'resources': resources, 'bytes': bytes, 'form': form, 'docform': docform, 'heatmap': heatmap,
             })
@@ -522,7 +535,10 @@ def deleteResourceView(request, pk):
     if resource.creator == request.user:
         resource.delete()
 
-    resources = Resource.objects.filter(creator=request.user)[:10]
+    resources = Resource.objects.filter(creator=request.user)
+    resources = cache.set(RESOURCES_KEY, resources, settings.RESOURCES_LIFESPAN)
+    resources = cache.get(RESOURCES_KEY)[:10]
+
     bytes = storage_usage(request.user)
     heatmap = get_resource_heatmap(request.user)
 

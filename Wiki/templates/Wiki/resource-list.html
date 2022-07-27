@@ -1,3 +1,4 @@
+{% load cache %}
 {% load humanize %}
 
 <div class="row">
@@ -9,6 +10,7 @@
 <hr/>
 <div class="masked-overflow-x">
     {% for resource in resources %}
+	    {% cache None 'RESOURCES_KEY' resource.id %}
       <!--TEXT LINK-->
     {% if resource.category == 'DOC' %}
     <span class="resource-card card-5 btn btn-sm mb-2" style="margin:5px;  border-radius:10px">
@@ -67,6 +69,7 @@
         <b class="title resource-card__link" style="overflow:hidden" data-toggle="tooltip" title="{{ resource.videodescription|truncatewords:50 }}">
           {{ resource.title }}</b></a>
         <span class="badge bg-danger" hx-delete="{% url 'delete-resource' pk=resource.pk %}" hx-target="#resource-list" hx-confirm="Are you sure you want to permanently delete this resource?"><i class="bi bi-x"></i></span>
+        <p><i>{{ resource.description|truncatewords:5 }}</i></p>
 
       <p style="padding-top:8px">{{ resource.dateCreated|naturaltime }}
         {% if resource.public %}
@@ -120,6 +123,7 @@
     </span>
 
     {% endif %}
+	    {% endcache %}
     {% endfor %}
   </div>
   <h6 class="noselect" style="color:gray">Total cloud storage used: {{ bytes|filesizeformat }} / 200MB</h6>

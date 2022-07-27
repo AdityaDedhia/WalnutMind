@@ -62,6 +62,7 @@ SECURE_BROWSER_XSS_FILTER = True  # Prevent cross-site scripting attacks in brow
 SERVER_EMAIL = 'support@walnutmind.org'
 
 # CONFIG SETTINGS ---------------------------------------------------
+RESOURCES_LIFESPAN = 60 * 30 # 30 Minute cache
 
 # MFA SETTINGS ---------------------------------------------------
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
