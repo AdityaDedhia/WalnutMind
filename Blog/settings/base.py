@@ -14,7 +14,8 @@ WSGI_APPLICATION = 'Blog.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 HOSTCOUNTRY_CODE = "LU"
-
+DEBUG = False
+SECURE_SSL_REDIRECT = True
 
 INTERNAL_IPS = [  # Debugging IPs
 	'127.0.0.1', 'localhost', 'www.halflife-edu-dev.herokuapp.com', 'halflife-edu-dev.herokuapp.com',

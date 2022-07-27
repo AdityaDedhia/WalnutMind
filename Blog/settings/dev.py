@@ -8,7 +8,6 @@ ADMINS = [
 DEBUG = False
 SECURE_SSL_REDIRECT = True # Redirect all non-HTTPS requests to HTTPS
 
-
 ALLOWED_HOSTS = ['127.0.0.1', 'www.halflife-edu-dev.herokuapp.com', 'halflife-edu-dev.herokuapp.com']
 
 DATABASES = {
