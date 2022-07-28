@@ -1,9 +1,21 @@
 {
   "environments": {
     "test": {
-      "scripts": {
-        "test": "nose test"
-      }
+      "formation": {
+          "test": {
+            "quantity": 1,
+            "size": "standard-1x"
+          }
+      },
+      "addons":[
+         "loadmill"
+      ],
+      "buildpacks": [
+        {
+      "url": "heroku/python"
+        }
+    ],
+    "stack": "heroku-20"
     }
   }
 }
