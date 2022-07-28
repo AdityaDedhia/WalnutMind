@@ -6,7 +6,6 @@
 
 
 {% for collection in collections %}
-	{% cache None 'COLLECTIONS_KEY' collection.id %}
     <div class="row">
 
         <div id="collection-details">
@@ -52,7 +51,6 @@
                 {% endfor %}
             </form>
     </div>
-	{% endcache %}
 {% endfor %}
 
 

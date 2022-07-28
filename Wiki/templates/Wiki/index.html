@@ -546,11 +546,10 @@
       border-radius:10px;
       background-color: #212121;
       min-width: 100%;
-      min-height:200px;
+      min-height:175px;
       font-size:10px;
       color:#d6d6d6;
     }
-
 
     .dropzone:hover {
       background-color: #929292;
@@ -665,22 +664,28 @@
     </div><br/>
 
     <!--All resources-->
-    {% if resources %}
+    {% if archived %}
     <div class="card bg-info"  style="border-radius:10px; border:none; height:auto; font-size: 14px; padding:15px; box-shadow: #d6d6d6 0px -13px 25px 0px inset">
-      <h5 class="text-white"><b>Your Resources:</b></h5>
+      <h5 class="text-white"><b>Your Archived Collections:</b></h5>
       <h6 class="text-white"><i>manage at a glance</i></h6>
 
-      <ul>
-        {% for resource in resources %}
-        <li>
-          <a href="{{ resource.get_absolute_url }}" class="text-white">{{ resource.title }}</a>
-        </li>
+    <ul>
+        {% for collection in archived %}
+	        <li class="noselect" id="{{ collection.pk }}" onclick="remove(this.id)">
+	        <div class="card" style="display: inline">
+
+        {{ collection.title }}
+        <i class="bi bi-folder-minus fs-5" style="cursor: pointer;"
+           hx-get="{% url 'archivecollection' pk_slug=collection.pk %}" hx-target="#collection-details"></i>
+	      </div>
+	        </li>
         {% endfor %}
-      </ul>
+
+    </ul>
+
     </div>
     {% endif %}
   </div>
-
 
     <!--MAIN AREA-->
     <div class="col-sm-7 col-md-8 col-lg-9 col-xl-10">
@@ -781,23 +786,40 @@
 		    {% endfor %}
 		</ul>
 
+			<br/>
+
+			<div class="card noselect" style="padding:8px; font-size:12px;">
+            <b class="noselect">Usage Commands:</b><br/>
+            <p class="noselect" style="font-size:12px;">
+            Enter a query to search all resources.
+
+            To filter your query by class:
+            <div class="card bg-dark" style="padding:4px; margin:15px; margin-top:0px; font-size:12px;">
+            <samp class="text-white">-class [query]</samp>
+            </div>
+            <i>Options: orphan</i>
+
+            To filter your query by category:
+            <div class="card bg-dark" style="padding:4px; margin:15px; margin-top:0px; font-size:12px;">
+            <samp class="text-white">#category [query]</samp>
+            </div>
+            <i>Options: file, doc, image, web, video, book</i>
+
+            To filter your query by creator:
+            <div class="card bg-dark" style="padding:4px; margin:15px; margin-top:0px; font-size:12px;">
+                <samp class="text-white">@username [query]</samp>
+            </div>
+            <i>Options: Public users with public resources only</i>
+        </div>
+
+
+
+
 		</div>
 
     </div>
 
 
-
-      {% if archived %}
-      <h3>Your archived collections:</h3>
-      <hr/>
-      <div>
-        {% for collection in archived %}
-        {{ collection.title }}
-        <i class="bi bi-folder-minus fs-5" style="cursor: pointer;" hx-get="{% url 'archivecollection' pk_slug=collection.pk %}" hx-target="#collection-details"></i>
-
-        {% endfor %}
-      </div>
-      {% endif %}
       <script>
         const modal1 = new bootstrap.Modal(document.getElementById("modal"))
         const modal2 = new bootstrap.Modal(document.getElementById("detailmodal"))
@@ -822,7 +844,10 @@
     $('[data-toggle="tooltip"]').tooltip()
   });
 
-  $('.alert').alert()
+function remove(me) {
+    document.getElementById(me).outerHTML = ""
+}
+
 
 </script>
 {% endblock body %}

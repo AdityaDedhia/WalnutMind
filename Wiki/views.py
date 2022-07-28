@@ -41,7 +41,6 @@ class TermAutoComplete(autocomplete.Select2QuerySetView):
         return qs
 
 RESOURCES_KEY = "resources.all"
-COLLECTIONS_KEY = "collections.all"
 
 def wiki_view(request):
     if request.user.is_authenticated:
@@ -59,13 +58,12 @@ def wiki_view(request):
         else:
             log = None
 
-        collections = cache.get(COLLECTIONS_KEY)
-        if not collections:
-            collections = Collection.objects.filter(creator=request.user)
-            cache.set(COLLECTIONS_KEY, collections, settings.RESOURCES_LIFESPAN)
+        collections = Collection.objects.filter(creator=request.user)
+        print(collections)
 
-        collections = collections.filter(creator=request.user, archived=False)
-        archived = collections.filter(creator=request.user, archived=True).only('title', 'pk')
+        active = collections.filter(archived=False)
+        archived = collections.filter(archived=True)
+
         # collectionresources = CollectionOrder.objects.prefetch_related('resource').filter(user=request.user) #Prefetch resources of collection object in collectionresources
         bytes = storage_usage(request.user)
 
@@ -79,8 +77,7 @@ def wiki_view(request):
         #        collection.resourcesorder.add(resource)
 
     else:
-        resources = None
-        collections = None
+        active = None
         archived = None
         bytes = None
         form = None
@@ -91,7 +88,7 @@ def wiki_view(request):
         log = None
 
     return render(request, 'Wiki/index.html', {
-        'collections': collections, 'archived': archived, 'resources': recents, 'bytes': bytes, 'form': form,
+        'collections': active, 'archived': archived, 'resources': recents, 'bytes': bytes, 'form': form,
         'logform': logform, 'heatmap': heatmap, 'unsorted': unsorted,'log': log
     })
 
@@ -191,17 +188,19 @@ def searchResourceView(request, pk):
     help = False
 
     if query.startswith(('-', '#', '@')):  # Tuple for filtered searches
+        
         if query.startswith('-'):
             category = query[1:]  # Remove operator from query
             category = str(category.split(' ')[0])  # Extract first word or 'category' from query
+
             if category == 'orphan':
                 message = "Results in orphaned resources"
                 if ' ' in query:
                     query = query.replace(f'-{category} ', '')  # Query, intentional space after type
-                    results = Resource.objects.filter(title__search=query, collectionorder=None)[:10]
-
+                    results = Resource.objects.filter(title__icontains=query,
+                                                      creator=request.user, collectionorder=None)[:10]
                 else:
-                    results = Resource.objects.filter(collectionorder=None)[:10]
+                    results = Resource.objects.filter(creator=request.user, collectionorder=None)[:10]
 
             else:
                 message = "Invalid class specified"
@@ -233,8 +232,8 @@ def searchResourceView(request, pk):
                                                                          public=False).exclude(
                     title__in=resources.values_list('resource__title', flat=True))[:10]
             else:
-                results = Resource.objects.filter(title__search=query, category=type).exclude(~Q(creator=request.user),
-                                                                                              public=False).exclude(
+                results = Resource.objects.filter(title__icontains=query, category=type).exclude(
+                    ~Q(creator=request.user), public=False).exclude(
                     title__in=resources.values_list('resource__title', flat=True))[:10]
         else:
             creator = query[1:]  # Remove operator from query
@@ -256,9 +255,10 @@ def searchResourceView(request, pk):
                                                                                      public=False).exclude(
                     title__in=resources.values_list('resource__title', flat=True))[:10]
             else:
-                results = Resource.objects.filter(title__search=query, creator__username=creator).exclude(
+                results = Resource.objects.filter(title__icontains=query, creator__username=creator).exclude(
                     ~Q(creator=request.user), public=False).exclude(
                     title__in=resources.values_list('resource__title', flat=True))[:10]
+
     else:
         if query == '':
             message = "Waiting for a query"
@@ -266,19 +266,21 @@ def searchResourceView(request, pk):
             results = None
         else:
             message = f"Results for '{query}'"
-            results = Resource.objects.filter(title__search=query).exclude(~Q(creator=request.user),public=False).exclude(
+            results = Resource.objects.filter(title__icontains=query).exclude(
+                ~Q(creator=request.user), public=False).exclude(
                 title__in=resources.values_list('resource__title', flat=True))[:10]
             # Filter public false resources which are not created by user and are not in collection
+
 
     return render(request, 'Wiki/partials/search-resources-results.html', {
         'results': results, 'pk': pk, 'message': message, 'help': help
     })
 
-
 def resourceSort(request):
     resource_order = request.POST.getlist('resource_order')
     collectionpk = request.POST.get('collectionpk')
-    collections = cache.get(COLLECTIONS_KEY).prefetch_related('resourcesorder').filter(
+
+    collections = Collection.objects.prefetch_related('resourcesorder').filter(
         creator=request.user, archived=False)
 
     updatedresources = []
@@ -296,10 +298,7 @@ def resourceSort(request):
     CollectionOrder.objects.bulk_update(updatedresources, [
         'order'])  # Only update order field for only resources that have changed order.
 
-    resources = cache.get(RESOURCES_KEY)
-    results = resources.filter(creator=request.user, collectionorder=None)[:10]
-
-    cache.set(COLLECTIONS_KEY, collections, settings.RESOURCES_LIFESPAN)
+    results = Resource.objects.filter(creator=request.user, collectionorder=None)[:10]
 
     messages.success(request, "Collection synced.")
     return render(request, 'Wiki/partials/collection-resource-list.html', {
@@ -327,7 +326,7 @@ def removeResourceView(request, collectionpk, resourcepk):
 
 @login_required(login_url='/users/login')
 def existingResourceView(request, collectionpk, resourcepk):
-    collections = cache.get(COLLECTIONS_KEY).prefetch_related('resourcesorder').filter(creator=request.user,
+    collections = Collection.objects.prefetch_related('resourcesorder').filter(creator=request.user,
                                                                                        archived=False)
     resource = Resource.objects.get(pk=resourcepk)
     collection = Collection.objects.get(pk=collectionpk)
@@ -341,7 +340,6 @@ def existingResourceView(request, collectionpk, resourcepk):
         )
         resource.save()
         collection.resourcesorder.add(resource)
-        cache.set(COLLECTIONS_KEY, collections, settings.RESOURCES_LIFESPAN)
 
     messages.success(request, "Resource added to collection.")
     return render(request, 'Wiki/partials/collection-resource-list.html', {
@@ -608,7 +606,6 @@ def copyCollectionView(request, pk_slug):
     return render(request, 'Wiki/partials/collection-resource-list.html', {
         'collections': collections, 'collection': collection,
     })
-
 
 @login_required(login_url='/users/login')
 def archiveCollectionView(request, pk_slug):
