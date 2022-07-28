@@ -28,29 +28,29 @@
         font-size: 25px;
         transition: all 0.5s;
       }
-      
+
       .heading__link {
         text-decoration: none;
       }
-      
+
       .heading__credits .heading__link {
         color: inherit;
       }
-      
+
       /* CARDS */
-      
+
       .resource-card {
         box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.35);
         transition: all 0.2s;
         transform:scale(0.9);
         height:12rem;
       }
-      
+
       .resource-card:hover {
         box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.4);
         transform: scale(1.005);
       }
-      
+
       .resource-card__link,
       .resource-card__exit,
       .resource-card__icon {
@@ -58,7 +58,7 @@
         text-decoration: none;
         color: rgba(255, 255, 255, 0.9);
       }
-      
+
       .resource-card__link::after {
         position: absolute;
         top: 20px;
@@ -69,62 +69,62 @@
         background-color: rgba(255, 255, 255, 0.6);
         transition: all 0.5s;
       }
-      
+
       .resource-card__link:hover::after {
         width: 100%;
       }
-    
-      
+
+
       /* CARD BACKGROUNDS */
-      
+
       .card-1 {
         background: radial-gradient(#1fe4f5, #3fbafe);
       }
-      
+
       .card-2 {
         background: radial-gradient(#fbc1cc, #fa99b2);
       }
-      
+
       .card-3 {
         background: radial-gradient(#76b2fe, #b69efe);
       }
-      
+
       .card-4 {
         background: radial-gradient(#60efbc, #58d5c9);
       }
-      
+
       .card-5 {
         background: radial-gradient(#f588d8, #c0a3e5);
       }
       .card-6 {
         background: radial-gradient(#ebebeb, #d6d6d6);
       }
-       
+
       /* RESPONSIVE */
-      
+
       @media (max-width: 1600px) {
         .cards {
           justify-content: center;
         }
       }
-    
+
       .masked-overflow-x {
         /* scroll bar width, for use in mask calculations */
         --scrollbar-width: 8px;
-    
+
         /* mask fade distance, for use in mask calculations */
         --mask-height: 30px;
         --mask-width: 32px;
-    
+
         white-space:nowrap;
         overflow-x: auto;
-    
+
         /* Need to make sure container has bottom space,
       otherwise content at the bottom is always faded out */
         padding-bottom: 8px;
-    
+
         /* The CSS mask */
-    
+
         /* The content mask is a linear gradient from top to bottom */
         --mask-image-content: linear-gradient(
             to right,
@@ -133,29 +133,29 @@
             black calc(100% - var(--mask-height)),
             transparent
         );
-    
-        /* scale the content gradient to the width of the container 
+
+        /* scale the content gradient to the width of the container
       minus the scrollbar width. The height is the full container height */
         --mask-size-content: calc(100% - var(--scrollbar-width)) 100%;
-    
+
         --mask-image-scrollbar: linear-gradient(black, black);
-    
+
         /* width of the scrollbar.
       The height is the full container height */
         --mask-size-scrollbar: var(--scrollbar-width) 100%;
-    
+
         mask-image: var(--mask-image-content), var(--mask-image-scrollbar);
         mask-size: var(--mask-size-content), var(--mask-size-scrollbar);
-    
-        /* Position the content gradient in the top left, and the 
+
+        /* Position the content gradient in the top left, and the
       scroll gradient in the top right */
         mask-position: 0 0, 125% 0;
-    
+
         mask-repeat: no-repeat, no-repeat;
     }
 
       ::placeholder {
-        text-align: center; 
+        text-align: center;
       }
 
       .marquee-wrapper{
@@ -209,11 +209,11 @@
         }
       }
       @keyframes marqueeRight{
-        0% { 
-          left: -100%; 
+        0% {
+          left: -100%;
         }
         100% {
-         left: 0; 
+         left: 0;
         }
       }
     #wrapper{
@@ -244,13 +244,13 @@
     <h3 style="font-family: 'Josefin Sans', sans-serif;">WM <b style="color:gray">Wiki</b></h3>
     <p style="color:gray">Meet WM Wiki, our enhanced search engine enabled by the capabilities of Postgres vector-based full-text search queries and community-driven content contributions. Querying analyses various parameters across dozens of stored publications metadata such as key word clusters, positioning, and linguistic patterns to name a few.</p>
     <hr/>
-  
+
     <!--SEARCH-->
     <section class="pt-4">
       <div>
-        
+
         <!--<h5><i class="bi bi-globe"></i> Published live:</h5>-->
-  
+
       </div>
       <div class="container">
         <div id="wrapper" class="noselect" style="max-width:100%; opacity: 60%">
@@ -551,7 +551,7 @@
       color:#d6d6d6;
     }
 
-  
+
     .dropzone:hover {
       background-color: #929292;
       box-shadow: #c0c0c0 0px 4px 8px 0px;
@@ -569,17 +569,17 @@
       font-weight: bold;
       transition: 0.5s;
       background-size: 200% auto;
-      color: white;            
+      color: white;
       box-shadow: 0 0 15px #797979;
       border-radius: 10px;
     }
-    
+
     .btn-warm-blue:hover {
       background-position: right center;
       color: #fff;
       text-decoration: none;
     }
-         
+
     .btn-vivid-red {
       background-image: linear-gradient(to right, #D31027 0%, #EA384D  51%, #D31027  100%);
       margin: 10px;
@@ -590,11 +590,11 @@
       font-weight: bold;
       transition: 0.5s;
       background-size: 200% auto;
-      color: white;            
+      color: white;
       box-shadow: 0 0 15px #797979;
       border-radius: 10px;
     }
-    
+
     .btn-vivid-red:hover {
       background-position: right center;
       color: #fff;
@@ -613,7 +613,7 @@
         {{ form.media }}
         {% if form.errors %}
         {% for field in form %}
-            {% for error in field.errors %} 
+            {% for error in field.errors %}
                <div class="alert alert-danger">
                     <strong>{{ error|escape }}</strong>
                </div>
@@ -627,7 +627,7 @@
             {{ form.category.as_hidden }}
           <div class="form-group row">
             <hr style="color:white"/>
-            <input class="btn btn-vivid-red" style="margin-left:2px;" type='reset' value='Clear' name='reset'> 
+            <input class="btn btn-vivid-red" style="margin-left:2px;" type='reset' value='Clear' name='reset'>
             <label class="text-white" for="filelink"><b>Files / Images (25MB)</b></label>
             {{ form.filelink }}
             {{ form.filetype.as_hidden }}
@@ -652,7 +652,7 @@
             <label style="float: left;" class="text-white" for="description"><b><i>Context (Optional)</i></b></label>
             {{ form.description }}
           </div>
-          
+
           <div class="form-group form-check form-switch row">
             <label class="text-white" for="public"><b>Make public?</b>{{ form.public }}</label>
           </div>
@@ -686,7 +686,7 @@
     <div class="col-sm-7 col-md-8 col-lg-9 col-xl-10">
       <br/>
       <div style="display:flex; flex-wrap: wrap; background-color: #e7e7e7; border-radius:10px;
-      
+
       box-shadow: rgba(243,243,243,0.3) 0px -23px 25px 5px inset, rgba(243,243,243,0.3) 0px -18px 15px 0px inset, rgba(0, 0, 0, 0.02) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.02) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 10px 5px, rgba(0, 0, 0, 0.05) 0px 16px 16px;">
       <a href="{% url 'newblogpost' %}" class="btn-dreamy-purple">WM Publish</a>
       <a href="{% url 'newterm' %}" class="btn-dreamy-blue">WM Define</a>
@@ -702,22 +702,16 @@
           {% include 'Wiki/resource-list.html' %}
         </div>
 
-        <div class="col-xl-3 col-lg-4 col-md-12">
-          <form hx-post="{% url 'add-doc' %}" enctype="multipart-formdata" hx-encoding="multipart/form-data" hx-target="#resource-list">
+        <div class="col-xl-4 col-lg-5 col-md-12">
+          <form>
             {% csrf_token %}
-            {{ docform.media }}
-
-              <div style="white-space:nowrap; display:flex;">
-                <div>{{ docform.title }}</div>
-                <div style="flex-grow:1"></div>
-                <button type="submit" style="width:100%; display:inline; margin-right:0px;" class="btn btn-outline-secondary"><b>Create Doc</b></button>
-
-              </div>
-
-            <div class="form-group row">
-              {{ docform.text }}
-            </div>
-
+	              <textarea rows="22" cols="40" class="form-control" style="resize:none"
+					hx-post="{% url 'doc-log' %}"
+					hx-target="this"
+					hx-trigger="keyup changed delay:1s"
+					name="content"
+					placeholder="Today's log is empty, your notes will be automatically saved to today's log."
+	              >{{ log.text }}</textarea>
             </form>
         </div>
 
@@ -728,16 +722,70 @@
 
       <form class="form-group" style="display:flex; padding:8px;">
         <h3 style="margin-top:5px">Your Collections:</h3>
+
         <div style="flex-grow:1;"></div>
         <div style="padding:5px;"><input class="form-control" style="width:150px" type="text" name="title" placeholder="Enter title"/></div>
         <div style="padding:5px;"><input class="form-control" type="text" name="description" placeholder="Description (Optional)"/></div>
-        <div style="padding:5px; padding-right:0px"><button  hx-post="{% url 'add-collection' %}" hx-encoding="multipart/form-data" hx-target="#collection-resource-list" hx-swap="outerhtml" type="submit" class="btn btn-primary">Create New</button></div>
+        <div style="padding:5px; padding-right:0px">
+	        <button  hx-post="{% url 'add-collection' %}" hx-encoding="multipart/form-data"
+	                 hx-target="#collection-resource-list" hx-swap="outerhtml" type="submit" class="btn
+                     btn-primary">Create New</button></div>
       </form>
     </div>
 
-      <div id="collection-resource-list">
+      {%  if collections.count > 12 %}
+	   		<div class="alert alert-danger" role="alert">
+		    Your active collections count exceeds our recommended limit. To optimise performance, consider archiving
+			    collections you do not actively use.
+			</div>
+      {%  elif collections.count > 8 %}
+		<div class="alert alert-info" role="alert">
+		  To make loading your collections even faster, consider archiving collections you do not actively use.
+		</div>
+      {% endif %}
+
+       <style>
+  .searching{
+    animation: pulse 1500ms infinite;
+    color: inherit;
+    display: block;
+    font-family: "CerebriSans-Regular", -apple-system, BlinkMacSystemFont, "Roboto", sans-serif;
+    font-size: 80px;
+    height: 1em;
+    line-height: 24px;
+    margin: auto;
+    overflow: visible;
+    width: 1em;
+  }
+	</style>
+
+    <div class="row">
+	    <div id="collection-resource-list" class="col-md-9 col-sm-12" style="padding:25px">
         {% include 'Wiki/partials/collection-resource-list.html' %}
-      </div>
+	    </div>
+
+		<div class="card bg-light col-md-3 col-sm-12" style="padding:10px" id="resource-results">
+		<p class="noselect" style="font-size:14px;"><i class="bi bi-binoculars-fill fs-6"></i> <b>Resource Exploratory</b></p>
+		<p class="noselect" style="font-size:12px;">We have found the following orphans that do not yet belong to any of your collections.<br/><br/>
+		<i>Consider deleting them or adding them to a collection.</i>
+		</p>
+
+		<ul class="list-group">
+		    {% for resource in unsorted %}
+		    <li class="list-group-item d-flex justify-content-between align-items-center">
+		      <p class="noselect" style="font-size:13px;">
+		      <a style="color:black;" href="{% url 'resourceview' pk=resource.pk %}" target="_blank" rel="noopener noreferrer">{{ resource.title }}</a>
+		      <span class="badge bg-info" style="margin-left:5px;">{{ resource.category.title }}</span>
+		      </p>
+		    </li>
+		    {% endfor %}
+		</ul>
+
+		</div>
+
+    </div>
+
+
 
       {% if archived %}
       <h3>Your archived collections:</h3>
@@ -754,7 +802,7 @@
         const modal1 = new bootstrap.Modal(document.getElementById("modal"))
         const modal2 = new bootstrap.Modal(document.getElementById("detailmodal"))
       </script>
-      
+
     </div>
    <!-- <h3>Categories:</h3>
     <h5>Files and Docs</h5>
@@ -774,7 +822,7 @@
     $('[data-toggle="tooltip"]').tooltip()
   });
 
-
+  $('.alert').alert()
 
 </script>
 {% endblock body %}

@@ -17,7 +17,7 @@
 
       <a style="text-decoration:none; color:black" href="{% url 'resourceview' pk=resource.pk %}" target="_blank" rel="noopener noreferrer">
       <b class="title resource-card__link" style="overflow:hidden" data-toggle="tooltip" data-html="true" title="{{ resource.text|truncatewords:50 }}">{{ resource.title }}</b></a>
-  
+
       <span class="badge bg-danger" hx-delete="{% url 'delete-resource' pk=resource.pk %}" hx-target="#resource-list" hx-confirm="Are you sure you want to delete this resource?"><i class="bi bi-x"></i></span>
 
       <p style="padding-top:8px">{{ resource.dateCreated|naturaltime }}
@@ -30,7 +30,7 @@
 
     </span>
       <!--FILE LINK-->
-    {% elif resource.category == 'FILE' %}
+    {% elif resource.category == 'FILE' and resource.filelink %}
     <span class="resource-card card-5 btn btn-sm mb-2" style="margin:5px; border-radius:10px">
         <a style="text-decoration:none; color:white;" href="{% url 'resourceview' pk=resource.pk %}" target="_blank" rel="noopener noreferrer">
         <b class="title resource-card__link" style="overflow:hidden">{{ resource.title }}</b></a>
@@ -56,10 +56,10 @@
             {% else %}
             <span class="badge bg-secondary rounded-pill">PRIVATE</span>
             {% endif %}</p>
-  
+
             <i class="bi bi-image"></i><i> {{ resource.filetype }} </i><b>IMAGE</b> | Size: {{ resource.imagelink.size|filesizeformat }}
         </span>
-  
+
       <!--VIDEO LINK-->
     {% elif resource.category == 'VIDEO' %}
     <span class="resource-card card-2 btn btn-sm mb-2" style="margin:10px; border-radius:10px">
@@ -130,6 +130,6 @@
 
   {% else %}
   <p class="noselect" style="text-align:center; padding-top:225px;">No data available to generate your dashboard. Add a resource to begin.</p>
-  
+
   {% endif %}
 </div>

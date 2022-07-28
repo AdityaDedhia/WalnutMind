@@ -6,7 +6,7 @@ class NewTermForm(forms.ModelForm):
     class Meta:
         model = Term
         fields = ('term', 'definition', 'cover', 'coverSrc', 'coverURL')
-        
+
         widgets = {
             'term': forms.TextInput(attrs={'class': 'form-control'}),
             'definition': forms.Textarea(attrs={'class': 'form-control'}),
@@ -20,7 +20,7 @@ class NewListForm(forms.ModelForm):
         model = List
         fields = ('title','description', 'terms', 'public')
 
-        
+
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
@@ -33,7 +33,9 @@ class NewListForm(forms.ModelForm):
 class ResourceForm(forms.ModelForm):
     class Meta:
         model = Resource
-        fields = ('title', 'source', 'isbnlink', 'weblink', 'webicon', 'webdescription', 'videolink', 'videolength', 'videothumbnail', 'videochannel', 'videodescription', 'filelink', 'filetype', 'text', 'category', 'description', 'public')
+        fields = ('title', 'source', 'isbnlink', 'weblink', 'webicon', 'webdescription', 'videolink',
+                  'videolength', 'videothumbnail', 'videochannel', 'videodescription', 'filelink', 'filetype', 'text',
+                  'category', 'description', 'public')
 
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
@@ -44,17 +46,6 @@ class ResourceForm(forms.ModelForm):
             'text': forms.Textarea(attrs={'class': 'form-control'}),
             'description': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter a description'}),
             'public': forms.CheckboxInput(attrs = {'class': 'form-check-input form-control'}),
-        }
-
-class DocForm(forms.ModelForm):
-    class Meta:
-        model = Resource
-        fields = ('title','source','text','description','public')
-
-        widgets = {
-            'text': forms.Textarea(attrs={'class': 'form-control'}),
-            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Title (Optional)'}),
-            'public': forms.CheckboxInput(attrs = {'class': 'form-check-input'}),
         }
 
 class CollectionForm(forms.ModelForm):
@@ -68,4 +59,14 @@ class CollectionForm(forms.ModelForm):
             'description': forms.TextInput(attrs={'class': 'form-control'}),
             'public': forms.CheckboxInput(attrs = {'class': 'form-check-input'}),
 
+        }
+
+class DocLogForm(forms.ModelForm):
+    class Meta:
+        model = Resource
+        fields = ('title', 'text')
+
+        widgets = {
+            'text': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Jot down anything...',
+                                          'rows': '40', 'cols': '30', 'hx-trigger':'keyup changed delay:3s'}),
         }

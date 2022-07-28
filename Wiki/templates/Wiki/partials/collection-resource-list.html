@@ -1,12 +1,12 @@
+{% load cache %}
 {% load humanize %}
 
 {% if collections %}
 {% csrf_token %}
 
-<div class="row">
 
-<div class="col-md-9 col-sm-12" style="padding:25px">
 {% for collection in collections %}
+	{% cache None 'COLLECTIONS_KEY' collection.id %}
     <div class="row">
 
         <div id="collection-details">
@@ -30,15 +30,16 @@
                     {% else %}
                     <i class="bi bi-file-lock2" style="color:gray"></i>
                     {% endif %}&nbsp;
-                    
-                    <a class="noselect" href="{% url 'resourceview' pk=resource.resource.pk %}" style="color:black; text-decoration: none;" target="_blank" rel="noopener noreferrer">{{ resource }}
+
+                    <a class="noselect" href="{% url 'resourceview' pk=resource.resource.pk %}" style="color:black;
+                    text-decoration: none;" target="_blank" rel="noopener noreferrer">{{ resource.resource.title|truncatewords:5 }}
                       <i class="bi bi-box-arrow-in-up-right"></i>
 
                       <span class="badge bg-info" style="margin-left:10px;">{{ resource.resource.category.title }}</span>
                     </a>
 
-                    <div style="flex-grow:1"></div>      
-       
+                    <div style="flex-grow:1"></div>
+
                     <i style="color:gray;" class="bi bi-arrow-down-up"></i>
                     <span style="margin-left:20px;" class="btn btn-success btn-sm" hx-get="{% url 'resourcemodalview' collectionpk=collection.pk resourcepk=resource.resource.pk order=resource.order %}" hx-target="#detail-dialog"><i class="bi bi-info-circle"></i></span>
 
@@ -50,47 +51,10 @@
 
                 {% endfor %}
             </form>
-
     </div>
+	{% endcache %}
 {% endfor %}
 
-</div>
-
-<style>
-  .searching{
-    animation: pulse 1500ms infinite;
-    color: inherit;
-    display: block;
-    font-family: "CerebriSans-Regular", -apple-system, BlinkMacSystemFont, "Roboto", sans-serif;
-    font-size: 80px;
-    height: 1em;
-    line-height: 24px;
-    margin: auto;
-    overflow: visible;
-    width: 1em;
-  }
-</style>
-
-<div class="card bg-light col-md-3 col-sm-12" style="padding:10px" id="resource-results">
-<p class="noselect" style="font-size:14px;"><i class="bi bi-binoculars-fill fs-6"></i> <b>Resource Exploratory</b></p>
-<p class="noselect" style="font-size:12px;">We have found the following orphans that do not yet belong to any of your collections.<br/><br/>
-<i>Consider deleting them or adding them to a collection.</i>
-</p>
-
-<ul class="list-group">
-    {% for resource in unsorted %}
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-      <p class="noselect" style="font-size:13px;">
-      <a style="color:black;" href="{% url 'resourceview' pk=resource.pk %}" target="_blank" rel="noopener noreferrer">{{ resource.title }}</a>
-      <span class="badge bg-info" style="margin-left:5px;">{{ resource.category.title }}</span>
-      </p>
-    </li>
-    {% endfor %}
-</ul>
-
-</div>
-
-</div>
 
 {% else %}
 <p class="noselect">No collections created yet.</p>
@@ -106,9 +70,9 @@
 
 <script>
 
-$('#modal').appendTo("body") 
+$('#modal').appendTo("body")
 
-$('#detailmodal').appendTo("body") 
+$('#detailmodal').appendTo("body")
 
 htmx.on("htmx:afterSwap", (e) => {
   // Response targeting #dialog => show the modal
@@ -131,7 +95,7 @@ htmx.on("htmx:afterSwap", (e) => {
     modal2.show()
   }
 })
-  
+
 htmx.on("htmx:beforeSwap", (e) => {
   // Empty response targeting #dialog => hide the modal
   if (e.detail.target.id === "detail-dialog" && !e.detail.xhr.response) {

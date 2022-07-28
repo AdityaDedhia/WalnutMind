@@ -5,7 +5,7 @@ from django.views.generic import DetailView, ListView, UpdateView
 from django.http import Http404, HttpResponse, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from .forms import DocForm, ResourceForm, NewTermForm, NewListForm, CollectionForm
+from .forms import ResourceForm, NewTermForm, NewListForm, CollectionForm, DocLogForm
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.postgres.search import SearchQuery, SearchVector, SearchRank, SearchHeadline
@@ -53,6 +53,12 @@ def wiki_view(request):
         unsorted = resources.filter(collectionorder=None)
         recents = resources[:10]
 
+        title = "Log " + str(datetime.now().strftime("%Y-%m-%d"))
+        if Resource.objects.filter(title=title, creator=request.user, category='DOC').exists():
+            log = Resource.objects.get(title=title, creator=request.user, category='DOC')
+        else:
+            log = None
+
         collections = cache.get(COLLECTIONS_KEY)
         if not collections:
             collections = Collection.objects.filter(creator=request.user)
@@ -64,7 +70,7 @@ def wiki_view(request):
         bytes = storage_usage(request.user)
 
         form = ResourceForm()
-        docform = DocForm()
+        logform = DocLogForm(instance=request.user)
         heatmap = get_resource_heatmap(request.user)
 
         # for collection in collections.all():
@@ -78,14 +84,15 @@ def wiki_view(request):
         archived = None
         bytes = None
         form = None
-        docform = None
+        logform = None
         heatmap = None
         unsorted = None
         recents = None
+        log = None
 
     return render(request, 'Wiki/index.html', {
         'collections': collections, 'archived': archived, 'resources': recents, 'bytes': bytes, 'form': form,
-        'docform': docform, 'heatmap': heatmap, 'unsorted': unsorted,
+        'logform': logform, 'heatmap': heatmap, 'unsorted': unsorted,'log': log
     })
 
 
@@ -201,7 +208,6 @@ def searchResourceView(request, pk):
                 help = True
                 results = None
 
-
         elif query.startswith('#'):
             type = query[1:]  # Remove operator from query
             type = str(type.split(' ')[0])  # Extract first word or 'tag' from query
@@ -260,10 +266,9 @@ def searchResourceView(request, pk):
             results = None
         else:
             message = f"Results for '{query}'"
-            results = Resource.objects.filter(title__search=query).exclude(~Q(creator=request.user),
-                                                                           public=False).exclude(
-                title__in=resources.values_list('resource__title', flat=True))[
-                      :10]  # Filter public false resources which are not created by user and are not in collection
+            results = Resource.objects.filter(title__search=query).exclude(~Q(creator=request.user),public=False).exclude(
+                title__in=resources.values_list('resource__title', flat=True))[:10]
+            # Filter public false resources which are not created by user and are not in collection
 
     return render(request, 'Wiki/partials/search-resources-results.html', {
         'results': results, 'pk': pk, 'message': message, 'help': help
@@ -273,13 +278,13 @@ def searchResourceView(request, pk):
 def resourceSort(request):
     resource_order = request.POST.getlist('resource_order')
     collectionpk = request.POST.get('collectionpk')
-    collections = cache.get(COLLECTIONS_KEY).prefetch_related('resourcesorder').filter(creator=request.user, archived=False)
+    collections = cache.get(COLLECTIONS_KEY).prefetch_related('resourcesorder').filter(
+        creator=request.user, archived=False)
 
     updatedresources = []
 
-    collectionresources = CollectionOrder.objects.prefetch_related('resource').filter(collection__pk=collectionpk,
-                                                                                      user=request.user)  # Prefetch resources of collection object in collectionresources
-    print(collectionresources)
+    collectionresources = CollectionOrder.objects.prefetch_related('resource').filter(
+        collection__pk=collectionpk, user=request.user)  # Prefetch resources of collection object in collectionresources
 
     for index, resource_pk in enumerate(resource_order, start=1):
         resource = next(x for x in collectionresources if x.pk == int(resource_pk))
@@ -293,6 +298,8 @@ def resourceSort(request):
 
     resources = cache.get(RESOURCES_KEY)
     results = resources.filter(creator=request.user, collectionorder=None)[:10]
+
+    cache.set(COLLECTIONS_KEY, collections, settings.RESOURCES_LIFESPAN)
 
     messages.success(request, "Collection synced.")
     return render(request, 'Wiki/partials/collection-resource-list.html', {
@@ -320,8 +327,8 @@ def removeResourceView(request, collectionpk, resourcepk):
 
 @login_required(login_url='/users/login')
 def existingResourceView(request, collectionpk, resourcepk):
-    collections = Collection.objects.prefetch_related('resourcesorder').filter(creator=request.user, archived=False)
-
+    collections = cache.get(COLLECTIONS_KEY).prefetch_related('resourcesorder').filter(creator=request.user,
+                                                                                       archived=False)
     resource = Resource.objects.get(pk=resourcepk)
     collection = Collection.objects.get(pk=collectionpk)
 
@@ -334,6 +341,7 @@ def existingResourceView(request, collectionpk, resourcepk):
         )
         resource.save()
         collection.resourcesorder.add(resource)
+        cache.set(COLLECTIONS_KEY, collections, settings.RESOURCES_LIFESPAN)
 
     messages.success(request, "Resource added to collection.")
     return render(request, 'Wiki/partials/collection-resource-list.html', {
@@ -360,29 +368,15 @@ class resourceList(ListView):
 
 
 @login_required(login_url='/users/login')
-def addDocView(request):
-    docform = DocForm(request.POST, request.FILES)
+def docLog(request):
+    title = "Log " + str(datetime.now().strftime("%Y-%m-%d"))
+    resource = Resource.objects.get_or_create(title=title, creator=request.user, category='DOC')[0]
+    print(resource.title)
 
-    if docform.is_valid():
-        docform.instance.creator = request.user
-        docform.instance.category = 'DOC'
-
-        if not docform.instance.title:
-            docform.instance.title = "Untitled Doc " + datetime.now().strftime("%S%M_%y-%m-%d")
-
-        docform.save()
-
-        docform = DocForm(request.GET)
-        heatmap = get_resource_heatmap(request.user)
-        resources = Resource.objects.filter(creator=request.user)[:10]
-        return render(request, 'Wiki/resource-list.html', {
-            'resources': resources, 'bytes': bytes, 'docform': docform, 'heatmap': heatmap,
-        })
-
-    else:
-        messages.success = (request, "No data is present in your document.")
-        return HttpResponseBadRequest(status=204)
-
+    if request.method == 'POST':
+        resource.text = request.POST.get('content')
+        resource.save()
+    return HttpResponse(status=200)
 
 @login_required(login_url='/users/login')
 @ratelimit(key='ip', rate='6/m', block=True)
@@ -507,7 +501,6 @@ def addResourceView(request):
             form.save()
 
             form = ResourceForm()
-            docform = DocForm()
 
             # VALIDATE TOTAL FILE STORAGE
             bytes = storage_usage(request.user)
@@ -521,7 +514,7 @@ def addResourceView(request):
             resources = cache.set(RESOURCES_KEY, resources, settings.RESOURCES_LIFESPAN)
             resources = cache.get(RESOURCES_KEY)[:10]
             return render(request, 'Wiki/resource-list.html', {
-                'resources': resources, 'bytes': bytes, 'form': form, 'docform': docform, 'heatmap': heatmap,
+                'resources': resources, 'bytes': bytes, 'form': form, 'heatmap': heatmap,
             })
         else:
             messages.success = (request, "An error occured while trying to save your document.")
@@ -586,8 +579,8 @@ def editCollectionView(request, pk_slug):
 @login_required(login_url='/users/login')
 def copyCollectionView(request, pk_slug):
     collection = deepcopy(Collection.objects.get(pk=pk_slug))
-    collectionresources = CollectionOrder.objects.prefetch_related('resource').filter(collection__pk=collection.pk,
-                                                                                      user=request.user)  # Prefetch resources of collection object in collectionresources
+    collectionresources = CollectionOrder.objects.prefetch_related('resource').filter(
+        collection__pk=collection.pk, user=request.user)  # Prefetch resources of collection object in collectionresources
 
     collection.pk = None
     collection.id = None
@@ -609,7 +602,8 @@ def copyCollectionView(request, pk_slug):
         newresource.save()
         collection.resourcesorder.add(newresource)
 
-    collections = Collection.objects.prefetch_related('resourcesorder').filter(creator=request.user, archived=False)
+    collections = Collection.objects.prefetch_related('resourcesorder').filter(
+        creator=request.user, archived=False)
 
     return render(request, 'Wiki/partials/collection-resource-list.html', {
         'collections': collections, 'collection': collection,
