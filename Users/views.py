@@ -99,7 +99,7 @@ def activate_user(request, uidb64, token):
 @ratelimit(key='ip', rate='3/12h', block=True)
 @sensitive_variables('password')
 def registerView(request):
-    
+
     if request.method == "POST":
         #Complete IP check to verify legitimate identity
         ip = get_ip(request)
@@ -115,7 +115,7 @@ def registerView(request):
         if status == "anonymous":
             messages.success(request, 'An error occured whilst attempting to verify your origin. Please ensure that you are not using IP rerouting services such as VPNs and try again.')
             return redirect('registerr')
-        
+
         form = RegisterUserForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
@@ -127,7 +127,7 @@ def registerView(request):
                 existingUser = User.objects.get(email = email)
                 if existingUser.is_active == True:
                     messages.success(request, 'Unauthorised registration detected for email address: %s. You are now being actively monitored for suspicious activity. If you are the rightful account owner, contact support immediately.'% email)
-                    
+
                     blacklistform = Blacklist(
                     ip = ip,
                     reason = "Automated ban reason: Suspicious registration attempt to an active user account with email: {email} was made.".format(email = email),
@@ -176,18 +176,7 @@ def loginView(request):
     if request.method == "POST":
         #BYPASS ALL SECURITY if served on localhost
         ip = get_ip(request)
-        if ip =='127.0.0.1':
-            username = request.POST['username']
-            password = request.POST['password']
-            user = authenticate(request=request, username=username, password=password)
-            if user is not None:
-                login(request,user)
-                messages.success(request, 'Login security bypassed from localhost: %s.'% ip)
-                return redirect('index')
-            else:
-                messages.success(request, 'Your username or password is incorrect, please try again.')
-                return redirect('loginn')      
-        #IF NO IPBLOCK DETECTED CHECK FOR BOT LOGIN ATTEMPT
+
         captcha_token = request.POST.get("g-recaptcha-response")
         captcha_url = "https://www.google.com/recaptcha/api/siteverify"
         captcha_secret = os.environ['captcha_secret']
@@ -224,7 +213,7 @@ def loginView(request):
             userprofile.save(update_fields=["ip"])
             messages.success(request, ("For additional security, please re-enter your credentials."))
             return redirect('two_factor:login')
-            #IF NO MFA ENABLED, LOGIN IMMEDIATELY 
+            #IF NO MFA ENABLED, LOGIN IMMEDIATELY
         else:
             messages.success(request, ("The username and/or password you have entered is incorrect, please try again."))
             return redirect('loginn')
@@ -239,10 +228,10 @@ def logoutView(request):
     return redirect('index')
 
 # dont know how secure this is- public/private may be able to be changed.
-def profileView(request, username):    
+def profileView(request, username):
     if User.objects.filter(username = username).exists():
         requestedUser = User.objects.get(username = username)
-        
+
         if request.user.is_authenticated:
             user = Profile.objects.get(user = request.user)
             if requestedUser in user.following.all():

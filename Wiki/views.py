@@ -188,7 +188,7 @@ def searchResourceView(request, pk):
     help = False
 
     if query.startswith(('-', '#', '@')):  # Tuple for filtered searches
-        
+
         if query.startswith('-'):
             category = query[1:]  # Remove operator from query
             category = str(category.split(' ')[0])  # Extract first word or 'category' from query
