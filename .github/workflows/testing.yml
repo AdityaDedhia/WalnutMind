@@ -9,7 +9,7 @@ on:
     build:
       runs-on: ubuntu-latest
 
-      step:
+      steps:
         - uses: actions/checkout@v2
         - name: Smoke Tests
           uses: actions/setup-python@v2

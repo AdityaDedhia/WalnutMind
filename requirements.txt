@@ -54,6 +54,7 @@ django-two-factor-auth==1.14.0
 django-widget-tweaks==1.4.12
 djangorestframework==3.13.1
 djlint==1.2.0
+flake8==4.0.1
 frozenlist==1.3.0
 geoip2==4.6.0
 gunicorn==20.1.0
@@ -70,6 +71,7 @@ linkpreview==0.2.0
 lxml==4.9.1
 markdown2==2.4.3
 maxminddb==2.2.0
+mccabe==0.6.1
 multidict==6.0.2
 numpy==1.23.1
 pandas==1.4.3
@@ -81,7 +83,9 @@ prompt-toolkit==3.0.30
 psutil==5.9.1
 psycopg2==2.9.3
 pycares==4.2.1
+pycodestyle==2.8.0
 pycparser==2.21
+pyflakes==2.4.0
 PyJWT==2.4.0
 pylibmc==1.6.1
 PyMySQL==1.0.2
