@@ -5,30 +5,30 @@ on:
     branches:
       - main
 
-  jobs:
-    build:
-      runs-on: ubuntu-latest
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-      steps:
-        - uses: actions/checkout@v2
-        - name: Smoke Tests
-          uses: actions/setup-python@v2
-          with:
-            python-version: 3.7
-        - name: Install dependencies
-          run:
-            python -m pip install --upgrade pip
-            pip install -r requirements.txt
+    steps:
+      - uses: actions/checkout@v2
+      - name: Smoke Tests
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - name: Install dependencies
+        run:
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-        - name: Lint Flake8
-          run:
-            pip install flake8
-            flake8
-        - name: Coverage Report
-          run:
-            pip install coverage
-            coverage run manage.py test
-            coverage report
-        - name: Django Tests
-          run:
-            python3 manage.py test
+      - name: Lint Flake8
+        run:
+          pip install flake8
+          flake8
+      - name: Coverage Report
+        run:
+          pip install coverage
+          coverage run manage.py test
+          coverage report
+      - name: Django Tests
+        run:
+          python3 manage.py test
