@@ -1,4 +1,5 @@
 {
+  "name": "Walnut Mind",
   "environments": {
     "test": {
       "formation": {
@@ -8,7 +9,13 @@
           }
       },
       "addons":[
-         "loadmill"
+         "heroku-postgresql",
+        {
+          "plan": "loadmill",
+          "options": {
+            "pool": "64c290bc-1ac9-4b68-8784-1b49c750868a"
+          }
+        }
       ],
       "buildpacks": [
         {
