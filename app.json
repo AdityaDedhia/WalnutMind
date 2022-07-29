@@ -1,5 +1,13 @@
 {
   "name": "Walnut Mind",
+  "description": "Walnut Mind is a curated academic content management and publishing platform.",
+  "keywords": [
+    "academia",
+    "publications",
+    "CMS"
+  ],
+  "website": "https://www.walnutmind.org",
+
   "environments": {
     "test": {
       "formation": {
@@ -8,8 +16,10 @@
             "size": "standard-1x"
           }
       },
+      "scripts": {
+        "test": "bundle exec rake test"
+      },
       "addons":[
-         "heroku-postgresql",
         {
           "plan": "loadmill",
           "options": {
