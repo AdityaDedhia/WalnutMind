@@ -7,26 +7,4 @@
     "CMS"
   ],
   "website": "https://www.walnutmind.org",
-
-  "environments": {
-    "test": {
-      "formation": {
-          "test": {
-            "quantity": 1,
-            "size": "standard-1x"
-          }
-      },
-      "scripts": {
-        "test": "bundle exec rake test"
-      },
-      "addons":[
-        {
-          "plan": "loadmill",
-          "options": {
-            "pool": "64c290bc-1ac9-4b68-8784-1b49c750868a"
-          }
-        }
-      ]
-    }
-  }
 }
