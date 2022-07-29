@@ -1,12 +1,14 @@
 from django.contrib import admin
 from .models import Term, List, Resource, Collection, CollectionOrder
 
+
 @admin.register(Term)
 class FileAdmin(admin.ModelAdmin):
     list_display = ['term', 'definition']
     search_fields = ['term']
 
     readonly_fields = ['slug']
+
 
 @admin.register(List)
 class FileAdmin(admin.ModelAdmin):
@@ -26,6 +28,7 @@ class FileAdmin(admin.ModelAdmin):
 
 admin.site.register(Collection)
 
+
 @admin.register(CollectionOrder)
 class FileAdmin(admin.ModelAdmin):
-    list_display = ['resource', 'collection','order', 'dateCreated']
+    list_display = ['resource', 'collection', 'order', 'dateCreated']

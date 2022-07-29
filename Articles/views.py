@@ -13,15 +13,15 @@ from Blog.utils import profanity_filter
 from taggit.models import Tag
 from .serializers import ArticleSerializer
 from rest_framework.generics import ListAPIView
-from django.contrib.auth import logout
 import readtime
 from hitcount.views import HitCountDetailView
 
-def indexView(request):
-    recent = Post.objects.filter(public = True).order_by('-dateCreated')[:5] #Get last 5 entries
-    tags = Tag.objects.all() #return all tags
 
-    if request.user.is_authenticated: #Send custom feed to logged in users:
+def indexView(request):
+    recent = Post.objects.filter(public = True).order_by('-dateCreated')[:5]  # Get last 5 entries
+    tags = Tag.objects.all()  # Return all tags
+
+    if request.user.is_authenticated:  # Send custom feed to logged in users:
         user = request.user
         saved_articles = user.article_saves.all()
         saved_commentaries = user.commentary_saves.all()
@@ -32,29 +32,38 @@ def indexView(request):
         saved_commentaries = None
         saved_diaries = None
     return render(request, 'Articles/index.html', {
-        'recent': recent, 'tags': tags, 'saved_articles': saved_articles, 'saved_commentaries': saved_commentaries, 'saved_diaries': saved_diaries
+        'recent': recent, 'tags': tags, 'saved_articles': saved_articles,
+        'saved_commentaries': saved_commentaries, 'saved_diaries': saved_diaries
     })
+
 
 def aboutView(request):
     return render(request, 'Articles/about.html')
 
+
 def opportunitiesView(request):
     return render(request, 'Articles/opportunities.html')
+
 
 def contactView(request):
     return render(request, 'Articles/contact.html')
 
+
 def roadmapView(request):
     return render(request, 'Articles/roadmap.html')
+
 
 def privacyView(request):
     return render(request, 'Articles/privacy.html')
 
+
 def termsView(request):
     return render(request, 'Articles/terms.html')
 
+
 def faqView(request):
     return render(request, 'Articles/faq.html')
+
 
 class searchView(ListView):
     model = Post
@@ -69,9 +78,11 @@ class searchView(ListView):
         #additional code before view is called
         return super(searchView, self).dispatch(request, *args, **kwargs)
 
+
 class ArticleListAPIView(ListAPIView):
     queryset = Post.objects.filter(public = True)
     serializer_class = ArticleSerializer
+
 
 class articleView(HitCountDetailView):
     model = Post
@@ -85,7 +96,7 @@ class articleView(HitCountDetailView):
         readEST = readtime.of_text(content).minutes + 1 #Get reading time of text.
 
         # FOR ANONYMOUS USERS CHECK PUBSLEFT
-        if not self.request.user.is_authenticated: 
+        if not self.request.user.is_authenticated:
             if 'pubs_remaining' in self.request.session:
                 if self.request.session['pubs_remaining'] >= 0:
                     self.request.session['pubs_remaining'] -= 1
@@ -106,12 +117,12 @@ class articleView(HitCountDetailView):
 
         if pk_slug is not None and pk_slug.isdigit():
             queryset = queryset.filter(pk=pk_slug)
-        
+
         elif pk_slug is not None:
             slug_field = self.get_slug_field()
             queryset = queryset.filter(**{slug_field: pk_slug})
 
-        
+
         if pk_slug is None:
             raise AttributeError(
                 "Generic detail view %s must be called with an object "
@@ -126,7 +137,7 @@ class articleView(HitCountDetailView):
         return obj
 
     def dispatch(self, request, *args, **kwargs):
-        #additional code before view is called
+        # Additional code before view is called
         return super(articleView, self).dispatch(request, *args, **kwargs)
 
 
@@ -142,66 +153,68 @@ def articlesave(request, pk):
     link = f"https://www.walnutmind.org/articles/{post.slug}"
     description = f"Saved article: {post.title}"
     logitem = Log(
-        user = request.user,
-        description =description,
-        link = link,
-        datelog = datetime.now()
+        user=request.user,
+        description=description,
+        link=link,
+        datelog=datetime.now()
     )
     logitem.save()
-    messages.success(request, ("Article saved to your list."))
-    return HttpResponseRedirect(reverse('articleview', args =[str(post.slug)]))
+    messages.success(request, "Article saved to your list.")
+    return HttpResponseRedirect(reverse('articleview', args=[str(post.slug)]))
+
 
 @login_required(login_url='/users/login')
 def articleupvote(request, pk):
-    post = get_object_or_404(Post, id = pk)
+    post = get_object_or_404(Post, id=pk)
     if request.user in post.likes.all():
         post.likes.remove(request.user)
         messages.success(request, ("Article unliked."))
-        return HttpResponseRedirect(reverse('articleview', args =[str(post.slug)]))
+        return HttpResponseRedirect(reverse('articleview', args=[str(post.slug)]))
     post.likes.add(request.user)
     link = f"https://www.walnutmind.org/articles/{post.slug}"
     description = f"Liked article: {post.title}"
     logitem = Log(
-        user = request.user,
-        description =description,
-        link = link,
-        datelog = datetime.now()
+        user=request.user,
+        description=description,
+        link=link,
+        datelog=datetime.now()
     )
     logitem.save()
     messages.success(request, ("Article liked, thank you for your feedback."))
-    return HttpResponseRedirect(reverse('articleview', args =[str(post.slug)]))
+    return HttpResponseRedirect(reverse('articleview', args=[str(post.slug)]))
 
-#---------------------------------------------------------------------------------  
+#---------------------------------------------------------------------------------
 @login_required(login_url='/users/login')
 def newPostView(request):
-        if request.method == 'POST':
-            form = PostForm(request.POST, request.FILES) #Requires both request.Files, else will be left blank.
-            if form.is_valid():
-                form.instance.author = request.user #Because author field from forms.py was excluded
-                title = form.instance.title
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES) #Requires both request.Files, else will be left blank.
+        if form.is_valid():
+            form.instance.author = request.user #Because author field from forms.py was excluded
+            title = form.instance.title
 
-                if form.instance.public == True:
-                    form.instance.was_public = True
-                    link = f"https://www.walnutmind.org/articles/{post_slug}"
-                    description = f"Published article: {title}"
-                    logitem = Log(
-                        user = request.user,
-                        description =description,
-                        link = link,
-                        datelog = datetime.now()
-                    )
-                    logitem.save()
-                form.save()
-                messages.success(request, ("Article is successfully published!"))
-                post_slug = Post.objects.latest('pk').slug #Essentially gets latest entry object based on last pk added, and then gets the pk of that entry object.
+            if form.instance.public == True:
+                form.instance.was_public = True
+                link = f"https://www.walnutmind.org/articles/{post_slug}"
+                description = f"Published article: {title}"
+                logitem = Log(
+                    user=request.user,
+                    description=description,
+                    link=link,
+                    datelog=datetime.now()
+                )
+                logitem.save()
+            form.save()
+            messages.success(request, ("Article is successfully published!"))
+            post_slug = Post.objects.latest('pk').slug  # Get last entry object based on last pk
+
+            return HttpResponseRedirect(reverse('articleview', args=[str(post_slug)]))
+    else:
+        form = PostForm()
+    return render(request, 'Articles/post.html', {
+            'form': form
+        })
 
 
-                return HttpResponseRedirect(reverse('articleview', args =[str(post_slug)]))
-        else:
-            form = PostForm()
-        return render(request, 'Articles/post.html', {
-                'form': form
-            })
 @login_required(login_url='/users/login')
 def newCommentView(request, pk):
     if request.method == 'POST':
@@ -211,18 +224,18 @@ def newCommentView(request, pk):
         if profanity_filter(content) == True:
                 messages.success(request, ("Your comment could not be posted, please refrain from the use of explicit language."))
                 Infraction.objects.create(
-                    user = request.user,
-                    reason = f"Used explicit language in article ID {pk} with the comment: {content}",
-                    datelog = datetime.now()
+                    user=request.user,
+                    reason=f"Used explicit language in article ID {pk} with the comment: {content}",
+                    datelog=datetime.now()
                 )
-                return HttpResponseRedirect(reverse('articleview', args =[str(post.slug)]))
+                return HttpResponseRedirect(reverse('articleview', args=[str(post.slug)]))
 
         comment = Comment.objects.create(
-            post = post,
-            content = content,
-            author = request.user,
-            dateCreated = date.today(),
-            dateUpdated = date.today(),
+            post=post,
+            content=content,
+            author=request.user,
+            dateCreated=date.today(),
+            dateUpdated=date.today(),
         )
         comment.save()
         title = post.title
@@ -230,13 +243,13 @@ def newCommentView(request, pk):
         link = f"https://www.walnutmind.org/articles/{post_slug}"
         description = f"Posted comment on '{title}'"
         logitem = Log(
-            user = request.user,
+            user=request.user,
             description =description,
-            link = link,
-            datelog = datetime.now()
+            link=link,
+            datelog=datetime.now()
         )
         logitem.save()
-        return HttpResponseRedirect(reverse('articleview', args =[str(post.slug)]))
+        return HttpResponseRedirect(reverse('articleview', args=[str(post.slug)]))
     return render(request, "Articles/article.html")
 
 class updatePostView(UpdateView):
@@ -249,7 +262,6 @@ class updatePostView(UpdateView):
         context = super(updatePostView, self).get_context_data(*args, **kwargs)
         tags = Tag.objects.all() #return all tags
         context['tags'] = tags
-
 
         if not self.object.was_public == True and self.object.public == True:
             self.object.was_public = True
@@ -280,7 +292,7 @@ def deleteCommentView(request, pk, id):
     if request.user == comment.author and comment.post == post: #IF AND ONLY IF user is the author of the comment, and the post is the same as the comment's post, then delete the comment.
         comment.delete()
         messages.success(request, ("Comment succesfully deleted."))
-        return HttpResponseRedirect(reverse('articleview', args =[str(post.slug)]))
+        return HttpResponseRedirect(reverse('articleview', args=[str(post.slug)]))
     else:
         messages.success(request, ("An unknown error occured attempting to delete your comment."))
         return HttpResponseRedirect(reverse('articleindex'))

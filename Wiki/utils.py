@@ -4,8 +4,8 @@ from django.utils import timezone
 import plotly.express as px
 import calendar
 
+
 def storage_usage(User):
-    #VALIDATE TOTAL FILE STORAGE
     bytes = 0
 
     resources = Resource.objects.filter(creator = User)
@@ -15,14 +15,16 @@ def storage_usage(User):
 
     return bytes
 
+
 def resource_collection_order(collection) -> int:
     existing_resources = CollectionOrder.objects.filter(collection = collection)
 
-    if not existing_resources.exists(): #If no resources in collection initialise first item order to 1
+    if not existing_resources.exists():  # If no resources in collection initialise first item order to 1
         return 1
     else:
         current_max = existing_resources.aggregate(max_order=Max('order'))['max_order']
         return current_max + 1
+
 
 def resource_collection_reorder(collection):
     existing_resources = CollectionOrder.objects.filter(collection = collection)
@@ -35,6 +37,7 @@ def resource_collection_reorder(collection):
         resource.order = order
         resource.save()
 
+
 def date_range(start, end):
     delta = end - start
     dates = []
@@ -42,17 +45,18 @@ def date_range(start, end):
         dates.append(start + timezone.timedelta(days=i))
     return dates
 
+
 def get_resource_heatmap(User):
-    now = timezone.now() +  timezone.timedelta(days = 1) #End date
-    start = now - timezone.timedelta(days=182) #Days must be exactly plottable in a nxn grid.
+    now = timezone.now() + timezone.timedelta(days=1)  # End date
+    start = now - timezone.timedelta(days=182)  # Days must be exactly plottable in a nxn grid.
 
     daterange = date_range(start, now)
 
-    #Create a list of lists, each list containing the number of resources created in each day
+    # Create a list of lists, each list containing the number of resources created in each day
     counts = [[] for i in range(7)]
     dates = [[] for i in range(7)]
 
-    items = list(Resource.objects.filter(creator = User).only('dateCreated').order_by('dateCreated'))
+    items = list(Resource.objects.filter(creator=User).only('dateCreated').order_by('dateCreated'))
     added = []
 
     for dt in daterange:
@@ -66,32 +70,31 @@ def get_resource_heatmap(User):
         counts[day].append(count)
         dates[day].append(dt)
 
-    #Generate graph
+    # Generate graph
     days_list = list(calendar.day_name)
-    #init_day = daterange[1].weekday()
-    #days = days_list[init_day:] + days_list[:init_day]
+    # init_day = daterange[1].weekday()
+    # days = days_list[init_day:] + days_list[:init_day]
     fig = px.imshow(
         counts,
         labels=dict(x="Week Beginning",y="Week Day", color="Additions"),
         color_continuous_scale='brwnyl',
         x=dates[0],
         y=days_list,
-        height=300, #width is set by autosize attribute
+        height=300,  # width is set by autosize attribute
     )
     fig.update_layout(
         plot_bgcolor='#ffffff',
         title = 'Your Activity Heatmap',
         autosize = True,
         )
-  
+
     fig.update_traces(
         {'xgap': 5, 'ygap': 5},
         )
- 
+
     chart = fig.to_html(
         config=dict(
             displayModeBar = False,
         ),
     )
-
     return chart

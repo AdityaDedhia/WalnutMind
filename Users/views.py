@@ -181,44 +181,50 @@ def loginView(request):
         captcha_url = "https://www.google.com/recaptcha/api/siteverify"
         captcha_secret = os.environ['captcha_secret']
         captcha_data = {"secret": captcha_secret, "response": captcha_token}
-        captcha_response = requests.post(url=captcha_url, data = captcha_data)
-        captcha_response_json=json.loads(captcha_response.text)
-        if captcha_response_json['success']==False:
+        captcha_response = requests.post(url=captcha_url, data=captcha_data)
+        captcha_response_json = json.loads(captcha_response.text)
+        if captcha_response_json['success'] == False:
                 messages.success(request, 'Login request aborted. Human verification has failed.')
                 return redirect('loginn')
-        #SUCCESSFUL VERIFICATION WOULD THEN PROCEED WITH ACCOUNT LOGIN
+        # SUCCESSFUL VERIFICATION WOULD THEN PROCEED WITH ACCOUNT LOGIN
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
             userprofile = Profile.objects.get(user = user)
-            #IF LOGIN ATTEMPT IS MADE INTERNATIONALLY BLOCK IP
-            loginlocation = GeoIP2().country_code(ip)
-            profilelocation = userprofile.location
+            # IF LOGIN ATTEMPT IS MADE INTERNATIONALLY BLOCK IP
 
-            if not profilelocation == loginlocation:
-                userprofile.is_email_verified = False
-                messages.success(request, 'Suspicious login attempt from IP address: %s blocked. If you are the rightful account owner, check your email for a reverification link.'% ip)
-                send_activation_email(user, request)
-                return redirect('index')
+            # Bypass on localhost
+            if not ip == '127.0.0.1':
+                loginlocation = GeoIP2().country_code(ip)
+                profilelocation = userprofile.location
 
-            #FORCE PROFILE VERIFICATION IF NOT ALREADY VERIFIED
+                if not profilelocation == loginlocation:
+                    userprofile.is_email_verified = False
+                    messages.success(request, 'Suspicious login attempt from IP address: %s blocked. If you are the rightful account owner, check your email for a reverification link.'% ip)
+                    send_activation_email(user, request)
+                    return redirect('index')
+
+            # FORCE PROFILE VERIFICATION IF NOT ALREADY VERIFIED
             if not userprofile.is_email_verified:
                 send_activation_email(user, request)
                 messages.success(request, ("Your email has not yet been verified. Check your inbox."))
                 return redirect('index')
 
-            #IF PASSES ALL CHECKS RECORD CURRENT LOGIN LOCATION AND IF MFA IS SETUP- SEND TO FINAL LOGIN PAGE
-            userprofile.ip = ip
-            userprofile.save(update_fields=["ip"])
+            # IF PASSES ALL CHECKS RECORD CURRENT LOGIN LOCATION AND IF MFA IS SETUP- SEND TO
+            # FINAL LOGIN PAGE
+            if not ip == '127.0.0.1':
+                userprofile.ip = ip
+                userprofile.save(update_fields=["ip"])
             messages.success(request, ("For additional security, please re-enter your credentials."))
             return redirect('two_factor:login')
-            #IF NO MFA ENABLED, LOGIN IMMEDIATELY
+            # IF NO MFA ENABLED, LOGIN IMMEDIATELY
         else:
             messages.success(request, ("The username and/or password you have entered is incorrect, please try again."))
             return redirect('loginn')
     else:
         return render(request,'Users/login.html')
+
 
 def logoutView(request):
     logout(request)
@@ -226,6 +232,7 @@ def logoutView(request):
         request.session['pubs_remaining'] = settings.PUBS_ACCESS
     messages.success(request, ("You have successfully signed out."))
     return redirect('index')
+
 
 # dont know how secure this is- public/private may be able to be changed.
 def profileView(request, username):
@@ -248,23 +255,26 @@ def profileView(request, username):
         log = Log.objects.filter(user = requestedUser).order_by('-datelog')[:6] #Descending order limited to last 6 items.
         is_public = requestedUser.profile.is_public
         return render(request, 'Users/profile.html', {
-            'user': requestedUser,'isFollowing':isFollowing,'followers':followers, 'articles':articles, 'commentaries': commentaries, 'diaries': diaries, 'highlights': highlights, 'log': log, 'is_public':is_public
+            'user': requestedUser, 'isFollowing': isFollowing, 'followers': followers,
+            'articles': articles, 'commentaries': commentaries, 'diaries': diaries,
+            'highlights': highlights, 'log': log, 'is_public': is_public
         })
     else:
         messages.success(request, ("It appears that this user does not exist."))
         return redirect('index')
 
+
 @login_required(login_url='/users/login')
 def followProfileView(request, username):
-    requestedUser = User.objects.get(username = username)
-    user = Profile.objects.get(user = request.user)
-    if Profile.objects.filter(following = requestedUser).exists():
+    requestedUser = User.objects.get(username=username)
+    user = Profile.objects.get(user=request.user)
+    if Profile.objects.filter(following=requestedUser).exists():
         user.following.remove(requestedUser)
         messages.success(request, (f"You are no longer following {username}."))
-        return HttpResponseRedirect(reverse('profile', args =[str(username)]))
+        return HttpResponseRedirect(reverse('profile', args=[str(username)]))
     user.following.add(requestedUser)
     messages.success(request, (f"You are now following {username}."))
-    return HttpResponseRedirect(reverse('profile', args =[str(username)]))
+    return HttpResponseRedirect(reverse('profile', args=[str(username)]))
 
 @login_required(login_url='/users/login')
 def editProfileView(request, username):
@@ -279,18 +289,18 @@ def editProfileView(request, username):
             u_form.save()
             p_form.save()
             messages.success(request, ("Your account has been successfully updated."))
-            return redirect('profile', username = request.user.username)
+            return redirect('profile', username=request.user.username)
         else:
             messages.success(request, ("Integrity validation failed. You have attempted to manipulate non-editable fields."))
 
     else:
-        if User.objects.filter(username = username).exists():
-            requestedUser = User.objects.get(username = username)
-            u_form = UpdateUserForm(instance = request.user)
-            p_form = UpdateProfileForm(instance = request.user.profile)
+        if User.objects.filter(username=username).exists():
+            requestedUser = User.objects.get(username=username)
+            u_form = UpdateUserForm(instance=request.user)
+            p_form = UpdateProfileForm(instance=request.user.profile)
 
             if not request.user.is_verified():
-                messages.success(request, ("To increase your account security you are advised to set up multifactor (MFA) authentication below."))
+                messages.success(request,"To increase your account security you are advised to set up multifactor (MFA) authentication below.")
 
     return render(request, 'Users/editprofile.html', {
         'user': requestedUser, 'u_form': u_form, 'p_form': p_form

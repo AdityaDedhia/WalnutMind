@@ -17,4 +17,4 @@ elif os.environ['ENV_TYPE'] == 'dev':
 elif os.environ['ENV_TYPE'] == 'test':
 	from . test import *
 else:
-	raise Exception('Invalid ENV_TYPE, please set a valid ENV_TYPE in .env (located in the project root directory).')
+	raise Exception('Invalid ENV_TYPE, please set a valid ENV_TYPE in .env.')

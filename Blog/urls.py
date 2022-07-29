@@ -23,6 +23,5 @@ urlpatterns = [
     path('books/', include('Commentaries.urls')),
     path('blogs/', include('Diaries.urls')),
     path('wiki/', include('Wiki.urls')),
-    path('polls/', include('Polls.urls')),
 
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
