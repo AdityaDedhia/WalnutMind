@@ -16,13 +16,7 @@
             "pool": "64c290bc-1ac9-4b68-8784-1b49c750868a"
           }
         }
-      ],
-      "buildpacks": [
-        {
-      "url": "heroku/python"
-        }
-    ],
-    "stack": "heroku-20"
+      ]
     }
   }
 }
