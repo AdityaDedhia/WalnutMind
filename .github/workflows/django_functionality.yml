@@ -1,4 +1,4 @@
-name: Django Functionality Tests
+name: Django Functionality
 
 on:
   push:
