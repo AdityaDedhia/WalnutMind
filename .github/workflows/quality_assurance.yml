@@ -1,4 +1,4 @@
-name: Django Tests
+name: Python Quality Assurance Tests
 
 on:
   push:
@@ -14,4 +14,6 @@ jobs:
       - name: Coveralls Check
         uses: AndreMiras/coveralls-python-action@v20201129
       - name: Codiga GitHub action
+        env:
+          CODIGA_API_TOKEN: ${{ secrets.CODIGA_API_TOKEN }}
         uses: codiga/github-action@v1
