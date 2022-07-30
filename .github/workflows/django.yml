@@ -29,7 +29,11 @@ jobs:
         pip install -r requirements.txt
     - name: Run Tests
       env:
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
         ENV_TYPE: ${{ secrets.ENV_TYPE }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_STORAGE_TEST_BUCKET_NAME: ${{ secrets.AWS_STORAGE_TEST_BUCKET_NAME }}
         TESTDBName: ${{ secrets.TESTDBName }}
         TESTDBUser: ${{ secrets.TESTDBUser }}
         TESTDBPass: ${{ secrets.TESTDBPass }}

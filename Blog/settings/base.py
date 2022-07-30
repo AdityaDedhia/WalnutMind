@@ -63,13 +63,6 @@ TWO_FACTOR_CALL_GATEWAY = 'two_factor.gateways.twilio.gateway.Twilio'
 TWO_FACTOR_SMS_GATEWAY = 'two_factor.gateways.twilio.gateway.Twilio'
 TWO_FACTOR_PHONE_THROTTLE_FACTOR = 50  # 50,100,200,400,800..seconds between texts/calls
 
-TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
-TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
-TWILIO_CALLER_ID = os.environ.get('TWILIO_CALLER_ID')
-
-REALEMAIL_API_KEY = os.environ.get('REALEMAIL_API_KEY')
-IPINVESTIGATOR_API_KEY = os.environ.get('IPINVESTIGATOR_API_KEY')
-
 AXES_LOCK_OUT_AT_FAILURE = False
 AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = True
 AXES_COOLOFF_TIME = 120  # 2 minutes
