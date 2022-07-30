@@ -28,5 +28,11 @@ jobs:
         sudo apt install libmemcached-dev
         pip install -r requirements.txt
     - name: Run Tests
+      env:
+        ENV_TYPE: ${{ secrets.ENV_TYPE }}
+        TESTDBName: ${{ secrets.TESTDBName }}
+        TESTDBUser: ${{ secrets.TESTDBUser }}
+        TESTDBPass: ${{ secrets.TESTDBPass }}
+        TESTDBHost: ${{ secrets.TESTDBHost }}
       run: |
         python manage.py test
