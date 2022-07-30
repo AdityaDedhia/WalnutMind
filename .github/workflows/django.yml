@@ -20,6 +20,8 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+  
+    - uses: niden/actions-memcached@v7
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
