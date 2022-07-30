@@ -13,3 +13,5 @@ jobs:
       - uses: actions/checkout@v2
       - name: Coveralls Check
         uses: AndreMiras/coveralls-python-action@v20201129
+      - name: Codiga GitHub action
+        uses: codiga/github-action@v1
