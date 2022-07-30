@@ -30,6 +30,6 @@ jobs:
         min_quality_score: '80'
         max_defects_rate: '0.001'
         max_complex_functions_rate: '0.05'
-        max_long_functions_rate: '0.05'
+        max_long_functions_rate: '0.1'
         project_name: 'WalnutMind'
         max_timeout_sec: '600'
