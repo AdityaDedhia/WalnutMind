@@ -32,6 +32,7 @@ SERVICE = "wiki"
 def clearMessagesView(request):
     return HttpResponse("")
 
+
 class TermAutoComplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         qs = Term.objects.all()
@@ -40,7 +41,9 @@ class TermAutoComplete(autocomplete.Select2QuerySetView):
             qs = qs.filter(term__icontains=self.q)  # case insensitive standard search
         return qs
 
+
 RESOURCES_KEY = "resources.all"
+
 
 def wiki_view(request):
     if request.user.is_authenticated:
@@ -53,8 +56,8 @@ def wiki_view(request):
         recents = resources[:10]
 
         title = "Log " + str(datetime.now().strftime("%Y-%m-%d"))
-        if Resource.objects.filter(title=title, creator=request.user, category='DOC').exists():
-            log = Resource.objects.get(title=title, creator=request.user, category='DOC')
+        if resources.filter(title=title, creator=request.user, category='LOG').exists():
+            log = Resource.objects.get(title=title, creator=request.user, category='LOG')
         else:
             log = None
 
@@ -368,8 +371,7 @@ class resourceList(ListView):
 @login_required(login_url='/users/login')
 def docLog(request):
     title = "Log " + str(datetime.now().strftime("%Y-%m-%d"))
-    resource = Resource.objects.get_or_create(title=title, creator=request.user, category='DOC')[0]
-    print(resource.title)
+    resource = Resource.objects.get_or_create(title=title, creator=request.user, category='LOG')[0]
 
     if request.method == 'POST':
         resource.text = request.POST.get('content')

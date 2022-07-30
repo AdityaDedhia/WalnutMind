@@ -76,7 +76,7 @@ def get_resource_heatmap(User):
     # days = days_list[init_day:] + days_list[:init_day]
     fig = px.imshow(
         counts,
-        labels=dict(x="Week Beginning",y="Week Day", color="Additions"),
+        labels=dict(x="Week Beginning", y="Week Day", color="Additions"),
         color_continuous_scale='brwnyl',
         x=dates[0],
         y=days_list,
@@ -84,8 +84,8 @@ def get_resource_heatmap(User):
     )
     fig.update_layout(
         plot_bgcolor='#ffffff',
-        title = 'Your Activity Heatmap',
-        autosize = True,
+        title='Your Activity Heatmap',
+        autosize=True,
         )
 
     fig.update_traces(
@@ -94,7 +94,7 @@ def get_resource_heatmap(User):
 
     chart = fig.to_html(
         config=dict(
-            displayModeBar = False,
+            displayModeBar=False,
         ),
     )
     return chart

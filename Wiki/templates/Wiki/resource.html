@@ -33,10 +33,10 @@
 <h5>Authored by: {{ metadata.Authors }}</h5>
 <h5>Published by: {{ metadata.Publisher }}, {{ metadata.Year }}</h5>
 <p>Digital Object Identifier (DOI): {{ DOI }}</p>
-<img src="{{ cover }}"/>
+<img src="{{ cover.smallThumbnail }}"/>
 
 {% else %}
-Attachments: 
+Attachments:
 {% if resource.weblink %}
 <i class="bi bi-filetype-html"> </i><a href="{{ resource.weblink }}" target="_blank" rel="noopener noreferrer">{{ resource.weblink }}</a>
 {% endif %}

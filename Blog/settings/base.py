@@ -17,10 +17,6 @@ HOSTCOUNTRY_CODE = "LU"
 DEBUG = False
 SECURE_SSL_REDIRECT = True
 
-INTERNAL_IPS = [  # Debugging IPs
-    '127.0.0.1', 'localhost', 'www.halflife-edu-dev.herokuapp.com', 'halflife-edu-dev.herokuapp.com'
-]
-
 # ARCHIVE SETTINGS -----------------------------------------------------------manage.py archive
 ARCHIVE_DIRECTORY = 'archives/'
 ARCHIVE_FILENAME = '%Y-%m-%d--%H-%M'

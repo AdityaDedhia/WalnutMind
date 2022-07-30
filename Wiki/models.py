@@ -94,6 +94,8 @@ class Resource(models.Model):
 
     isbnlink = models.CharField(null=True, blank=True, max_length=13)
 
+    pubpk = models.IntegerField(null=True, blank=True)
+
     public = models.BooleanField(default=False)
     dateCreated = models.DateTimeField(auto_now_add=True)
     dateUpdated = models.DateTimeField(auto_now=True)
@@ -104,6 +106,10 @@ class Resource(models.Model):
     WEB = 'WEB'
     VIDEO = 'VIDEO'
     BOOK = 'BOOK'
+    ARTICLE = 'ARTICLE'
+    COMMENTARY = 'COMMENTARY'
+    BLOG = 'BLOG'
+    LOG = 'LOG'
 
     CHOICES = [
         (FILE, 'File'),
@@ -112,9 +118,13 @@ class Resource(models.Model):
         (WEB, 'Web'),
         (VIDEO, 'Video'),
         (BOOK, 'Book'),
+        (ARTICLE, 'Article'),
+        (COMMENTARY, 'Commentary'),
+        (BLOG, 'Blog'),
+        (LOG, 'Log')
     ]
     category = models.CharField(
-        max_length=5,
+        max_length=10,
         choices=CHOICES,
         default=FILE,
     )

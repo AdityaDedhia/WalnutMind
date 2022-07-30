@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-<title> 
+<title>
   {% if is_public == True %}
   {{ user.first_name }} {{ user.last_name }}'s Profile | WM
   {% else %}
@@ -81,20 +81,20 @@
               <h5 style="text-shadow: 2px 1px #5e5e5e;">{{ user.first_name }} {{ user.last_name }}
                 {% if user.is_staff %}
                 <a href="#" type="button" data-toggle="tooltip" data-placement="top" title="User is a Walnut Mind admin."><i style="color: #56bbff;" class="bi bi-shield-lock-fill"></i></a>
-                
+
                 {% endif %}
               </h5>
               {% else %}
               <h5 style="text-shadow: 2px 1px #5e5e5e;">{{ user.username }}</h5>
               {% endif %}
-  
+
 
               <b>Location:</b> {{ user.profile.location.name }} <img src="{{ user.profile.location.flag }}"><br/>
               <b>Interests:</b> {{ user.profile.interests }}
             </div>
           </div>
 
-          {% if is_public == False %}
+          {% if is_public == False and user != request.user %}
 
           <p>This user's profile information has been redacted because they have marked their profile as private.</p>
 
@@ -140,7 +140,7 @@
                         <img style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid #16060e; margin-right: 4px" class = "zoom float-md-start" src = "{% static 'Users/def_avatar.png' %}">
                         {% endif %}
                       </a>
-                  </div>                  
+                  </div>
                   {% endfor %}
                 </div>
               </div>
@@ -148,7 +148,7 @@
           </div>
 
             <!--MAIN PANEL-->
-            <div class="col-lg-9 col-sm-8" style="padding: 30px">  
+            <div class="col-lg-9 col-sm-8" style="padding: 30px">
 
               {% if user.profile.meta %}
               <h3 class="display-6">📄 Meta: </h3>
@@ -166,7 +166,7 @@
                 <p>Source: <a href="{{ highlight.sourcelink }}">{{ highlight.sourcename }}</a></p>
                 {% endfor %}
               </div>
-              
+
                 <br/>
 
                 <h3 class="display-6">✍️ Blog:</h3>
@@ -182,7 +182,7 @@
                           <!-- Card Image -->
                           <img src="{{ diary.cover.url }}" style="width:auto; height:200px; opacity: 0.9; filter: brightness(50%);">
                           <!-- Card Image overlay -->
-                          <div class="card-img-overlay d-flex flex-column p-3 p-md-4"> 
+                          <div class="card-img-overlay d-flex flex-column p-3 p-md-4">
                             <div style="white-space:normal;">
                               <!-- Card category -->
                               {% for tag in diary.tags.all %}
@@ -191,7 +191,7 @@
                               {% endfor %}
                             </div>
                             <div class="w-100 mt-auto" style="white-space:normal;">
-                                                    
+
                               <h6 class="text-white" style="overflow-wrap: break-word;"><a href="{% url 'blogview' username=diary.author pk_slug=diary.slug %}" class="btn-link text-reset stretched-link">{{ diary.title }}</a></h6>
                               <!-- Card info -->
                               <ul class="nav nav-divider text-white-force align-items-center small">
@@ -209,14 +209,14 @@
                     </div>
                 </section>
 
-  
+
               </div>
             <h3 class="display-6">🕥 Recent Publications:</h3>
             <hr/>
             <div id="masonry" class="row">
               {% for article in articles %}
               {% if article.public %}
-              
+
               <div class = "col-sm-6 col-lg-3 mb-4 zoom row-item">
                 <a href="{% url 'articleview' pk_slug=article.slug %}">
                 <div class="card">
@@ -232,7 +232,7 @@
               {% endfor %}
               {% for commentary in commentaries %}
               {% if commentary.public %}
-  
+
               <div class="col-sm-4 col-lg-2 mb-3 zoom row-item">
                 <a href="{% url 'bookview' pk_slug=commentary.slug %}">
                 <div class="card">
@@ -246,7 +246,7 @@
               {% endfor %}
               {% for diary in diaries %}
               {% if diary.public %}
-          
+
               <div class = "col-sm-6 col-lg-3 mb-4 zoom row-item">
                 <a href="{% url 'blogview' username=diary.author pk_slug=diary.slug %}">
                 <div class="card">
@@ -264,19 +264,19 @@
           </div>
 
           <br/><br/><br/>
- 
-        
+
+
           </div>
 
                    <!--PUBLICATIONS MANAGER-->
 
                    {% if request.user == user %}
                    <div class="bg-light" style = "margin-top:50px; padding: 30px">
-       
+
                    <h3 class="display-6" id="publicationsmanager">Manage Your Publications:</h3>
                    <br>
                    <div id="masonry" class="row">
-       
+
                      <div class = "col-4">
                        <h5>Articles
                         <a style="margin-left:5px" href="{% url 'newpost' %}" role="button"><i class="bi bi-plus-circle-fill"></i>
@@ -286,9 +286,9 @@
                         {% for article in articles %}
                          <li>
                            <a href = "{% url 'articleview' pk_slug=article.slug %}">
-                           {{ article.title }} 
+                           {{ article.title }}
                          </a>
-       
+
                            {% if article.public == True %}
                            <p class="badge bg-success">Live</p>
                            {% else %}
@@ -298,11 +298,11 @@
                           {{ article.dateCreated }}
                            <a href="{% url 'updatearticle' pk=article.pk %}" role="button">Edit</a>
                            <hr>
-       
+
                          </li>
                          {% endfor %}
                        </ul>
-       
+
                      </div>
                      <div class="col-4">
                        <h5>Books
@@ -315,7 +315,7 @@
                            <a href = "{% url 'bookview' pk_slug=commentary.slug %}">
                            {{ commentary.title }} Commentary
                          </a>
-       
+
                            {% if commentary.public == True %}
                            <p class="badge bg-success">Live</p>
                            {% else %}
@@ -325,12 +325,12 @@
                           {{ commentary.dateCreated }}
                            <a href="{% url 'updatebook' pk=commentary.pk %}" role="button">Edit</a>
                            <hr>
-       
+
                          </li>
                          {% endfor %}
                        </ul>
-       
-       
+
+
                      </div>
                      <div class="col-4">
                        <h5>Blog
@@ -341,7 +341,7 @@
                        {% for diary in diaries %}
                          <li>
                            <a href = "{% url 'blogview' username=diary.author pk_slug=diary.slug %}">
-                           {{ diary.title }} 
+                           {{ diary.title }}
                          </a>
                          {% if diary.public == True %}
                          <p class="badge bg-success">Live</p>
@@ -352,15 +352,15 @@
                           {{ diary.dateCreated }}
                            <a href="{% url 'updateblog' username=diary.author pk=diary.pk %}" role="button">Edit</a>
                            <hr/>
-       
-                         </li>       
+
+                         </li>
                        {% endfor %}
                       </ul>
 
                      </div>
-       
+
                    </div>
-       
+
                  </div>
                    {% endif %}
                    {% endif %}

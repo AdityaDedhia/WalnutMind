@@ -12,9 +12,6 @@ sentry_sdk.init(
 
 )
 
-DEBUG = False
-SECURE_SSL_REDIRECT = True # Redirect all non-HTTPS requests to HTTPS
-
 ALLOWED_HOSTS = ['www.walnutmind.org', 'walnutmind.org']
 
 DATABASES = {

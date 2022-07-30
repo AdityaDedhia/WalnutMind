@@ -6,11 +6,11 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ('title', 'author','isbn', 'year', 'pages', 'cover', 'tags','rating', 'headquote', 'abstract', 'quotes', 'takeaways', 'summary', 'content', 'resources', 'public')
-        
+
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'author': forms.TextInput(attrs={'class': 'form-control'}),
-            'isbn':forms.TextInput(attrs={'class': 'form-control','placeholder':'Optional - isbndb.com'}),
+            'isbn': forms.TextInput(attrs={'class': 'form-control','placeholder': 'isbndb.com'}),
             'pages': forms.NumberInput(attrs={'class': 'form-control'}),
             'year': forms.NumberInput(attrs={'class': 'form-control'}),
             'cover': forms.FileInput(attrs={'class': 'form-control'}),
