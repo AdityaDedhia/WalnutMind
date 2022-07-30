@@ -1,5 +1,8 @@
-This project (WalnutMind) is my debut full-stack software release as a means of showcasing a wide range of development skills such as integrations with web hosts, SaaS companies such as AWS, and programming frameworks such as Django.
+![Code Grade](https://api.codiga.io/project/34252/status/svg)
+![Code Score](https://api.codiga.io/project/34252/score/svg)
 
-WalnutMind is a web-based academic content hosting platform where users may write articles/commentaries/blogs/resources for various educational topics. The application is programmed such that there is an allowance for scaling the application with content links in mind, that is, focusing on emphasizing the interdisciplinary nature of the content domains through implementations such as tags, related content algorithms, and backlinks.
+# WALNUT MIND
+> Walnut Mind is a web-based academic content management system (CMS) designed to rethink the 
+> fundamentals of knowledge acquisition.
 
-DISCLAIMER: The code for this project, provided for public view, is unlicensed for public use. All rights are reserved. If you would like to contribute to the project, contact me.
+The application is programmed such that there is an allowance for scaling the application with content links in mind, that is, focusing on emphasizing the interdisciplinary nature of the content domains through implementations such as tags, related content algorithms, and backlinks.
