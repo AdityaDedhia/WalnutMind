@@ -5,16 +5,16 @@ ADMINS = [
 	('Aditya Dedhia', 'aditya23dedhia@gmail.com'),
 ]
 
-ALLOWED_HOSTS = ['127.0.0.1', 'www.halflife-edu-dev.herokuapp.com', 'halflife-edu-dev.herokuapp.com']
+ALLOWED_HOSTS = ['www.halflife-edu-dev.herokuapp.com', 'halflife-edu-dev.herokuapp.com']
 
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.postgresql',
-		'NAME': os.environ['TESTDBName'],
-		'HOST': os.environ['TESTDBHost'],
+		'NAME': os.environ['DEVDBName'],
+		'HOST': os.environ['DEVDBHost'],
 		'PORT': 5432,
-		'USER': os.environ['TESTDBUser'],
-		'PASSWORD': os.environ['TESTDBPass'],
+		'USER': os.environ['DEVDBUser'],
+		'PASSWORD': os.environ['DEVDBPass'],
 	}
 }
 

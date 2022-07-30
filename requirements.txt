@@ -63,6 +63,7 @@ html-void-elements==0.1.0
 httplib2==0.20.4
 idna==3.3
 importlib-metadata==4.11.4
+iniconfig==1.1.1
 isbnlib==3.10.10
 jmespath==1.0.0
 joblib==1.1.0
@@ -74,14 +75,17 @@ maxminddb==2.2.0
 mccabe==0.6.1
 multidict==6.0.2
 numpy==1.23.1
+packaging==21.3
 pandas==1.4.3
 pathspec==0.9.0
 phonenumbers==8.12.51
 Pillow==9.1.1
 plotly==5.9.0
+pluggy==1.0.0
 prompt-toolkit==3.0.30
 psutil==5.9.1
 psycopg2==2.9.3
+py==1.11.0
 pycares==4.2.1
 pycodestyle==2.8.0
 pycparser==2.21
@@ -91,6 +95,7 @@ pylibmc==1.6.1
 PyMySQL==1.0.2
 pyparsing==3.0.9
 pyquery==1.4.3
+pytest==7.1.2
 python-dateutil==2.8.2
 python-decouple==3.6
 python-dotenv==0.20.0
