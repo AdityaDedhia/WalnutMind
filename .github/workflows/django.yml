@@ -38,5 +38,8 @@ jobs:
         TESTDBUser: ${{ secrets.TESTDBUser }}
         TESTDBPass: ${{ secrets.TESTDBPass }}
         TESTDBHost: ${{ secrets.TESTDBHost }}
+        CAPTCHA_SECRET: ${{ secrets.captcha_secret }}
+        EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
+
       run: |
         python manage.py test
