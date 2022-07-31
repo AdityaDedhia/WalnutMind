@@ -1,21 +1,22 @@
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 import six
-from .models import User
 import os
 import json
 import urllib.request
-from django.conf import settings
+
 
 class TokenGenerator(PasswordResetTokenGenerator):
     def _make_hash_value(self, user, timestamp):
         return (six.text_type(user.pk)+six.text_type(timestamp)+six.text_type(user.is_active)).encode('utf-8')
 
+
 generate_token = TokenGenerator()
+
 
 def verify_email(email):
     api_key = os.environ.get('REALEMAIL_API_KEY')
     link = 'https://realemail.expeditedaddons.com/?api_key=' + api_key + '&email=' + email + '&fix_typos=true'
-            
+
     link = urllib.request.urlopen(link)
     response = link.read()
     obj = json.loads(response)
@@ -26,11 +27,12 @@ def verify_email(email):
             return False
     except:
         return False
-    
+
+
 def verify_ip(ip):
     api_key = os.environ.get('IPINVESTIGATOR_API_KEY')
     link = 'https://ipinvestigator.expeditedaddons.com/?api_key=' + api_key + '&ip=' + ip
-    
+
     link = urllib.request.urlopen(link)
     response = link.read()
     print(response)
@@ -48,7 +50,8 @@ def verify_ip(ip):
     except:
         status = "anonymous"
         return status
-    
+
+
 def get_ip(request):
     x_forw_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forw_for is not None:

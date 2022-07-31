@@ -17,6 +17,6 @@ class PostForm(forms.ModelForm):
             'coverURL': forms.TextInput(attrs={'class': 'form-control'}),
             'content': forms.Textarea(attrs={'class': 'form-control'}),
             'resources': forms.Textarea(attrs={'class': 'form-control'}),
-            'public': forms.CheckboxInput(attrs = {'class': 'form-check-input'}),
+            'public': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
 
         }
