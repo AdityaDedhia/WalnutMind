@@ -52,7 +52,7 @@ def wiki_view(request):
             resources = Resource.objects.filter(creator=request.user)
             cache.set(RESOURCES_KEY, resources, settings.RESOURCES_LIFESPAN)
 
-        unsorted = resources.filter(collectionorder=None)
+        unsorted = resources.filter(collectionorder=None, creator=request.user)
         recents = resources[:10]
 
         title = "Log " + str(datetime.now().strftime("%Y-%m-%d"))
@@ -62,7 +62,6 @@ def wiki_view(request):
             log = None
 
         collections = Collection.objects.filter(creator=request.user)
-        print(collections)
 
         active = collections.filter(archived=False)
         archived = collections.filter(archived=True)

@@ -6,6 +6,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from Blog.utils import image_resize
 from .validators import validate_file_size
 from django.db.models.functions import Lower
+from django.conf import settings
 
 
 class Term(models.Model):
@@ -27,7 +28,7 @@ class Term(models.Model):
 
     def save(self, *args, **kwargs):
         if self.cover:
-            image_resize(self.cover, 800, 600)
+            image_resize(self.cover, settings.PUBS_WIDTH, settings.PUBS_HEIGHT)
         super().save(*args, **kwargs)
 
 

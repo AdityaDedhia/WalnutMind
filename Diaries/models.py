@@ -7,7 +7,7 @@ from Blog.utils import image_resize
 from django.urls import reverse
 from hitcount.models import HitCount
 from django.contrib.contenttypes.fields import GenericRelation
-
+from django.conf import settings
 
 class Post(models.Model):
     title = models.CharField(max_length=128, blank=False)
@@ -37,7 +37,7 @@ class Post(models.Model):
         return reverse('blogview', kwargs={'username': str(self.author), 'pk_slug': str(self.slug)})
 
     def save(self, *args, **kwargs):
-        image_resize(self.cover, 1200, 900)
+        image_resize(self.cover, settings.PUBS_WIDTH, settings.PUBS_HEIGHT)
         super().save(*args, **kwargs)
 
 

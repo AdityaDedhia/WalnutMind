@@ -26,9 +26,11 @@ class FileAdmin(admin.ModelAdmin):
     readonly_fields = ['dateCreated']
 
 
-admin.site.register(Collection)
+@admin.register(Collection)
+class FileAdmin(admin.ModelAdmin):
+    list_display = ['creator', 'title', 'dateCreated']
 
 
 @admin.register(CollectionOrder)
 class FileAdmin(admin.ModelAdmin):
-    list_display = ['resource', 'collection', 'order', 'dateCreated']
+    list_display = ['user', 'resource', 'collection', 'order', 'dateCreated']

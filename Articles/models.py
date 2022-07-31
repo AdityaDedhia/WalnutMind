@@ -8,6 +8,7 @@ from autoslug import AutoSlugField
 from Blog.utils import image_resize
 from hitcount.models import HitCount
 from django.contrib.contenttypes.fields import GenericRelation
+from django.conf import settings
 
 
 class Post(models.Model):
@@ -42,7 +43,7 @@ class Post(models.Model):
         return reverse('articleview', kwargs={'pk_slug': str(self.slug)})
 
     def save(self, *args, **kwargs):
-        image_resize(self.cover, 1200, 900)
+        image_resize(self.cover, settings.PUBS_WIDTH, settings.PUBS_HEIGHT)
         super().save(*args, **kwargs)
 
 

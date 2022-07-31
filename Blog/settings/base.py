@@ -7,9 +7,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 dotenv_file = os.path.join(BASE_DIR, ".env")
 if os.path.isfile(dotenv_file):
-    dotenv.load_dotenv(dotenv_file)
+	dotenv.load_dotenv(dotenv_file)
 SECRET_KEY = os.environ['SECRET_KEY']
-
+SITE_ID = 1
 WSGI_APPLICATION = 'Blog.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -22,8 +22,6 @@ ARCHIVE_DIRECTORY = 'archives/'
 ARCHIVE_FILENAME = '%Y-%m-%d--%H-%M'
 ARCHIVE_FORMAT = archivers.ZIP
 
-
-
 # USER SETTINGS (MODIFIABLE)
 
 PUBS_ACCESS = 2  # ANONYMOUS ACCESS LIMIT BEFORE SIGNIN
@@ -31,9 +29,13 @@ BASIC_STORAGE = 104857600 * 2  # MAXIMUM BASIC STORAGE (in bytes)
 STANDARD_STORAGE = 104857600 * 50  # MAXIMUM STANDARD STORAGE (in bytes)
 PREMIUM_STORAGE = 104857600 * 500  # MAXIMUM PREMIUM STORAGE (in bytes)
 
+PUBS_WIDTH = 1200
+PUBS_HEIGHT = 900
+
 HITCOUNT_KEEP_HIT_ACTIVE = {'days': 1}  # HIT COUNT LASTS 1 DAY
 HITCOUNT_HITS_PER_IP_LIMIT = 20  # ACTIVE HIT COUNT LIMIT PER IP (ANY 1 DAY)
-HITCOUNT_KEEP_HIT_IN_DATABASE = {'days': 365}  # if hitcount_cleanup is run, only delete hits older than 1 year.
+HITCOUNT_KEEP_HIT_IN_DATABASE = {
+	'days': 365}  # if hitcount_cleanup is run, only delete hits older than 1 year.
 
 # DO NOT CHANGE THIS -----------------------------------------------------
 CSRF_COOKIE_SECURE = True  # Prevent CSRF cookie from being sent over HTTP
@@ -46,7 +48,7 @@ SECURE_BROWSER_XSS_FILTER = True  # Prevent cross-site scripting attacks in brow
 SERVER_EMAIL = 'support@walnutmind.org'
 
 # CONFIG SETTINGS ---------------------------------------------------
-RESOURCES_LIFESPAN = 60 * 30 # 30 Minute cache
+RESOURCES_LIFESPAN = 60 * 30  # 30 Minute cache
 
 # MFA SETTINGS ---------------------------------------------------
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
@@ -69,100 +71,100 @@ AXES_COOLOFF_TIME = 120  # 2 minutes
 AXES_RESET_ON_SUCCESS = True
 AXES_ENABLE_ACCESS_FAILURE_LOG = True
 
-
 INSTALLED_APPS = [
-    'dal',  # BEFORE django.contrib.admin
-    'dal_select2',  # BEFORE django.contrib.admin
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'axes',  # AFTER django.contrib.admin
-    'django_otp',  # 2FA
-    'django_otp.plugins.otp_static',  # 2FA
-    'django_otp.plugins.otp_totp',  # 2FA
-    'django_otp.plugins.otp_email',  # 2FA
-    'two_factor.plugins.email',  # 2FA
-    'two_factor.plugins.phonenumber',  # 2FA
-    'two_factor',  # 2FA
+	'dal',  # BEFORE django.contrib.admin
+	'dal_select2',  # BEFORE django.contrib.admin
+	'django.contrib.admin',
+	'django.contrib.auth',
+	'axes',  # AFTER django.contrib.admin
+	'django_otp',  # 2FA
+	'django_otp.plugins.otp_static',  # 2FA
+	'django_otp.plugins.otp_totp',  # 2FA
+	'django_otp.plugins.otp_email',  # 2FA
+	'two_factor.plugins.email',  # 2FA
+	'two_factor.plugins.phonenumber',  # 2FA
+	'two_factor',  # 2FA
 
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'whitenoise.runserver_nostatic',
-    'django.contrib.staticfiles',
-    'django_cleanup.apps.CleanupConfig',
-    'django.contrib.postgres',
-    'django_countries',
-    'ckeditor',
-    'ckeditor_uploader',
-    'django.contrib.humanize',
-    'storages',
-    'taggit',
-    'rest_framework',
-    'embed_video',
-    'widget_tweaks',
-    'hitcount',
-    'dbbackup',  # automated S3 db archive
-    'django_archive',  # manual archives using: manage.py archive
-    'Users',
-    'Articles',
-    'Commentaries',
-    'Diaries',
-    'Wiki',
+	'django.contrib.contenttypes',
+	'django.contrib.sessions',
+	'django.contrib.messages',
+	'whitenoise.runserver_nostatic',
+	'django.contrib.staticfiles',
+	'django_cleanup.apps.CleanupConfig',
+	'django.contrib.postgres',
+	'django.contrib.sites',
+	'django.contrib.sitemaps',
+	'django_countries',
+	'ckeditor',
+	'ckeditor_uploader',
+	'django.contrib.humanize',
+	'storages',
+	'taggit',
+	'rest_framework',
+	'embed_video',
+	'widget_tweaks',
+	'hitcount',
+	'dbbackup',  # automated S3 db archive
+	'django_archive',  # manual archives using: manage.py archive
+	'Users',
+	'Articles',
+	'Commentaries',
+	'Diaries',
+	'Wiki',
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django_otp.middleware.OTPMiddleware',  # AFTER AUTHMIDDLEWARE
-    'two_factor.middleware.threadlocals.ThreadLocals',  # AFTER AUTHMIDDLEWARE
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.common.BrokenLinkEmailsMiddleware',
-    'Blog.middleware.BlacklistBlockMiddleware',
-    'axes.middleware.AxesMiddleware',  # AFTER AUTHMIDDLEWARE
+	'django.middleware.security.SecurityMiddleware',
+	'whitenoise.middleware.WhiteNoiseMiddleware',
+	'django.contrib.sessions.middleware.SessionMiddleware',
+	'django.middleware.common.CommonMiddleware',
+	'django.middleware.csrf.CsrfViewMiddleware',
+	'django.contrib.auth.middleware.AuthenticationMiddleware',
+	'django_otp.middleware.OTPMiddleware',  # AFTER AUTHMIDDLEWARE
+	'two_factor.middleware.threadlocals.ThreadLocals',  # AFTER AUTHMIDDLEWARE
+	'django.contrib.messages.middleware.MessageMiddleware',
+	'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'django.middleware.common.BrokenLinkEmailsMiddleware',
+	'Blog.middleware.BlacklistBlockMiddleware',
+	'axes.middleware.AxesMiddleware',  # AFTER AUTHMIDDLEWARE
 ]
 
 ROOT_URLCONF = 'Blog.urls'
 
 TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.template.context_processors.media',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
+	{
+		'BACKEND': 'django.template.backends.django.DjangoTemplates',
+		'DIRS': [os.path.join(BASE_DIR, 'templates')],
+		'APP_DIRS': True,
+		'OPTIONS': {
+			'context_processors': [
+				'django.template.context_processors.debug',
+				'django.template.context_processors.request',
+				'django.template.context_processors.media',
+				'django.contrib.auth.context_processors.auth',
+				'django.contrib.messages.context_processors.messages',
+			],
+		},
+	},
 ]
-
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+	{
+		'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+	},
 ]
 AUTHENTICATION_BACKENDS = [
-    'axes.backends.AxesBackend',
-    'django.contrib.auth.backends.ModelBackend',
+	'axes.backends.AxesBackend',
+	'django.contrib.auth.backends.ModelBackend',
 ]
 
 LANGUAGE_CODE = 'en-us'
@@ -176,46 +178,47 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # RICH TEXT EDITOR-------------
 CKEDITOR_CONFIGS = {
-    'default': {
-        'skin': 'kama',
-        'height': 375,
-        'width': 300,
-        'toolbarCanCollapse': True,
-        'toolbarStartupExpanded': False,
-        'tabSpaces': 4,
-        'toolbar': 'custom',
-        'toolbar_custom': [
-            {'name': 'document', 'items': ['Maximize', 'Source', '-', 'Templates']},
-            {'name': 'clipboard', 'items': ['Undo', 'Redo']},
-            {'name': 'editing', 'items': ['Find', 'Replace']},
+	'default': {
+		'skin': 'kama',
+		'height': 400,
+		'width': 400,
+		'toolbarCanCollapse': True,
+		'toolbarStartupExpanded': False,
+		'tabSpaces': 4,
+		'toolbar': 'custom',
+		'toolbar_custom': [
+			{'name': 'document', 'items': ['Maximize', 'Source', '-', 'Templates']},
+			{'name': 'clipboard', 'items': ['Undo', 'Redo']},
+			{'name': 'editing', 'items': ['Find', 'Replace']},
 
-            {'name': 'links',
-             'items': ['Link', 'Unlink', 'Anchor']},
-            {'name': 'insert',
-             'items': ['Image', 'Flash', 'Table', 'HorizontalRule', 'SpecialChar', 'Iframe']},
+			{'name': 'links',
+			 'items': ['Link', 'Unlink', 'Anchor']},
+			{'name': 'insert',
+			 'items': ['Image', 'Flash', 'Table', 'HorizontalRule', 'SpecialChar', 'Iframe']},
 
-            {'name': 'paragraph',
-             'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-',
-                       'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
+			{'name': 'paragraph',
+			 'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-',
+			           'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
 
-            {'name': 'styles',
-             'items': ['Bold', 'Italic', 'Underline', 'Strike', 'TextColor', 'BGColor', 'Subscript', 'Superscript',
-                       'Format', 'Font', 'FontSize', '-', 'RemoveFormat']},
+			{'name': 'styles',
+			 'items': ['Bold', 'Italic', 'Underline', 'Strike', 'TextColor', 'BGColor',
+			           'Subscript', 'Superscript', 'Format', 'Font', 'FontSize', '-',
+			           'RemoveFormat']},
 
-        ],
-        'extraPlugins': ','.join([
-            'uploadimage',  # the upload image feature
-            # your extra plugins here
-            'div',
-            'autolink',
-            'autoembed',
-            'embedsemantic',
-            'find',
-            'notification',
-        ]),
-        'removePlugins': 'exportpdf',
+		],
+		'extraPlugins': ','.join([
+			'uploadimage',  # the upload image feature
+			# your extra plugins here
+			'div',
+			'autolink',
+			'autoembed',
+			'embedsemantic',
+			'find',
+			'notification',
+		]),
+		'removePlugins': 'exportpdf',
 
-    },
+	},
 
 }
 
@@ -229,7 +232,7 @@ STATIC_URL = STATIC_HOST + '/static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+	BASE_DIR / "static",
 ]
 
 MEDIA_URL = '/user_content/'
@@ -262,48 +265,49 @@ DEFAULT_FROM_EMAIL = 'support@walnutmind.org'
 
 
 def get_cache():
-    import os
-    try:
-        servers = os.environ['MEMCACHIER_SERVERS']
-        username = os.environ['MEMCACHIER_USERNAME']
-        password = os.environ['MEMCACHIER_PASSWORD']
-        return {
-          'default': {
-            'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
-            # TIMEOUT is not the connection timeout! It's the default expiration
-            # timeout that should be applied to keys! Setting it to `None`
-            # disables expiration.
-            'TIMEOUT': None,
-            'LOCATION': servers,
-            'OPTIONS': {
-              'binary': True,
-              'username': username,
-              'password': password,
-              'behaviors': {
-                # Enable faster IO
-                'no_block': True,
-                'tcp_nodelay': True,
-                # Keep connection alive
-                'tcp_keepalive': True,
-                # Timeout settings
-                'connect_timeout': 2000, # ms
-                'send_timeout': 750 * 1000, # us
-                'receive_timeout': 750 * 1000, # us
-                '_poll_timeout': 2000, # ms
-                # Better failover
-                'ketama': True,
-                'remove_failed': 1,
-                'retry_timeout': 2,
-                'dead_timeout': 30,
-              }
-            }
-          }
-        }
-    except:
-        return {
-          'default': {
-            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
-          }
-        }
+	import os
+	try:
+		servers = os.environ['MEMCACHIER_SERVERS']
+		username = os.environ['MEMCACHIER_USERNAME']
+		password = os.environ['MEMCACHIER_PASSWORD']
+		return {
+			'default': {
+				'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+				# TIMEOUT is not the connection timeout! It's the default expiration
+				# timeout that should be applied to keys! Setting it to `None`
+				# disables expiration.
+				'TIMEOUT': None,
+				'LOCATION': servers,
+				'OPTIONS': {
+					'binary': True,
+					'username': username,
+					'password': password,
+					'behaviors': {
+						# Enable faster IO
+						'no_block': True,
+						'tcp_nodelay': True,
+						# Keep connection alive
+						'tcp_keepalive': True,
+						# Timeout settings
+						'connect_timeout': 2000,  # ms
+						'send_timeout': 750 * 1000,  # us
+						'receive_timeout': 750 * 1000,  # us
+						'_poll_timeout': 2000,  # ms
+						# Better failover
+						'ketama': True,
+						'remove_failed': 1,
+						'retry_timeout': 2,
+						'dead_timeout': 30,
+					}
+				}
+			}
+		}
+	except:
+		return {
+			'default': {
+				'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
+			}
+		}
+
 
 CACHES = get_cache()
