@@ -1,65 +1,63 @@
 {% extends "layout.html" %}
-
-{% block title %}
-<title>New Term | WM</title>
-{% endblock title %}
+{% block title %}New Term | WM{% endblock title %}
 
 {% block body %}
+	<div class="card text-center">
+		<div class="card-header">
+			<ul class="nav nav-tabs card-header-tabs">
+				<!--DEFAULT FOR NORMAL USERS-->
+				<li class="nav-item">
+					<a class="nav-link active" href="">Define Term</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'newlist' %}">Create Term List</a>
+				</li>
+			</ul>
+		</div>
+		<div class="card-body form-group">
 
-<div class="card text-center">
-    <div class="card-header">
-      <ul class="nav nav-tabs card-header-tabs">
-            <!--DEFAULT FOR NORMAL USERS-->
-            <li class="nav-item">
-              <a class="nav-link active" href="">Define Term</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'newlist' %}">Create Term List</a>
-            </li>
-      </ul>
-    </div>
-    <div class="card-body form-group">
+			<form method="post" enctype="multipart/form-data">
+				{% csrf_token %}
+				{{ form.media }}
 
-      <form method="post" enctype="multipart/form-data">
-          {% csrf_token %}
-          {{ form.media }}
-
-          <!--ROW 1-->
-          <div class="row">
-            <div class="col-md-4">
-            <div class="row" id="term">
-              <label style="float: left;" for="term">Term</label>
-              {{ form.term }}
-            </div><br/>
-            <p>Optional but recommended</p>
-            <hr/>
-            <div class="row" id="cover">
-              <label style="float: left;" for="cover">Cover</label>
-              {{ form.cover }}
-            </div>
-            <div class="row" id="coverSrc">
-              <label style="float: left;" for="coverSrc">Source</label>
-              {{ form.coverSrc }}
-            </div>
-            <div class="row" id="coverURL">
-              <label style="float: left;" for="coverURL">Source Link</label>
-              {{ form.coverURL }}
-            </div>
+				<!--ROW 1-->
+				<div class="row">
+					<div class="col-md-4">
+						<div class="row" id="term">
+							<label style="float: left;" for="term">Term</label>
+							{{ form.term }}
+						</div>
+						<br/>
+						<p>Optional but recommended</p>
+						<hr/>
+						<div class="row" id="cover">
+							<label style="float: left;" for="cover">Cover</label>
+							{{ form.cover }}
+						</div>
+						<div class="row" id="coverSrc">
+							<label style="float: left;" for="coverSrc">Source</label>
+							{{ form.coverSrc }}
+						</div>
+						<div class="row" id="coverURL">
+							<label style="float: left;" for="coverURL">Source Link</label>
+							{{ form.coverURL }}
+						</div>
 
 
-          </div>
-            <div class="col-md-8" id = "definition">
-              <label style = "float: left;" for="definition">Definition</label>
-              {{ form.definition }}
-            </div>
-          </div>
-  
-        <br/>
+					</div>
+					<div class="col-md-8" id="definition">
+						<label style="float: left;" for="definition">Definition</label>
+						{{ form.definition }}
+					</div>
+				</div>
 
-        <button type="submit" style="float: right;" class="btn btn-primary btn-lg">SUBMIT</button>
-        </form>
+				<br/>
 
-        </div>
-    </div>
+				<button type="submit" style="float: right;" class="btn btn-primary btn-lg">SUBMIT
+				</button>
+			</form>
+
+		</div>
+	</div>
 
 {% endblock body %}

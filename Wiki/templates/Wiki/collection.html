@@ -1,36 +1,37 @@
 {% extends "layout.html" %}
-
-{% block title %}
-<title>Wiki | WM</title>
-{% endblock title %}
+{% block title %}Wiki | WM{% endblock title %}
 
 {% block body %}
+	<ol class="breadcrumb" style="background-color:white">
+		<li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+		<li class="breadcrumb-item"><a href="{% url 'wikiindex' %}">Wiki</a></li>
+		<li class="breadcrumb-item"><a href="{% url 'collectionsview' %}">Collections</a></li>
+		<li class="breadcrumb-item active" aria-current="page">{{ collection.title }}</li>
+	</ol>
 
-<ol class="breadcrumb" style = "background-color:white">
-    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'wikiindex' %}">Wiki</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'collectionsview' %}">Collections</a></li>
-    <li class="breadcrumb-item active" aria-current="page">{{ collection.title }}</li>
-</ol>
+	<div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
 
-<div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
+		<h3>{{ collection.title }}</h3>
+		<p>Collection by <a
+				href="{% url 'profile' username=collection.creator %}">{{ collection.creator }}</a>
+			| Created on <b>{{ collection.dateCreated }}</b>, last updated
+			<b>{{ collection.dateUpdated }}</b></p>
 
-<h3>{{ collection.title }}</h3>
-<p>Collection by <a href="{% url 'profile' username=collection.creator %}">{{ collection.creator }}</a> | Created on <b>{{ collection.dateCreated }}</b>, last updated <b>{{ collection.dateUpdated }}</b></p>
+		<ul>
+			<div class="list-group">
+				{% for resource in collection.resources.all %}
 
-<ul>
-    <div class="list-group">
-    {% for resource in collection.resources.all %}
-  
-    <a href="{% url 'resourceview' pk=resource.pk %}" class="list-group-item list-group-item-action">
-    <h5>{{ resource.title }}</h5><hr/>
-    Description: {{ resource.description }}
-    <br/>
+					<a href="{% url 'resourceview' pk=resource.pk %}"
+					   class="list-group-item list-group-item-action">
+						<h5>{{ resource.title }}</h5>
+						<hr/>
+						Description: {{ resource.description }}
+						<br/>
 
-    </div>
-    {% endfor %}
-  </div>
-</ul>
+					</div>
+				{% endfor %}
+	</div>
+	</ul>
 
-</div>
+	</div>
 {% endblock body %}

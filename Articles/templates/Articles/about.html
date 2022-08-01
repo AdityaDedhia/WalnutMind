@@ -1,18 +1,17 @@
 {% extends "layout.html" %}
 
-{% block title %}
-     <title> About | WM</title>
-{% endblock title %}
+{% block title %}About | WM{% endblock title %}
 
 {% block body %}
-{% load static %}
+	{% load static %}
 
-    <section class="py-5">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-lg-5 col-6 mx-lg-0 mx-auto px-lg-0 px-md-0 my-auto">
-              <img class="w-100 border-radius-lg shadow" src="{% static "Articles/worldtradecenter.jpg" %}"/>
-            </div>
+	<section class="py-5">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-lg-5 col-6 mx-lg-0 mx-auto px-lg-0 px-md-0 my-auto">
+					<img class="w-100 border-radius-lg shadow"
+					     src="{% static "Articles/worldtradecenter.jpg" %}"/>
+				</div>
             <div class="col-lg-4 col-10 d-flex justify-content-center flex-column mx-auto text-lg-start text-center">
               <h2 class="mb-0 mt-lg-0 mt-4 text-gradient text-info">Words from the founder</h2>
               <p class="lead">I am <a href="{% url 'profile' username='adityadedhia' %}">Aditya Dedhia</a>, a recent graduate of the International Baccaulerate (IB) Diploma Programme. During my studies across four countries and two continents, I would be rather underwhelmed; academic disciplines to this day are often taught very rigidly, often times, at the expense of holistic clarity and real-life application. </p>

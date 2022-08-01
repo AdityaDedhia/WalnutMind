@@ -1,106 +1,106 @@
 {% extends "layout.html" %}
 
-{% block title %}
-<title>Publish | WM</title>
-{% endblock title %}
+{% block title %}Publish | WM{% endblock title %}
 {% block body %}
-<ol class="breadcrumb" style = "background-color:white">
-  <li class="breadcrumb-item">
-    <a href="{% url 'index' %}">Home</a>
-  </li>
-  <li class="breadcrumb-item">
-    <a href="{% url 'profile' username=request.user %}">Profile</a>
-  </li>
-  <li class="breadcrumb-item">
-    <a href="/users/{{ request.user }}/#publicationsmanager">Publications Manager</a>
-  </li>
-  <li class="breadcrumb-item active" aria-current="page">Content Publisher</li>
-</ol>
+	<ol class="breadcrumb" style="background-color:white">
+		<li class="breadcrumb-item">
+			<a href="{% url 'index' %}">Home</a>
+		</li>
+		<li class="breadcrumb-item">
+			<a href="{% url 'profile' username=request.user %}">Profile</a>
+		</li>
+		<li class="breadcrumb-item">
+			<a href="/users/{{ request.user }}/#publicationsmanager">Publications Manager</a>
+		</li>
+		<li class="breadcrumb-item active" aria-current="page">Content Publisher</li>
+	</ol>
 
-<div class="card text-center">
-    <div class="card-header">
-      <ul class="nav nav-tabs card-header-tabs">
-        <!--DEFAULT FOR NORMAL USERS-->
-        {% if request.user.profile.is_author == False %}
-        <li class="nav-item">
-          <a class="nav-link disabled" href="">Publish Article</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="{% url 'newbookpost' %}">Publish Commentary</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="{% url 'newblogpost' %}">Publish Blog</a>
-        </li>
-        {% else %}
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'newpost' %}">Publish Article</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'newbookpost' %}">Publish Commentary</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="{% url 'newblogpost' %}">Publish Blog</a>
-        </li>
-        {% endif %}
+	<div class="card text-center">
+		<div class="card-header">
+			<ul class="nav nav-tabs card-header-tabs">
+				<!--DEFAULT FOR NORMAL USERS-->
+				{% if request.user.profile.is_author == False %}
+					<li class="nav-item">
+						<a class="nav-link disabled" href="">Publish Article</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link disabled" href="{% url 'newbookpost' %}">Publish
+							Commentary</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link active" href="{% url 'newblogpost' %}">Publish Blog</a>
+					</li>
+				{% else %}
+					<li class="nav-item">
+						<a class="nav-link" href="{% url 'newpost' %}">Publish Article</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{% url 'newbookpost' %}">Publish Commentary</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link active" href="{% url 'newblogpost' %}">Publish Blog</a>
+					</li>
+				{% endif %}
 
-      </ul>
-    </div>
+			</ul>
+		</div>
 
-    <div class="card-body form-group">
-        <form method = "POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.media }}
+		<div class="card-body form-group">
+			<form method="POST" enctype="multipart/form-data">
+				{% csrf_token %}
+				{{ form.media }}
 
-            <div class="row" style="display:flex; justify-content: center">
+				<div class="row" style="display:flex; justify-content: center">
 
-              <div class="col-md-4" style="padding:50px">
-                <div class="row" id = "title">
-                  <label style = "float: left;" for="title">Title</label>
-                  {{ form.title }}
-                </div>
+					<div class="col-md-4" style="padding:50px">
+						<div class="row" id="title">
+							<label style="float: left;" for="title">Title</label>
+							{{ form.title }}
+						</div>
 
-              <div class="row" id = "tags">
-                <label style = "float: left;" for="tags">Topics (' , ' seperated)</label>
-                {{ form.tags }}
-              </div>
-                <div class="row" id="cover">
-                  <label style = "float: left;" for="cover">Cover</label>
-                  {{ form.cover }}
-                </div>
-                <div class="row" id="coverSrc">
-                  <label style = "float: left;" for="coverSrc">Cover Source</label>
-                  {{ form.coverSrc }}
-                </div>
-                <div class="row" id="coverURL">
-                  <label style = "float: left;" for="coverURL">Cover URL</label>
-                  {{ form.coverURL }}
-                </div>
-              </div>
-
-
-              <div id = "top" class="col-md-6" id="content">
-                {{ form.content }}
-              </div>
-
-            </div>
+						<div class="row" id="tags">
+							<label style="float: left;" for="tags">Topics (' , ' seperated)</label>
+							{{ form.tags }}
+						</div>
+						<div class="row" id="cover">
+							<label style="float: left;" for="cover">Cover</label>
+							{{ form.cover }}
+						</div>
+						<div class="row" id="coverSrc">
+							<label style="float: left;" for="coverSrc">Cover Source</label>
+							{{ form.coverSrc }}
+						</div>
+						<div class="row" id="coverURL">
+							<label style="float: left;" for="coverURL">Cover URL</label>
+							{{ form.coverURL }}
+						</div>
+					</div>
 
 
-            
-            <br/>
-            <div class="form-check form-switch" id="public" style="float:left">
-              <label class="form-check-label" for="public">
-                {{ form.public }}
-                <i class="bi bi-cloud-arrow-up-fill"></i>
-                <b> PUBLISH LIVE</b>
-              </label>
-            </div>
-            <button type="submit" style="float: right;" class="btn btn-primary btn-lg">SAVE</button>
-        </form>
-    </div>
+					<div id="top" class="col-md-6" id="content">
+						{{ form.content }}
+					</div>
 
-</div>
-<br/>
-{% if request.user.profile.is_author == False %}
-<p style="color:gray">If you are interested in becoming an author on our site, see the <a href="{% url 'opportunities' %}">opportunities page</a>.</p>
-{% endif %}
-{% endblock body %} 
+				</div>
+
+
+				<br/>
+				<div class="form-check form-switch" id="public" style="float:left">
+					<label class="form-check-label" for="public">
+						{{ form.public }}
+						<i class="bi bi-cloud-arrow-up-fill"></i>
+						<b> PUBLISH LIVE</b>
+					</label>
+				</div>
+				<button type="submit" style="float: right;" class="btn btn-primary btn-lg">SAVE
+				</button>
+			</form>
+		</div>
+
+	</div>
+	<br/>
+	{% if request.user.profile.is_author == False %}
+		<p style="color:gray">If you are interested in becoming an author on our site, see the <a
+				href="{% url 'opportunities' %}">opportunities page</a>.</p>
+	{% endif %}
+{% endblock body %}

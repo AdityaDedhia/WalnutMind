@@ -1,97 +1,108 @@
 {% extends "layout.html" %}
-
-{% block title %}
-<title>Wiki | WM</title>
-{% endblock title %}
+{% block title %}Wiki | WM{% endblock title %}
 
 {% block body %}
-<ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'wikiindex' %}">Wiki</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Walnut Define</li>
-</ol>
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+		<li class="breadcrumb-item"><a href="{% url 'wikiindex' %}">Wiki</a></li>
+		<li class="breadcrumb-item active" aria-current="page">Walnut Define</li>
+	</ol>
 
-<div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
+	<div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
 
-<h1 style="color:gray">Walnut <i>Define</i></h1>
-<p>Lists Count: {{ listsCount }}</p>
-<p style="color:gray">Terms displayed with<i style="color:green" class="bi bi-check2-circle"></i> are verified by WM authors. We cannot guarantee the correctness of terms not displaying this symbol and should be used with your own judgement.</p>
+		<h1 style="color:gray">Walnut <i>Define</i></h1>
+		<p>Lists Count: {{ listsCount }}</p>
+		<p style="color:gray">Terms displayed with<i style="color:green"
+		                                             class="bi bi-check2-circle"></i> are verified
+			by WM authors. We cannot guarantee the correctness of terms not displaying this symbol
+			and should be used with your own judgement.</p>
 
-<div class="row">
-<!--SIDE TERMS PANEL-->
-  <div class="col-md-3" style="height:500px;border:1px solid #ccc; border-radius: 10px; overflow:auto;">
-      <br/>
-      <ul>
-        {% for term in terms %}
-        <li>
-        <a href = "define-{{ term.slug }}">{{ term.term }}</a>
-        {% if term.verified %}
-        <i style="color:green" class="bi bi-check2-circle"></i>
-        {% endif %}
-        </li>
-        {% endfor %}
-    </ul>
-  </div>
+		<div class="row">
+			<!--SIDE TERMS PANEL-->
+			<div class="col-md-3"
+			     style="height:500px;border:1px solid #ccc; border-radius: 10px; overflow:auto;">
+				<br/>
+				<ul>
+					{% for term in terms %}
+						<li>
+							<a href="define-{{ term.slug }}">{{ term.term }}</a>
+							{% if term.verified %}
+								<i style="color:green" class="bi bi-check2-circle"></i>
+							{% endif %}
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
 
-<!--MAIN PANEL-->
-  <div class="col-md-9" style="height:500px;overflow:auto">
-    <h3>Public Lists</h3>
-    <ul>
-      <div class="list-group">
+			<!--MAIN PANEL-->
+			<div class="col-md-9" style="height:500px;overflow:auto">
+				<h3>Public Lists</h3>
+				<ul>
+					<div class="list-group">
 
-        {% for list in lists %}
-        <div class="list-group-item list-group-item-action">
-          {% if list.creator.profile.is_public %}
-          <b style="display:inline"><a href="{% url 'listview' pk_slug=list.slug %}">{{ list.title }}</a> | <a href="{% url 'profile' username=list.creator %}">{{ list.creator.first_name }} {{ list.creator.last_name }}</a></b>
-          {% else %}
-          <b>{{ list.title }} | <a href="{% url 'profile' username=list.creator %}">{{ list.creator }}</a></b>
-          {% endif %}
-          <br/>
-          {% if list.description %}
-          Description: {{ list.description }}
-          {% endif %}
-        </div>
-        {% endfor %}
+						{% for list in lists %}
+							<div class="list-group-item list-group-item-action">
+								{% if list.creator.profile.is_public %}
+									<b style="display:inline"><a
+											href="{% url 'listview' pk_slug=list.slug %}">{{ list.title }}</a>
+										|
+										<a href="{% url 'profile' username=list.creator %}">{{ list.creator.first_name }} {{ list.creator.last_name }}</a></b>
+								{% else %}
+									<b>{{ list.title }} | <a
+											href="{% url 'profile' username=list.creator %}">{{ list.creator }}</a></b>
+								{% endif %}
+								<br/>
+								{% if list.description %}
+									Description: {{ list.description }}
+								{% endif %}
+							</div>
+						{% endfor %}
 
-      </div>
-    </ul>
+					</div>
+				</ul>
 
-    {% if privatelists %}
-    <h3>Private Lists</h3>
-    <ul>
-      <div class="list-group">
+				{% if privatelists %}
+					<h3>Private Lists</h3>
+					<ul>
+						<div class="list-group">
 
-        {% for list in privatelists %}
-        <div class="list-group-item list-group-item-action">
-          {% if list.creator.profile.is_public %}
-          <b style="display:inline"><a href="{% url 'listview' pk_slug=list.slug %}">{{ list.title }}</a> | <a href="{% url 'profile' username=list.creator %}">{{ list.creator.first_name }} {{ list.creator.last_name }}</a></b>
-          {% else %}
-          <b>{{ list.title }} | <a href="{% url 'profile' username=list.creator %}">{{ list.creator }}</a></b>
-          {% endif %}
-          <br/>
-          {% if list.description %}
-          Description: {{ list.description }}
-          {% endif %}
-        </div>
-        {% endfor %}
+							{% for list in privatelists %}
+								<div class="list-group-item list-group-item-action">
+									{% if list.creator.profile.is_public %}
+										<b style="display:inline"><a
+												href="{% url 'listview' pk_slug=list.slug %}">{{ list.title }}</a>
+											|
+											<a href="{% url 'profile' username=list.creator %}">{{ list.creator.first_name }} {{ list.creator.last_name }}</a></b>
+									{% else %}
+										<b>{{ list.title }} | <a
+												href="{% url 'profile' username=list.creator %}">{{ list.creator }}</a></b>
+									{% endif %}
+									<br/>
+									{% if list.description %}
+										Description: {{ list.description }}
+									{% endif %}
+								</div>
+							{% endfor %}
 
-      </div>
-    </ul>
+						</div>
+					</ul>
 
-  </div>
+					</div>
 
-    {% else %}
-    {% if request.user.is_authenticated %}
-    <p>You have not created any private lists.</p>
-    {% else %}
-    <b><a href="{% url 'loginn' %}">Login</a> or <a href="{% url 'registerr' %}">register</a> to save and create your own lists.</b>
-    {% endif %}
-    {% endif %}
+				{% else %}
+					{% if request.user.is_authenticated %}
+						<p>You have not created any private lists.</p>
+					{% else %}
+						<b><a href="{% url 'loginn' %}">Login</a> or <a
+								href="{% url 'registerr' %}">register</a> to save and create your
+							own lists.</b>
+					{% endif %}
+				{% endif %}
 
-  </div>
+		</div>
 
-</div>
+	</div>
 
-</div>
-</div>
+	</div>
+	</div>
 {% endblock body %}

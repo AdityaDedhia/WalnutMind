@@ -1,8 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}
-<title>Blog | WM</title>
-{% endblock title %}
+{% block title %}Blog | WM{% endblock title %}
 
 {% block body %}
 {% load static %}
@@ -28,7 +26,7 @@
                 <!-- Card img -->
                 <div class="card position-relative zoom" style="overflow: hidden;">
                     <img style="opacity: 0.9; filter: brightness(50%);" class="card-img" src="{{ post.cover.url }}" alt="Card image">
-                    <div class="card-img-overlay align-items-center" style="p-3 p-sm-5 d-block"> 
+                    <div class="card-img-overlay align-items-center" style="p-3 p-sm-5 d-block">
                         <div style="
                         overflow: hidden;
                         text-overflow: ellipsis;">
@@ -108,7 +106,7 @@
             class="btn btn-dark"
             @click = "tag = $el.textContent
             "><b>All</b></button>
-        
+
             {% for tag in tags %}
             <button style="margin:3px" type="button"
                     class="btn btn-dark"
@@ -125,5 +123,5 @@
 </div>
 
 <br/>
-        
+
 {% endblock body %}

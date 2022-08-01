@@ -1,300 +1,372 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1, user-scalable=no"/>
-  <meta name="description" content="Walnut Mind is a curated academic content management and publishing platform."/>
-  <meta name="keywords" content="Academia, Articles, Books, Commentaries, Blogs, Definitions, Resources"/>
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1,
+  shrink-to-fit=no, maximum-scale=1, user-scalable=no"/>
+	<meta name="description" content="Walnut Mind is an academic content management system
+  and publishing platform."/>
+	<meta name="keywords" content="Academia, Articles, Books, Commentaries,
+  Blogs, Definitions, Resources"/>
 
-  {% load static %}
+	{% load static %}
 
-  <!--{% if request.META.HTTP_HOST == '127.0.0.1:8000' or request.META.HTTP_HOST == 'localhost:8000' %}
-  <script type="text/javascript" src="http://livejs.com/live.js"></script>
-  {% endif %}-->
+	<!--LINKS-->
+	<link rel="icon" href="{% static 'Articles/logo.png' %}" type="image/x-icon"/>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700"/>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora"/>
+	<link rel="stylesheet" href="{% static 'Articles/Article-List.css' %}"/>
+	<link rel="stylesheet"
+	      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css"/>
+	<link rel="stylesheet"
+	      href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css"/>
+	<link rel="stylesheet" href="{% static 'layout.css' %}"/>
 
-  <!--LINKS-->
-  <link rel="icon" href="{% static 'Articles/logo.png' %}" type="image/x-icon"/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700"/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora"/>
-  <link rel="stylesheet" href="{% static 'Articles/Article-List.css' %}"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css"/>
-  <link rel="stylesheet" href="{% static 'layout.css' %}"/>
-  <!--SCRIPTS-->
-  <script type="text/javascript">
-  !function(a,b,c,d,e,f,g,h){a.RaygunObject=e,a[e]=a[e]||function(){
-  (a[e].o=a[e].o||[]).push(arguments)},f=b.createElement(c),g=b.getElementsByTagName(c)[0],
-  f.async=1,f.src=d,g.parentNode.insertBefore(f,g),h=a.onerror,a.onerror=function(b,c,d,f,g){
-  h&&h(b,c,d,f,g),g||(g=new Error(b)),a[e].q=a[e].q||[],a[e].q.push({
-  e:g})}}(window,document,"script","//cdn.raygun.io/raygun4js/raygun.min.js","rg4js");
-</script>
-  <script type="text/javascript">
-  rg4js('apiKey', 'FCe3U689WU8Bb6WQEQsBlQ');
-  rg4js('enablePulse', true);
-</script>
-  <script
-  src="https://code.jquery.com/jquery-3.6.0.min.js"
-  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-  crossorigin="anonymous"></script>
-  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous"/>
-  <script src="https://unpkg.com/htmx.org@1.7.0" integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js" integrity="sha512-Eezs+g9Lq4TCCq0wae01s9PuNWzHYoCMkE97e2qdkYthpI0pzC3UGB03lgEHn2XM85hDOUF6qgqqszs+iXU4UA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<!--SCRIPTS-->
+	<script type="text/javascript">
+        !function (a, b, c, d, e, f, g, h) {
+            a.RaygunObject = e, a[e] = a[e] || function () {
+                (a[e].o = a[e].o || []).push(arguments)
+            }, f = b.createElement(c), g = b.getElementsByTagName(c)[0],
+                f.async = 1, f.src = d, g.parentNode.insertBefore(f, g), h = a.onerror, a.onerror = function (b, c, d, f, g) {
+                h && h(b, c, d, f, g), g || (g = new Error(b)), a[e].q = a[e].q || [], a[e].q.push({
+                    e: g
+                })
+            }
+        }(window, document, "script", "//cdn.raygun.io/raygun4js/raygun.min.js", "rg4js");
 
-  <!--ANALYTICS-->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4XQDC6FX9D"></script>
-  <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+        rg4js('apiKey', '{{ settings.RAYGUN_RUM_APIKEY }}';
+        rg4js('enablePulse', true);
+	</script>
 
-  gtag('config', 'G-4XQDC6FX9D');
-  </script>
+	<script
+			src="https://code.jquery.com/jquery-3.6.0.min.js"
+			integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+			crossorigin="anonymous">
+	</script>
 
-  <meta name='dmca-site-verification' content='R016REdjdC94cnVMWlhQbWFxVEQzb2lVbGFzckxBemRkZ3N4L2hMaldBZz01' />
+	<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+	        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+	        crossorigin="anonymous"></script>
+	<link rel="stylesheet"
+	      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+	      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+	      crossorigin="anonymous"/>
+	<script src="https://unpkg.com/htmx.org@1.7.0"
+	        integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo"
+	        crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"
+	        integrity="sha512-Eezs+g9Lq4TCCq0wae01s9PuNWzHYoCMkE97e2qdkYthpI0pzC3UGB03lgEHn2XM85hDOUF6qgqqszs+iXU4UA=="
+	        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    {% block title %}
-    {% endblock title %}
+	<!--ANALYTICS-->
+	<script async src="https://www.googletagmanager.com/gtag/js?id={{ settings.G_TAG }}"></script>
 
-  </head>
+	<script>
+        window.dataLayer = window.dataLayer || [];
 
-  <body>
-    <style>
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'G-4XQDC6FX9D');
+	</script>
+
+	<meta name='dmca-site-verification'
+	      content='R016REdjdC94cnVMWlhQbWFxVEQzb2lVbGFzckxBemRkZ3N4L2hMaldBZz01'/>
+	<title>{% block title %}{% endblock title %}</title>
+
+</head>
+
+<body>
+<style>
     @import url('https://fonts.googleapis.com/css2?family=Nuosu+SIL&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Nuosu+SIL&display=swap');
 
-    </style>
+</style>
 
-    <!--NAVBAR-->
-    <div class="container position-sticky min-vh-100">
-      <div class="row noselect">
-        <div class="col-12">
-          <nav
-            class="navbar navbar-expand-lg blur blur-rounded position-fixed top-0 border-bottom py-2 shadow my-2
+<!--NAVBAR-->
+<div class="container position-sticky min-vh-100">
+	<div class="row noselect">
+		<div class="col-12">
+			<nav
+					class="navbar navbar-expand-lg blur blur-rounded position-fixed top-0 border-bottom py-2 shadow my-2
             start-0 end-0 mx-5">
 
+				<div class="container">
+					<!-- NAVBAR BRAND-->
+					<a class="navbar-brand" href="{% url 'index' %}" style="color: #321c05;">
+						<img src="{% static 'Articles/logo.png' %}" width="45" height="45"
+						     class="d-inline-block zoom">
+					</a>
+					<div class="d-none d-xl-inline d-sm-inline d-md-inline d-lg-inline"
+					     style="margin-left:-15px; margin-right:auto; padding-right:10vw">
+						<b style="font-family: 'Josefin Sans', sans-serif;">WALNUT&nbsp;</b>MIND<br/>
+						<span style="font-size:12px; text-decoration: underline;"><i>Where ideas click.</i></span>
 
-            <div class="container">
-              <!-- NAVBAR BRAND-->
-              <a class="navbar-brand" href="{% url 'index' %}" style="color: #321c05;">
-                  <img src="{% static 'Articles/logo.png' %}" width="45" height="45"
-                       class="d-inline-block zoom">
-              </a>
-                <div class="d-none d-xl-inline d-sm-inline d-md-inline d-lg-inline" style="margin-left:-15px; margin-right:auto; padding-right:10vw">
-                <b style="font-family: 'Josefin Sans', sans-serif;">WALNUT&nbsp;</b>MIND<br/>
-                <span style="font-size:12px; text-decoration: underline;"><i>Where ideas click.</i></span>
+					</div>
 
-                </div>
+					<!-- END NAVBAR BRAND-->
+					<ul class="navbar-nav-hover" style="display: flex; list-style:none; margin-top:15px;
+              margin:auto; padding-left:0px; text-align: center;">
 
-              <!-- END NAVBAR BRAND-->
-              <ul class="navbar-nav-hover" style="display: flex; list-style:none; margin-top:15px; margin:auto; padding-left:0px; text-align: center;">
+						<li class="nav-item mx-2">
+							<a class="zoom nav-link"
+							   style="color: #000000; display: inline-block; margin-left:-20px"
+							   href="{% url 'articleindex' %}"><span
+									class="d-none d-xl-inline nav-principals"
+									style=""><b>ARTICLES</b></span>
+								<i class="zoom bi bi-newspaper"></i>
+							</a>
+						</li>
 
-                <li class="nav-item mx-2">
-                  <a class="zoom nav-link" style = "color: #000000; display: inline-block; margin-left:-20px" href="{% url 'articleindex' %}"><span class="d-none d-xl-inline nav-principals" style=""><b>ARTICLES</b></span>
-                    <i class="zoom bi bi-newspaper"></i>
-                  </a>
-                </li>
+						<li class="nav-item mx-2">
+							<a class="zoom nav-link" style="color: #000000; display: inline-block;"
+							   href="{% url 'bookindex' %}"><span
+									class="d-none d-xl-inline nav-principals"><b>BOOKS</b></span>
+								<i class="zoom bi bi-book-half"></i>
+							</a>
+						</li>
 
-                <li class="nav-item mx-2">
-                  <a class="zoom nav-link" style = "color: #000000; display: inline-block;" href="{% url 'bookindex' %}"><span class="d-none d-xl-inline nav-principals"><b>BOOKS</b></span>
-                    <i class="zoom bi bi-book-half"></i>
-                  </a>
-                </li>
+						<li class="nav-item mx-2">
+							<a class="zoom nav-link nav-text"
+							   style="color: #000000; display: inline-block;"
+							   href="{% url 'blogindex' %}"><span
+									class="d-none d-xl-inline nav-principals"><b>BLOGS</b></span>
+								<i class="bi bi-paragraph"></i>
+								<sub><i class="zoom bi bi-globe2"></i></sub>
+							</a>
+						</li>
 
-                <li class="nav-item mx-2">
-                  <a class="zoom nav-link nav-text" style="color: #000000; display: inline-block;" href="{% url 'blogindex' %}"><span class="d-none d-xl-inline nav-principals"><b>BLOGS</b></span>
-                    <i class="bi bi-paragraph"></i>
-                    <sub><i class="zoom bi bi-globe2"></i></sub>
-                  </a>
-                </li>
+						<li class="nav-item mx-2">
+							<a class="zoom nav-link" style="color: #000000; display: inline-block;"
+							   href="{% url 'wikiindex' %}"><span
+									class="d-none d-xl-inline nav-principals"><b>WIKI</b></span>
+								<i class="bi bi-body-text"></i>
+								<sub><i class="zoom bi bi-globe2"></i></sub>
+							</a>
+						</li>
 
-                <li class="nav-item mx-2">
-                  <a class="zoom nav-link" style="color: #000000; display: inline-block;" href="{% url 'wikiindex' %}"><span class="d-none d-xl-inline nav-principals"><b>WIKI</b></span>
-                    <i class="bi bi-body-text"></i>
-                    <sub><i class="zoom bi bi-globe2"></i></sub>
-                  </a>
-                </li>
+					</ul>
 
-              </ul>
+					<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+					        data-bs-target="#navbarSupportedContent"
+					        aria-controls="navbarSupportedContent" aria-expanded="false"
+					        aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+					</button>
 
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
+					<div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+						<ul class="navbar-nav" style="margin-left:auto;">
 
-                <ul class="navbar-nav" style="margin-left:auto;">
+							{% if request.user.is_authenticated %}
 
-                    {% if request.user.is_authenticated %}
-
-                    <div style="margin-top:11px; text-align:center">
+								<div style="margin-top:11px; text-align:center">
 
 
-                    <!--{% if request.user.profile.is_author == True %}
-                    <a style="box-shadow: 0 0 20px #eee;" class="zoom btn btn-info rounded-pill" href="{% url 'newpost' %}"><i class="bi bi-pen-fill"></i></a>
+									<!--{% if request.user.profile.is_author == True %}
+                    <a style="box-shadow: 0 0 20px #eee;" class="zoom btn btn-info rounded-pill" href="
+										{% url 'newpost' %}"><i class="bi bi-pen-fill"></i></a>
                     {% else %}
-                    <a style="box-shadow: 0 0 20px #eee;" class="zoom btn btn-info rounded-pill" href="{% url 'newblogpost' %}"><i class="bi bi-pen-fill"></i></a>
+                    <a style="box-shadow: 0 0 20px #eee;" class="zoom btn btn-info rounded-pill" href="
+										{% url 'newblogpost' %}"><i class="bi bi-pen-fill"></i></a>
                     {% endif %}
                     DECOMISSIONED-->
 
-                    <a style="font-size:0;" href="{% url 'profile' username=request.user.username %}">
-                      {% if request.user.profile.avatar %}
-                      <img class="zoom nav-avatar" style="transform:translateY(-4px);" src="{{ request.user.profile.avatar.url }}"/>
-                      {% else %}
-                      <img class="zoom nav-avatar" style="transform:translateY(-4px);" src="{% static 'Users/def_avatar.png' %}"/>
-                      {% endif %}
-                    </a>
+									<a style="font-size:0;"
+									   href="{% url 'profile' username=request.user.username %}">
+										{% if request.user.profile.avatar %}
+											<img class="zoom nav-avatar"
+											     style="transform:translateY(-4px);"
+											     src="{{ request.user.profile.avatar.url }}"/>
+										{% else %}
+											<img class="zoom nav-avatar"
+											     style="transform:translateY(-4px);"
+											     src="{% static 'Users/def_avatar.png' %}"/>
+										{% endif %}
+									</a>
 
-                    {% if request.user.is_staff %}
-                    <a style="box-shadow: 0 0 20px #eee;" class="btn btn-success rounded-pill" href="/&mfHQp04wVAYsorpv9clIsPv0CDq4vEsfB&pdJd^h38T27^A0dsC1UH!54gx8h3dQ7U6p$3QgTyhp8!YrS7o9OFsIfl*eZ4dNxqGI$kq/">
-                      <i class="bi bi-shield-lock-fill"></i>
-                    </a>
-                  {% endif %}
+									{% if request.user.is_staff %}
+										<a style="box-shadow: 0 0 20px #eee;"
+										   class="btn btn-success rounded-pill"
+										   href={{ settings.ADMIN_URL }}>
+											<i class="bi bi-shield-lock-fill"></i>
+										</a>
+									{% endif %}
 
-                    <a style="box-shadow: 0 0 20px #eee;" class="btn btn-danger rounded-pill" href="{% url 'logoutt' %}"><i class="bi bi-x-circle-fill"></i></a>
+									<a style="box-shadow: 0 0 20px #eee;"
+									   class="btn btn-danger rounded-pill"
+									   href="{% url 'logoutt' %}"><i
+											class="bi bi-x-circle-fill"></i></a>
 
-                    </div>
-                    {% else %}
+								</div>
+							{% else %}
 
-                    <a style="margin-left:8px" class="btn-sky-blue  nav-link  rounded-pill zoom" href="{% url 'registerr' %}"><span style="color:white; font-weight:bold">REGISTER</span></a>
-                    <a style="margin-left:8px" class="nav-link btn-mystic-black rounded-pill zoom" href="{% url 'loginn' %}"><span style="color:white; font-weight:bold">LOGIN</span></a>
-                    {% endif %}
-                    <!--SEARCH BAR-->
-                    <div class="dropdown nav-search">
-                      <a class="nav-link btn-mystic-purple rounded-pill zoom" role="button" style="color:white; font-weight:bold;" href="#" id="navSearch" data-bs-toggle="dropdown" aria-expanded="false">SEARCH</a>
-                      <div class="dropdown-menu dropdown-menu-end" style="background-color: transparent; border:none" aria-labelledby="navSearch">
-                        <form class="input-group" method="post" action="{% url 'search' %}" style="width:250px;">
-                          {% csrf_token %}
-                          <input class="form-control border-secondary" style="z-index:9; border-radius:16px;" type="search" placeholder="Powered by WM Wiki" aria-label="Search" name="searchedterm">
-                          <button class="btn btn-primary m-0" style="z-index:10; left:-25px; border-radius:16px;" type="submit">Find</button>
-                        </form>
-                      </div>
-                    </div>
-                    <!--END SEARCH BAR-->
+								<a style="margin-left:8px"
+								   class="btn-sky-blue  nav-link  rounded-pill zoom"
+								   href="{% url 'registerr' %}"><span
+										style="color:white; font-weight:bold">REGISTER</span></a>
+								<a style="margin-left:8px"
+								   class="nav-link btn-mystic-black rounded-pill zoom"
+								   href="{% url 'loginn' %}"><span
+										style="color:white; font-weight:bold">LOGIN</span></a>
+							{% endif %}
+							<!--SEARCH BAR-->
+							<div class="dropdown nav-search">
+								<a class="nav-link btn-mystic-purple rounded-pill zoom"
+								   role="button" style="color:white; font-weight:bold;" href="#"
+								   id="navSearch" data-bs-toggle="dropdown" aria-expanded="false">SEARCH</a>
+								<div class="dropdown-menu dropdown-menu-end"
+								     style="background-color: transparent; border:none"
+								     aria-labelledby="navSearch">
+									<form class="input-group" method="post"
+									      action="{% url 'search' %}" style="width:250px;">
+										{% csrf_token %}
+										<input class="form-control border-secondary"
+										       style="z-index:9; border-radius:16px;" type="search"
+										       placeholder="Powered by WM Wiki" aria-label="Search"
+										       name="searchedterm">
+										<button class="btn btn-primary m-0"
+										        style="z-index:10; left:-25px; border-radius:16px;"
+										        type="submit">Find
+										</button>
+									</form>
+								</div>
+							</div>
+							<!--END SEARCH BAR-->
 
-                  </li>
+							</li>
 
-                </ul>
+						</ul>
 
 
-              </div>
-            </div>
-          </nav>
-          <!-- End Navbar -->
-        </div>
-      </div>
+					</div>
+				</div>
+			</nav>
+			<!-- End Navbar -->
+		</div>
+	</div>
 
-    </br></br></br></br></br>
+	<br/><br/><br/><br/>
 
-    <!--LOAD STATUS MESSAGE-->
-    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-      <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
-        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-      </symbol>
-    </svg>
+	<!--LOAD STATUS MESSAGE-->
+	<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+		<symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+			<path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+		</symbol>
+	</svg>
 
-    {% if messages %}
-      {% for message in messages %}
-      <div style="width:60%; margin: auto; padding: 10px">
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <strong>{{ message }}</strong>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-      </div>
-      {% endfor %}
-    {% endif %}
-  <!--END LOAD STATUS MESSAGE-->
+	{% if messages %}
+		{% for message in messages %}
+			<div style="width:60%; margin: auto; padding: 10px">
+				<div class="alert alert-warning alert-dismissible fade show" role="alert">
+					<strong>{{ message }}</strong>
+					<button type="button" class="btn-close" data-bs-dismiss="alert"
+					        aria-label="Close"></button>
+				</div>
+			</div>
+		{% endfor %}
+	{% endif %}
 
-<!--INJECT HTML HERE-->
-    {% block body %}
-    {% endblock body %}
-<!--END INJECT HTML HERE-->
+	{% block body %}{% endblock body %}
 
-  </div>
+</div>
 
-    <section class="footer">
-      <!-- Footer -->
-      <footer class=" bg-dark text-white text-center text-md-start">
-        <!-- Grid container -->
-        <div class="container p-4">
-          <!--Grid row-->
-          <div class="row">
-            <!--Grid column-->
-            <div class="col-lg-6 col-md-8 mb-4 mb-md-0">
-              <h5 class="text-uppercase">OUR MISSION</h5>
-              <p><i>"To instil a sense of appreciation for academic literature by finding intriguing and meaningful interdisciplinary connections between works through the provision of high-quality and equally accessible publications."</i></p>
+<section class="footer">
+	<!-- Footer -->
+	<footer class=" bg-dark text-white text-center text-md-start">
+		<!-- Grid container -->
+		<div class="container p-4">
+			<!--Grid row-->
+			<div class="row">
+				<!--Grid column-->
+				<div class="col-lg-6 col-md-8 mb-4 mb-md-0">
+					<h5 class="text-uppercase">OUR MISSION</h5>
+					<p><i>
+						"To instil a sense of appreciation for academic literature by finding
+						intriguing and meaningful interdisciplinary connections between works
+						through
+						the provision of high-quality and equally accessible publications."
+					</i></p>
+				</div>
 
-            </div>
-            <!--Grid column-->
+				<!--Grid column-->
+				<div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+					<h5 class="text-uppercase">Product</h5>
 
-            <!--Grid column-->
-            <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
-              <h5 class="text-uppercase">Product</h5>
+					<ul class="list-unstyled mb-0">
+						<li>
+							🤔 <a href="{% url 'about' %}" class="text-white">ABOUT</a>
+						</li>
+						<li>
+						<li>
+							🏗 <a href="{% url 'roadmap' %}" class="text-white">ROADMAP</a>
+						</li>
+						<li>
+							🔮 <a class="text-white"
+							      href="{% url 'opportunities' %}">OPPORTUNITIES</a>
+						</li>
+					</ul>
+				</div>
+				<!--Grid column-->
 
-              <ul class="list-unstyled mb-0">
-                <li>
-                  🤔 <a href="{% url 'about' %}" class="text-white">ABOUT</a>
-                </li>
-                <li>
-                <li>
-                  🏗 <a href="{% url 'roadmap' %}" class="text-white">ROADMAP</a>
-                </li>
-                <li>
-                  🔮 <a class="text-white" href="{% url 'opportunities' %}">OPPORTUNITIES</a>
-                </li>
-              </ul>
-            </div>
-            <!--Grid column-->
+				<!--Grid column-->
+				<div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+					<h5 class="text-uppercase mb-0">Legal</h5>
 
-            <!--Grid column-->
-            <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
-              <h5 class="text-uppercase mb-0">Legal</h5>
-
-              <ul class="list-unstyled">
-                <!--<li>
+					<ul class="list-unstyled">
+						<!--<li>
                   <a href="{% url 'faq' %}" class="text-white">🪄 FAQ</a>
                 </li>-->
-                <li>
-                  📜 <a href="{% url 'privacy' %}" class="text-white">PRIVACY POLICY</a>
-                </li>
-                <li>
-                  📄 <a href="{% url 'terms' %}" class="text-white">TERMS OF USE</a>
-                </li>
-              </ul>
-            </div>
-            <!--Grid column-->
+						<li>
+							📜 <a href="{% url 'privacy' %}" class="text-white">PRIVACY POLICY</a>
+						</li>
+						<li>
+							📄 <a href="{% url 'terms' %}" class="text-white">TERMS OF USE</a>
+						</li>
+					</ul>
+				</div>
+				<!--Grid column-->
 
-            <!--Grid column-->
-            <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
-              <h5 class="text-uppercase mb-0">Social</h5>
+				<!--Grid column-->
+				<div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+					<h5 class="text-uppercase mb-0">Social</h5>
 
-              <ul class="list-unstyled">
-                <li>
-                  📞 <a class="text-white" href="{% url 'contact' %}">CONTACT</a>
-                </li>
-              </ul>
-            </div>
-            <!--Grid column-->
-          </div>
-          <!--Grid row-->
+					<ul class="list-unstyled">
+						<li>
+							📞 <a class="text-white" href="{% url 'contact' %}">CONTACT</a>
+						</li>
+					</ul>
+				</div>
+				<!--Grid column-->
+			</div>
+			<!--Grid row-->
 
-          </div>
+		</div>
 
-        <!--NOTICE CONTAINER -->
-        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-          {% now "Y" as current_year %}
-          © {{ current_year }} Aditya Dedhia | All rights reserved
-          <a href="//www.dmca.com/Protection/Status.aspx?ID=12c20b5c-7494-498d-9d92-be0686f68573" title="DMCA.com Protection Status" class="dmca-badge"> <img width="50px" src ="https://images.dmca.com/Badges/dmca-solid-bw-simple.png?ID=12c20b5c-7494-498d-9d92-be0686f68573"  alt="DMCA.com Protection Status" /></a><script src="https://images.dmca.com/Badges/DMCABadgeHelper.min.js"></script>
-        </div>
-        <!--END NOTICE CONTAINER-->
-      </footer>
-    </section>
+		<!--NOTICE CONTAINER -->
+		<div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+			{% now "Y" as current_year %}
+			© {{ current_year }} Aditya Dedhia | All rights reserved
+			<a href="//www.dmca.com/Protection/Status.aspx?ID=12c20b5c-7494-498d-9d92-be0686f68573"
+			   title="DMCA.com Protection Status" class="dmca-badge">
+				<img width="50px"
+				     src="https://images.dmca.com/Badges/dmca-solid-bw-simple.png?ID=12c20b5c-7494-498d-9d92-be0686f68573"
+				     alt="DMCA.com Protection Status"/></a>
+			<script src="https://images.dmca.com/Badges/DMCABadgeHelper.min.js"></script>
+		</div>
+		<!--END NOTICE CONTAINER-->
+	</footer>
+</section>
 
 
-    <script>
+<script>
 
-      htmx.onLoad(function(content) {
+    htmx.onLoad(function (content) {
         var sortables = content.querySelectorAll(".sortable");
         for (var i = 0; i < sortables.length; i++) {
             var sortable = sortables[i];
@@ -305,10 +377,10 @@
         }
     })
 
-      document.body.addEventListener('htmx:configRequest', (event)=> {
+    document.body.addEventListener('htmx:configRequest', (event) => {
         event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
-      })
-    </script>
+    })
+</script>
 
-  </body>
+</body>
 </html>

@@ -1,9 +1,6 @@
-<form hx-post="{% url 'editcollection' pk_slug=collection.pk %}" hx-encoding="multipart/form-data" hx-target="#collection-details">
-
-{% csrf_token %}
-
-{{ form.as_p }}
-
-<button class="btn btn-primary" type="submit">Submit</button>
-
+<form hx-post="{% url 'editcollection' pk_slug=collection.pk %}" hx-encoding="multipart/form-data"
+      hx-target="#collection-details">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<button class="btn btn-primary" type="submit">Submit</button>
 </form>

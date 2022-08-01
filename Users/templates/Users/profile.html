@@ -1,14 +1,11 @@
 {% extends "layout.html" %}
 
 {% block title %}
-<title>
   {% if is_public == True %}
   {{ user.first_name }} {{ user.last_name }}'s Profile | WM
   {% else %}
   {{ user.username }}'s Profile | WM
   {% endif %}
-
-</title>
 {% endblock title %}
 
 {% block body %}

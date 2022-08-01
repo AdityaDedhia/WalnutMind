@@ -131,6 +131,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'Blog.urls'
 
+ADMIN_URL = '&mfHQp04wVAYsorpv9clIsPv0CDq4vEsfB&pdJd^h38T27^A0dsC1UH!54gx8h3dQ7U6p$3QgTyhp8' \
+           '!YrS7o9OFsIfl*eZ4dNxqGI$kq/'
+
+#  ANALYTICS
+RAYGUN_RUM_APIKEY = 'FCe3U689WU8Bb6WQEQsBlQ'
+G_TAG = 'G-4XQDC6FX9D'
+
 TEMPLATES = [
 	{
 		'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -143,9 +150,16 @@ TEMPLATES = [
 				'django.template.context_processors.media',
 				'django.contrib.auth.context_processors.auth',
 				'django.contrib.messages.context_processors.messages',
+				'django_settings_export.settings_export',
 			],
 		},
 	},
+]
+
+SETTINGS_EXPORT = [
+	'ADMIN_URL',
+	'RAYGUN_RUM_APIKEY',
+	'G_TAG',
 ]
 
 AUTH_PASSWORD_VALIDATORS = [

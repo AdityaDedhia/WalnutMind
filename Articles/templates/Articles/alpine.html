@@ -1,119 +1,129 @@
 {% extends "layout.html" %}
 
-{% block title %}
-     <title> Articles | WM</title>
-{% endblock title %}
+{% block title %}Articles | WM{% endblock title %}
 
 {% block body %}
-<section class="position-relative pt-0">
-<div class="container"
-    x-data="{tag: 'All', posts: []}"
-    x-init="posts = await (await fetch('/article-list')).json()">
+	<section class="position-relative pt-0">
+		<div class="container"
+		     x-data="{tag: 'All', posts: []}"
+		     x-init="posts = await (await fetch('/article-list')).json()">
 
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-        <li class="breadcrumb-item"><a href="">Articles</a></li>
-        <li class="breadcrumb-item active" aria-current="page" x-text="tag">
-        </li>
-    </ol>
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+				<li class="breadcrumb-item"><a href="">Articles</a></li>
+				<li class="breadcrumb-item active" aria-current="page" x-text="tag">
+				</li>
+			</ol>
 
-    <h3 style="font-family: 'Josefin Sans', sans-serif;">WM <b style="color:gray">Articles</b></h3>
-    <hr/>
+			<h3 style="font-family: 'Josefin Sans', sans-serif;">WM <b
+					style="color:gray">Articles</b></h3>
+			<hr/>
 
-    <div class="mb-2" style="background-color: #ebebeb; border-radius:15px; padding:10px;">
-    <button type="button"
-    class="btn btn-dark"
-    @click = "tag = $el.textContent
+			<div class="mb-2" style="background-color: #ebebeb; border-radius:15px; padding:10px;">
+				<button type="button"
+				        class="btn btn-dark"
+				        @click="tag = $el.textContent
     "><b>All</b></button>
 
-    {% for tag in tags %}
-    <button style="margin:3px" type="button"
-            class="btn btn-dark"
-            @click="tag = $el.textContent
+				{% for tag in tags %}
+					<button style="margin:3px" type="button"
+					        class="btn btn-dark"
+					        @click="tag = $el.textContent
             ">{{ tag }}</button>
-    {% endfor %}
-    
-    </div>
-    <br/>
+				{% endfor %}
 
-    <style>
-        .img-container {
-            display: inline-block;
-            overflow: hidden;         
-          }
-          .img-container img {
-            display: block;
-            transition: transform 1s; 
-          }
-          .img-container:hover img {
-            transform: scale(1.3);
-            transform-origin: 50% 50%;
-        }
-   
-        .text-hover:hover {
-            font-size: 20px;
-              color: #0096ff;
-              cursor: pointer;
-              font-weight: 600;
-              text-decoration: underline;
-              padding-bottom: 5px;
-              transition: all 0.35s linear;
-              background: linear-gradient(
-                to bottom,
-                rgba(#ff9900, 1) 0%,
-                rgba(#ff9900, 1) 98%
-              );
-              background-size: 0px 4px;
-              background-repeat: no-repeat;
-              background-position: left 100%;
-            
-            }
+			</div>
+			<br/>
 
-    </style>
+			<style>
+                .img-container {
+                    display: inline-block;
+                    overflow: hidden;
+                }
 
-    <div class="row">
-        <div class="col-12">
-            <div class="row gy-4">
+                .img-container img {
+                    display: block;
+                    transition: transform 1s;
+                }
 
-<template x-for="post in posts.filter(f => tag === 'All' || f.tags.includes(tag))">
-       <!-- Card START -->
-       <div class="col-sm-4 col-lg-3">
-        <div class="card" style="border:none">
-            <!-- Card img -->
-            <div class="position-relative img-container">
-                <img :src = "post.cover" class="card-img" alt="Card image" id="image">
-                <div class="card-img-overlay d-flex align-items-start flex-column p-3">
-                    <!-- Card overlay bottom -->
-                    <div class="w-100 mt-auto">
-                        <!-- Card category -->
-                        <template x-for="tag in post.tags">
+                .img-container:hover img {
+                    transform: scale(1.3);
+                    transform-origin: 50% 50%;
+                }
+
+                .text-hover:hover {
+                    font-size: 20px;
+                    color: #0096ff;
+                    cursor: pointer;
+                    font-weight: 600;
+                    text-decoration: underline;
+                    padding-bottom: 5px;
+                    transition: all 0.35s linear;
+                    background: linear-gradient(
+                            to bottom,
+                            rgba(#ff9900, 1) 0%,
+                            rgba(#ff9900, 1) 98%
+                    );
+                    background-size: 0px 4px;
+                    background-repeat: no-repeat;
+                    background-position: left 100%;
+
+                }
+
+			</style>
+
+			<div class="row">
+				<div class="col-12">
+					<div class="row gy-4">
+
+						<template
+								x-for="post in posts.filter(f => tag === 'All' || f.tags.includes(tag))">
+							<!-- Card START -->
+							<div class="col-sm-4 col-lg-3">
+								<div class="card" style="border:none">
+									<!-- Card img -->
+									<div class="position-relative img-container">
+										<img :src="post.cover" class="card-img" alt="Card image"
+										     id="image">
+										<div class="card-img-overlay d-flex align-items-start flex-column p-3">
+											<!-- Card overlay bottom -->
+											<div class="w-100 mt-auto">
+												<!-- Card category -->
+												<template x-for="tag in post.tags">
                         <span class="badge bg-warning mb-2" style="margin:5px">
                                 #<b x-text="tag"></b>
                         </span>
-                    </template>
+												</template>
 
-                    </div>
-                </div>
-            </div>
-            <div class="card-body" style="padding:15px">
-                <h5 class="card-title text-hover"><a :href="'/articles/'+post.slug" class="btn-link text-reset fw-bold"><b x-text="post.title"></b></a></h5>
-                <i class="card-text" style="font-size: 13px;   text-align: justify; text-justify: inter-word;" x-text="post.abstract"></i><br/>
-                <b x-data="{date: new Date(post.dateCreated)}"  x-text="date.toLocaleString()" class="nav-item" style="color:gray; font-size:12px"></b>
-            </div>
-        </div>
-    </div>
-    <!-- Card END -->
-</template>
-            </div>
-        </div>
-    </div>
-</div>
-</section>
+											</div>
+										</div>
+									</div>
+									<div class="card-body" style="padding:15px">
+										<h5 class="card-title text-hover"><a
+												:href="'/articles/'+post.slug"
+												class="btn-link text-reset fw-bold"><b
+												x-text="post.title"></b></a></h5>
+										<i class="card-text"
+										   style="font-size: 13px;   text-align: justify; text-justify: inter-word;"
+										   x-text="post.abstract"></i><br/>
+										<b x-data="{date: new Date(post.dateCreated)}"
+										   x-text="date.toLocaleString()" class="nav-item"
+										   style="color:gray; font-size:12px"></b>
+									</div>
+								</div>
+							</div>
+							<!-- Card END -->
+						</template>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
-<script>
-var id = document.GetElementById("idvalue").innerHTML;
-document.write(id);
-</script>
+	<script>
+        var id = document.GetElementById("idvalue").innerHTML;
+        document.write(id);
+	</script>
 
-<br/>
+	<br/>
 {% endblock body %}

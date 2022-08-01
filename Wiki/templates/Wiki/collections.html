@@ -1,56 +1,54 @@
 {% extends "layout.html" %}
-
-{% block title %}
-<title>Wiki | WM</title>
-{% endblock title %}
+{% block title %}Wiki | WM{% endblock title %}
 
 {% block body %}
+	<ol class="breadcrumb" style="background-color:white">
+		<li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+		<li class="breadcrumb-item"><a href="{% url 'wikiindex' %}">Wiki</a></li>
+		<li class="breadcrumb-item active" aria-current="page">Collections</li>
+	</ol>
 
-    <ol class="breadcrumb" style = "background-color:white">
-        <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'wikiindex' %}">Wiki</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Collections</li>
-    </ol>
+	<div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
 
-<div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
+		<h1 style="color:gray">Walnut <i>Collections</i></h1>
+		<p>Collections Count: {{ collectionsCount }}</p>
 
-<h1 style="color:gray">Walnut <i>Collections</i></h1>
-<p>Collections Count: {{ collectionsCount }}</p>
+		<div class="row">
 
-<div class="row">
+			<div class="col-md-3"
+			     style="height:500px;border:1px solid #ccc; border-radius: 10px; overflow:auto;">
+				<br/>
+				<ul>
+					{% for resource in resources %}
+						<li>
+							<a href="{% url 'resourceview' pk=resource.pk %}">{{ resource.title }}</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
 
-  <div class="col-md-3" style="height:500px;border:1px solid #ccc; border-radius: 10px; overflow:auto;">
-    <br/>
-    <ul>
-      {% for resource in resources %}
-      <li>
-      <a href="{% url 'resourceview' pk=resource.pk %}">{{ resource.title }}</a>
-      </li>
-      {% endfor %}
-  </ul>
-  </div>
+			<div class="col-md-9" style="height:500px;overflow:auto">
+				<br/>
+				{% if collections %}
+					<ul>
+						<div class="list-group">
+							{% for collection in collections %}
 
-  <div class="col-md-9" style="height:500px;overflow:auto">
-    <br/>
-    {% if collections %}
-  <ul>
-    <div class="list-group">
-    {% for collection in collections %}
+								<a href="{% url 'collectionview' pk_slug=collection.slug %}"
+								   class="list-group-item list-group-item-action">
+									<b>{{ collection.title }} | {{ collection.creator }}</b>
+									<br/>
+									Description: {{ collection.description }}
+								</a>
+							{% endfor %}
+						</div>
+					</ul>
+				{% else %}
+					<p>No collections found.</p>
+				{% endif %}
+			</div>
 
-    <a href="{% url 'collectionview' pk_slug=collection.slug %}" class="list-group-item list-group-item-action">
-      <b>{{ collection.title }} | {{ collection.creator }}</b>
-      <br/>
-      Description: {{ collection.description }}
-    </a>
-    {% endfor %}
-  </div>
-  </ul>
-  {% else %}
-  <p>No collections found.</p>
-  {% endif %}
-  </div>
+		</div>
 
-</div>
-
-</div>
+	</div>
 {% endblock body %}

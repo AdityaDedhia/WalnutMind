@@ -1,55 +1,55 @@
-
 {% extends "layout.html" %}
-
-{% block title %}
-<title>{{ term }} Definition | WM</title>
-{% endblock title %}
-
-{% block body %}
+{% block title %}{{ term }} Definition | WM{% endblock title %}
 {% load static %}
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
-<ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'wikiindex' %}">Wiki</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'listsview' %}">Walnut Define</a></li>
+{% block body %}
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+		<li class="breadcrumb-item"><a href="{% url 'wikiindex' %}">Wiki</a></li>
+		<li class="breadcrumb-item"><a href="{% url 'listsview' %}">Walnut Define</a></li>
 
-    <li class="breadcrumb-item active" aria-current="page">{{ term }} Definition</li>
-</ol>
+		<li class="breadcrumb-item active" aria-current="page">{{ term }} Definition</li>
+	</ol>
 
-<style>
- figcaption {
-    color: grey;
-    font-style: italic;
-    padding: 2px;
-    text-align: center;
-}
+	<style>
+        figcaption {
+            color: grey;
+            font-style: italic;
+            padding: 2px;
+            text-align: center;
+        }
 
-</style>
+	</style>
 
-<h1 style="text-align:center;">{{ term }} Definition</h1>
-    <hr/>
+	<h1 style="text-align:center;">{{ term }} Definition</h1>
+	<hr/>
 
-    {% if term.cover %}
-    <div class="row">
+	{% if term.cover %}
+		<div class="row">
 
-    <div class="col-md-4">
-    <img class="img-thumbnail" style="height:300px; width: auto; display: block; margin-left: auto; margin-right: auto;" src="{{ term.cover.url }}"/>
-    <figcaption>Source: <a href="{{ term.coverURL }}" target="_blank" rel="noopener noreferrer">{{ term.coverSrc }}</a></figcaption>
-    </div>
-    <div class="col-md-8">
-    <p style="font-size:20px">{{ term.definition|safe }}</p>
-    <p style="color:gray">Last Reviewed: {{ term.dateUpdated }}</p>
+			<div class="col-md-4">
+				<img class="img-thumbnail"
+				     style="height:300px; width: auto; display: block; margin-left: auto; margin-right: auto;"
+				     src="{{ term.cover.url }}"/>
+				<figcaption>Source: <a href="{{ term.coverURL }}" target="_blank"
+				                       rel="noopener noreferrer">{{ term.coverSrc }}</a>
+				</figcaption>
+			</div>
+			<div class="col-md-8">
+				<p style="font-size:20px">{{ term.definition|safe }}</p>
+				<p style="color:gray">Last Reviewed: {{ term.dateUpdated }}</p>
 
-    </div>
+			</div>
 
-    </div>
-    {% else %}
-    <p>{{ term.definition|safe }}</p>
-    <p style="color:gray">Last Reviewed: {{ term.dateUpdated }}</p>
+		</div>
+	{% else %}
+		<p>{{ term.definition|safe }}</p>
+		<p style="color:gray">Last Reviewed: {{ term.dateUpdated }}</p>
 
-    {% endif %}
-<br/>
+	{% endif %}
+	<br/>
 
 {% endblock body %}

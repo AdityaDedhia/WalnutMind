@@ -1,18 +1,18 @@
 {% extends "layout.html" %}
 
-{% block title %}
-<title>Update Post | WM</title>
-{% endblock title %}
+{% block title %}Update Post | WM{% endblock title %}
 
 {% block body %}
-<ol class="breadcrumb" style = "background-color:white">
-    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'profile' username=request.user %}">Profile</a></li>
-    <li class="breadcrumb-item"><a href="/users/{{ request.user }}/#publicationsmanager">Publications Manager</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Publications Editor</li>
-</ol>
-{% if post.author == request.user %}
-<h1 class="display-2">CONFIRM DELETION</h1>
+	<ol class="breadcrumb" style="background-color:white">
+		<li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+		<li class="breadcrumb-item"><a href="{% url 'profile' username=request.user %}">Profile</a>
+		</li>
+		<li class="breadcrumb-item"><a href="/users/{{ request.user }}/#publicationsmanager">Publications
+			Manager</a></li>
+		<li class="breadcrumb-item active" aria-current="page">Publications Editor</li>
+	</ol>
+	{% if post.author == request.user %}
+		<h1 class="display-2">CONFIRM DELETION</h1>
 <h3 style="color:red">Are you sure you want to delete the article titled:</h3>
 <h5><b>'{{ post.title }}'?</b></h5>
 <h6 style="color:gray">It is always advised to archive by 'unpublishing' live where possible. You acknowledge that deleting is a permanent and irreversible action.</h6>

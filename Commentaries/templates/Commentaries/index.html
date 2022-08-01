@@ -1,113 +1,116 @@
 {% extends "layout.html" %}
 
-{% block title %}
-<title>Books | WM</title>
-{% endblock title %}
+{% block title %}Books | WM{% endblock title %}
 
 {% block body %}
-{% load static %}
+	{% load static %}
 
-<div class ="container"
-x-data="{tag: 'All', posts: []}"
-x-init="posts = await (await fetch('book-list')).json()">
+	<div class="container"
+	     x-data="{tag: 'All', posts: []}"
+	     x-init="posts = await (await fetch('book-list')).json()">
 
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-    <li class="breadcrumb-item"><a href="">Books</a></li>
-    <li class="breadcrumb-item active" aria-current="page" x-text="tag">
-    </li>
-</ol>
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+			<li class="breadcrumb-item"><a href="">Books</a></li>
+			<li class="breadcrumb-item active" aria-current="page" x-text="tag">
+			</li>
+		</ol>
 
-<h3 style="font-family: 'Josefin Sans', sans-serif;">WM <b style="color:gray">Books</b></h3>
-<hr/>
+		<h3 style="font-family: 'Josefin Sans', sans-serif;">WM <b style="color:gray">Books</b></h3>
+		<hr/>
 
-<style>
-.not-visible{
-  display:none;
-}
-</style>
-
-
-<!--START ALPINE CONTAINER-->
-
-<div class="row">
-<!--CATEGORY PANE-->
-
-  <div class="col-4 col-md-3">
-  <h3>Categories</h3>
-      <button type = "button"
-      class="btn btn-light"
-      @click = "tag = $el.textContent
-      ">All</button>
-
-      {% for tag in tags %}
-      <br><br>
-      <button type = "button"
-              class="btn btn-light"
-              @click = "tag = $el.textContent
-              ">{{tag}}</button>
-      {% endfor %}
-  </div>
+		<style>
+            .not-visible {
+                display: none;
+            }
+		</style>
 
 
-  <!--MAIN COLUMN-->
-  <div class="col-16 col-md-9">
+		<!--START ALPINE CONTAINER-->
+
+		<div class="row">
+			<!--CATEGORY PANE-->
+
+			<div class="col-4 col-md-3">
+				<h3>Categories</h3>
+				<button type="button"
+				        class="btn btn-light"
+				        @click="tag = $el.textContent
+      ">All
+				</button>
+
+				{% for tag in tags %}
+					<br><br>
+					<button type="button"
+					        class="btn btn-light"
+					        @click="tag = $el.textContent
+              ">{{ tag }}</button>
+				{% endfor %}
+			</div>
 
 
-<div id = "spinner-box" class = "text-center mt-3">
-  <div class="spinner-grow text-info" style="width: 3rem; height: 3rem;" role="status"></div>
-</div>
-  
+			<!--MAIN COLUMN-->
+			<div class="col-16 col-md-9">
 
-  <div id = "data-box" class = "not-visible">
 
-  <div class = "row">
+				<div id="spinner-box" class="text-center mt-3">
+					<div class="spinner-grow text-info" style="width: 3rem; height: 3rem;"
+					     role="status"></div>
+				</div>
 
-    <template x-for="post in posts.filter(f => tag === 'All' || f.tags.includes(tag))">
 
-        <div class="col-sm-3">
-          <!--BOOK LIST ITEM-->
-          <div class = "col zoom" style = "padding: 20px;">
-          <a :href = "post.slug">
-            <img :src = "post.cover" class = "img-thumbnail float-start" style = "height:250px; border: 2px solid black;"></a>
-            <br>
-            <cap><i x-text="post.title"></i>
-            </cap><br><b style = "color:grey;">Commentary</b>
-          </div>
-          <!--BOOK LIST ITEM END-->
-        </div>
-      <br>
+				<div id="data-box" class="not-visible">
 
-      
-    </template>
-  </div>
+					<div class="row">
 
-</div>
-</div>
-</div>
-</div>
+						<template
+								x-for="post in posts.filter(f => tag === 'All' || f.tags.includes(tag))">
 
-<script type="text/javascript">
-  const spinnerBox = document.getElementById('spinner-box')
-  const dataBox = document.getElementById('data-box')
-  
-  $.ajax({
-    type: 'GET',
-    url: '/books/post-json/',
-    success: function(response){
-      setTimeout(()=>{
-        spinnerBox.classList.add('not-visible')
-        console.log('response',response)
-        dataBox.classList.remove('not-visible')
-  
-      }, 500)
-  
-    },
-    error: function(error){
-      console.log(error)
-    }
-  })
-  
-  </script>
+							<div class="col-sm-3">
+								<!--BOOK LIST ITEM-->
+								<div class="col zoom" style="padding: 20px;">
+									<a :href="post.slug">
+										<img :src="post.cover" class="img-thumbnail float-start"
+										     style="height:250px; border: 2px solid black;"></a>
+									<br>
+									<cap><i x-text="post.title"></i>
+									</cap>
+									<br><b style="color:grey;">Commentary</b>
+								</div>
+								<!--BOOK LIST ITEM END-->
+							</div>
+							<br>
+
+
+						</template>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+        const spinnerBox = document.getElementById('spinner-box')
+        const dataBox = document.getElementById('data-box')
+
+        $.ajax({
+            type: 'GET',
+            url: '/books/post-json/',
+            success: function (response) {
+                setTimeout(() => {
+                    spinnerBox.classList.add('not-visible')
+                    console.log('response', response)
+                    dataBox.classList.remove('not-visible')
+
+                }, 500)
+
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        })
+
+	</script>
 
 {% endblock body %}

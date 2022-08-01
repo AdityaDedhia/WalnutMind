@@ -1,105 +1,113 @@
 {% extends "layout.html" %}
 
-{% block title %}
-<title>Update Post | WM</title>
-{% endblock title %}
+{% block title %}Update Post | WM{% endblock title %}
 
 {% block body %}
 
-<ol class="breadcrumb" style = "background-color:white">
-    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'profile' username=request.user %}">Profile</a></li>
-    <li class="breadcrumb-item"><a href="/users/{{ request.user }}/#publicationsmanager">Publications Manager</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Publications Editor</li>
-</ol>
+	<ol class="breadcrumb" style="background-color:white">
+		<li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+		<li class="breadcrumb-item"><a href="{% url 'profile' username=request.user %}">Profile</a>
+		</li>
+		<li class="breadcrumb-item"><a href="/users/{{ request.user }}/#publicationsmanager">Publications
+			Manager</a></li>
+		<li class="breadcrumb-item active" aria-current="page">Publications Editor</li>
+	</ol>
 
-<!--FURTHER AUTH FOR EDIT PRIVILEGES-->
+	<!--FURTHER AUTH FOR EDIT PRIVILEGES-->
 
-{% if user.is_authenticated %}
+	{% if user.is_authenticated %}
 
-{% if user.id == post.author.id %}
+		{% if user.id == post.author.id %}
 
-<h3>Publications Editor / <a href = "{% url 'articleview' pk_slug=post.slug %}" style="color:gray">Editing Article Key {{ post.pk }}</a></h3>
-<hr/>
+			<h3>Publications Editor / <a href="{% url 'articleview' pk_slug=post.slug %}"
+			                             style="color:gray">Editing Article Key {{ post.pk }}</a>
+			</h3>
+			<hr/>
 
-<div class="form-group" style="border">
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.media }}
-    
-        <div class="row">
+			<div class="form-group" style="border">
+				<form method="post" enctype="multipart/form-data">
+					{% csrf_token %}
+					{{ form.media }}
 
-        <div class="col-md-4" id = "title">
-          <label style = "float: left;" for="title">Title</label>
-          {{ form.title }}
-        </div>
-        <div class="col-md-3" id = "tags">
-          <label style = "float: left;" for="tags">Tags (' , ' seperated)</label>
-          <input type="text" name="tags" data-role="tagsinput" class="form-control" id="tags" name="tags" value="{% for tag in post.tags.all %}{{ tag }},{% endfor %}">
+					<div class="row">
 
-   
-        </div>
-        <div class="col-md-5" id="abstract">
-          <label style = "float: left;" for="abstract">Abstract</label>
-          {{ form.abstract }}
-        </div>
-
-      </div>
-
-        <div class="row">
-          <div class="col-md-4" id="cover">
-            <label style = "float: left;" for="cover">Cover</label>
-            {{ form.cover }}
-          </div>
-          <div class="col-md-4" id="coverSrc">
-            <label style = "float: left;" for="coverSrc">Cover Source</label>
-            {{ form.coverSrc }}
-          </div>
-
-          <div class="col-md-4" id="coverURL">
-            <label style = "float: left;" for="coverURL">Cover URL</label>
-            {{ form.coverURL }}
-          </div>
-        </div>
-        <br/>
-
-      <div class="row">
-
-        <div id = "top" class="col" id="content">
-          <label style = "float: left;" for="content">Content</label>
-          {{ form.content }}
-        </div>
-
-        <div id = "bottom" class="col" id="resources">
-          <label style = "float: left;" for="resources">Resources</label>
-          {{ form.resources }}
-        </div>
-
-      </div>
-      <br/>
-
-          <div class="form-check form-switch" id="public">
-            <label class="form-check-label" for="public"><i class="bi bi-cloud-arrow-up-fill"></i><b> PUBLISH LIVE</b>
-            </label>
-            {{ form.public }}
-          </div>
-          <button type="submit" style="float: right;" class="btn btn-primary btn-lg">SAVE</button>
-
-    </form>
-    <a style="color:red" href="{% url 'deletearticle' pk=post.pk %}">Delete this article?</a>
-
-</div>
-
-</div>
-<br/>
+						<div class="col-md-4" id="title">
+							<label style="float: left;" for="title">Title</label>
+							{{ form.title }}
+						</div>
+						<div class="col-md-3" id="tags">
+							<label style="float: left;" for="tags">Tags (' , ' seperated)</label>
+							<input type="text" name="tags" data-role="tagsinput"
+							       class="form-control" id="tags" name="tags"
+							       value="{% for tag in post.tags.all %}{{ tag }},{% endfor %}">
 
 
-{% else %}
+						</div>
+						<div class="col-md-5" id="abstract">
+							<label style="float: left;" for="abstract">Abstract</label>
+							{{ form.abstract }}
+						</div>
 
-Access denied
+					</div>
 
-{% endif %}
+					<div class="row">
+						<div class="col-md-4" id="cover">
+							<label style="float: left;" for="cover">Cover</label>
+							{{ form.cover }}
+						</div>
+						<div class="col-md-4" id="coverSrc">
+							<label style="float: left;" for="coverSrc">Cover Source</label>
+							{{ form.coverSrc }}
+						</div>
 
-{% endif %}
+						<div class="col-md-4" id="coverURL">
+							<label style="float: left;" for="coverURL">Cover URL</label>
+							{{ form.coverURL }}
+						</div>
+					</div>
+					<br/>
+
+					<div class="row">
+
+						<div id="top" class="col" id="content">
+							<label style="float: left;" for="content">Content</label>
+							{{ form.content }}
+						</div>
+
+						<div id="bottom" class="col" id="resources">
+							<label style="float: left;" for="resources">Resources</label>
+							{{ form.resources }}
+						</div>
+
+					</div>
+					<br/>
+
+					<div class="form-check form-switch" id="public">
+						<label class="form-check-label" for="public"><i
+								class="bi bi-cloud-arrow-up-fill"></i><b> PUBLISH LIVE</b>
+						</label>
+						{{ form.public }}
+					</div>
+					<button type="submit" style="float: right;" class="btn btn-primary btn-lg">
+						SAVE
+					</button>
+
+				</form>
+				<a style="color:red" href="{% url 'deletearticle' pk=post.pk %}">Delete this
+					article?</a>
+
+			</div>
+
+			</div>
+			<br/>
+
+
+		{% else %}
+
+			Access denied
+
+		{% endif %}
+
+	{% endif %}
 
 {% endblock body %}

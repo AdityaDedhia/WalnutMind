@@ -1,13 +1,9 @@
 {% extends "layout.html" %}
-
-{% block title %}
-<title>Search | WM</title>
-{% endblock title %}
-
-{% block body %}
+{% block title %}Search | WM{% endblock title %}
 {% load static %}
 {% load embed_video_tags %}
 
+{% block body %}
     <ol class="breadcrumb" style = "background-color:white">
         <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
         <li class="breadcrumb-item"><a href="{% url 'wikiindex' %}">Wiki</a></li>
@@ -135,7 +131,7 @@
                 <!--PRIORITY 3 - WEBSITES-->
                 {% elif resource.weblink %}
                 <h6>{{ resource.title }} | <i style="color:gray">Relevance: {{ resource.priority|floatformat:3 }}</i> </h6><hr/>
-                {{ resource.weblink }}: 
+                {{ resource.weblink }}:
                 {{ resource.description}}
                 <!--TRY TO GENERATE WEB LINK PREVIEW-->
                 {% endif %}

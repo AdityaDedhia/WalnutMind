@@ -1,136 +1,164 @@
 {% extends "layout.html" %}
 {% load widget_tweaks %}
 
-{% block title %}
-<title>Registration | WM</title>
-{% endblock title %}
+{% block title %}Registration | WM{% endblock title %}
 
 {% block body %}
-{% load static %}
-    <form action="{% url 'registerr' %}" method="post" autocomplete='off'>
-        {% csrf_token %}
+	{% load static %}
+	<form action="{% url 'registerr' %}" method="post" autocomplete='off'>
+		{% csrf_token %}
 
-        <section class="vh-100">
-            <div class="container h-100">
-              <div class="row d-flex justify-content-center align-items-center h-100">
-                <div class="col-lg-12 col-xl-11">
-                  <div class="card text-black" style="border-radius: 25px;">
-                    <div class="card-body p-md-5">
-                      <div class="row justify-content-center">
-                        <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
-          
-                          <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Get on board.</p>
-          
-                          <form class="mx-1 mx-md-4">
-        
-                            <div class = "form-row">
-                            <div class="col d-flex flex-row align-items-center mb-4">
-                            <i class="bi bi-person-fill fa-lg me-3 fa-fw"></i>
-        
-                              <div style = "padding: 5px" class="form-outline flex-fill mb-0">
-                                <div class="col" id = "first_name">
-                                    {{ form.first_name }}
-                                    <label style = "float: left;" for="first_name">First Name</label>
-                                  </div>
-                              </div>
-                                <div style = "padding: 5px" class="form-outline flex-fill mb-0">
-                                  <div class="col" id = "last_name">
-                                      {{ form.last_name }}
-                                      <label style = "float: left;" for="last_name">Last Name</label>
-                                    </div>
-                                </div>
-                              </div>
-                            </div>
-        
-                            <div class="d-flex flex-row align-items-center mb-4">
-                                <i class="bi bi-person-bounding-box fa-lg me-3 fa-fw"></i>
-                                <div class="form-outline flex-fill mb-0">
-                                  <div class="col" id = "username">
-                                      {% render_field form.username class="form-control" %}
-                                      <label style="float: left;" for="username">Username</label><br/>
-                                      <cap style="color:gray">This username will be publicly accessible and cannot be changed.</cap>
+		<section class="vh-100">
+			<div class="container h-100">
+				<div class="row d-flex justify-content-center align-items-center h-100">
+					<div class="col-lg-12 col-xl-11">
+						<div class="card text-black" style="border-radius: 25px;">
+							<div class="card-body p-md-5">
+								<div class="row justify-content-center">
+									<div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
 
-                                    </div>
-                                  
-                                </div>
-                                
-                            </div>
+										<p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Get
+											on board.</p>
 
-        
-                            <div class="d-flex flex-row align-items-center mb-4">
-                                <i class="bi bi-envelope-fill fa-lg me-3 fa-fw"></i>
-                                <div class="form-outline flex-fill mb-0">
-                                  <div class="col" id = "email">
-                                      {{ form.email }}
-                                      <label style="float: left;" for="email">Email</label>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="d-flex flex-row align-items-center mb-4">
-                                <i class="bi bi-unlock-fill fa-lg me-3 fa-fw"></i>
-                                <div class="form-outline flex-fill mb-0">
-                                  <div class="col" id = "pass1">
-                                      {% render_field form.password1 class="form-control" %}
-                                      <label style="float: left;" for="pass1">Password</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <ul style = "color:gray">
-                              <li><cap>Your password must be at least 8 characters</cap></li>
-                              <li><cap>Your password must contain an uppercase or lowercase character.</cap></li>
-                            </ul>
-        
-                            <div class="d-flex flex-row align-items-center mb-4">
-                                <i class="bi bi-lock-fill fa-lg me-3 fa-fw"></i>
-                                <div class="form-outline flex-fill mb-0">
-                                  <div class="col" id = "pass2">
-                                    {% render_field form.password2 class="form-control" %}
-                                    <label style="float: left;" for="pass2">Repeat Password</label>
-                                  </div>
-                                </div>
-                            </div>
-                            <div class="d-flex flex-row align-items-center mb-4">
-                            <p><b>By clicking register, you acknowledge and agree to WalnutMind's <a href="{% url 'terms' %}" target="_blank" rel="noopener noreferrer" type="button" data-toggle="tooltip" data-placement="top" title="Opens in a new tab.">terms of use</a>.</b>
-                            Account registration is
-                                <a href="#" type="button" data-toggle="tooltip" data-placement="top" title="Our security measures impose geo-based restrictions on account access. Foreign login attempts will be blocked and require reverification.">
-                                  geographically bounding</a>.</p>
-                            </div>
-                            <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                              {% if not request.htmx %}
-                                <button type="submit" class="btn btn-primary">REGISTER</button>
-                              {% endif %}
-                            </div>
-    
-                            <p>Already have an account? <a href="{% url 'loginn' %}">Login here</a>.</p>
+										<form class="mx-1 mx-md-4">
 
-                          </form>
-                        </div>
-                        <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
-          
-                          <img src="{% static "Users/registersplash.jpg" %}" style="  -webkit-filter: grayscale(100%);
+											<div class="form-row">
+												<div class="col d-flex flex-row align-items-center mb-4">
+													<i class="bi bi-person-fill fa-lg me-3 fa-fw"></i>
+
+													<div style="padding: 5px"
+													     class="form-outline flex-fill mb-0">
+														<div class="col" id="first_name">
+															{{ form.first_name }}
+															<label style="float: left;"
+															       for="first_name">First
+																Name</label>
+														</div>
+													</div>
+													<div style="padding: 5px"
+													     class="form-outline flex-fill mb-0">
+														<div class="col" id="last_name">
+															{{ form.last_name }}
+															<label style="float: left;"
+															       for="last_name">Last Name</label>
+														</div>
+													</div>
+												</div>
+											</div>
+
+											<div class="d-flex flex-row align-items-center mb-4">
+												<i class="bi bi-person-bounding-box fa-lg me-3 fa-fw"></i>
+												<div class="form-outline flex-fill mb-0">
+													<div class="col" id="username">
+														{% render_field form.username class="form-control" %}
+														<label style="float: left;" for="username">Username</label><br/>
+														<cap style="color:gray">This username will
+															be publicly accessible and cannot be
+															changed.
+														</cap>
+
+													</div>
+
+												</div>
+
+											</div>
+
+
+											<div class="d-flex flex-row align-items-center mb-4">
+												<i class="bi bi-envelope-fill fa-lg me-3 fa-fw"></i>
+												<div class="form-outline flex-fill mb-0">
+													<div class="col" id="email">
+														{{ form.email }}
+														<label style="float: left;" for="email">Email</label>
+													</div>
+												</div>
+											</div>
+
+											<div class="d-flex flex-row align-items-center mb-4">
+												<i class="bi bi-unlock-fill fa-lg me-3 fa-fw"></i>
+												<div class="form-outline flex-fill mb-0">
+													<div class="col" id="pass1">
+														{% render_field form.password1 class="form-control" %}
+														<label style="float: left;" for="pass1">Password</label>
+													</div>
+												</div>
+											</div>
+											<ul style="color:gray">
+												<li>
+													<cap>Your password must be at least 8
+														characters
+													</cap>
+												</li>
+												<li>
+													<cap>Your password must contain an uppercase or
+														lowercase character.
+													</cap>
+												</li>
+											</ul>
+
+											<div class="d-flex flex-row align-items-center mb-4">
+												<i class="bi bi-lock-fill fa-lg me-3 fa-fw"></i>
+												<div class="form-outline flex-fill mb-0">
+													<div class="col" id="pass2">
+														{% render_field form.password2 class="form-control" %}
+														<label style="float: left;" for="pass2">Repeat
+															Password</label>
+													</div>
+												</div>
+											</div>
+											<div class="d-flex flex-row align-items-center mb-4">
+												<p><b>By clicking register, you acknowledge and
+													agree to WalnutMind's <a
+															href="{% url 'terms' %}" target="_blank"
+															rel="noopener noreferrer" type="button"
+															data-toggle="tooltip"
+															data-placement="top"
+															title="Opens in a new tab.">terms of
+														use</a>.</b>
+													Account registration is
+													<a href="#" type="button" data-toggle="tooltip"
+													   data-placement="top"
+													   title="Our security measures impose geo-based restrictions on account access. Foreign login attempts will be blocked and require reverification.">
+														geographically bounding</a>.</p>
+											</div>
+											<div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+												{% if not request.htmx %}
+													<button type="submit" class="btn btn-primary">
+														REGISTER
+													</button>
+												{% endif %}
+											</div>
+
+											<p>Already have an account? <a
+													href="{% url 'loginn' %}">Login here</a>.</p>
+
+										</form>
+									</div>
+									<div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+
+										<img src="{% static "Users/registersplash.jpg" %}" style="  -webkit-filter: grayscale(100%);
                           filter: grayscale(100%);width:500px;display: block;  margin-left: auto;
                           margin-right: auto;"
 
-                            class="img-fluid" alt="Register Splash Image">                            
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+										     class="img-fluid" alt="Register Splash Image">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
 
-    </form>
+	</form>
 
 
-<script>
-  $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
-  })
+	<script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
 
-</script>
+	</script>
 
-<br/><br/><br/><br/>
+	<br/><br/><br/><br/>
 {% endblock body %}

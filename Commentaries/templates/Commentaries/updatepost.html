@@ -1,127 +1,133 @@
 {% extends "layout.html" %}
 
-{% block title %}
-<title>Update Post | WM</title>
-{% endblock title %}
+{% block title %}Update Post | WM{% endblock title %}
 
 {% block body %}
-<ol class="breadcrumb" style = "background-color:white">
-    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'profile' username=request.user %}">Profile</a></li>
-    <li class="breadcrumb-item"><a href="/users/{{ request.user }}/#publicationsmanager">Publications Manager</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Publications Editor</li>
-</ol>
+	<ol class="breadcrumb" style="background-color:white">
+		<li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+		<li class="breadcrumb-item"><a href="{% url 'profile' username=request.user %}">Profile</a>
+		</li>
+		<li class="breadcrumb-item"><a href="/users/{{ request.user }}/#publicationsmanager">Publications
+			Manager</a></li>
+		<li class="breadcrumb-item active" aria-current="page">Publications Editor</li>
+	</ol>
 
-{% if user.is_authenticated %}
+	{% if user.is_authenticated %}
 
-{% if user.id == post.publisher.id %}
+		{% if user.id == post.publisher.id %}
 
-<h3>Publications Editor / <a href = "{% url 'bookview' pk_slug=post.slug %}" style="color:gray">Editing Book Key {{ post.pk }}</a></h3>
-<hr/>
+			<h3>Publications Editor / <a href="{% url 'bookview' pk_slug=post.slug %}"
+			                             style="color:gray">Editing Book Key {{ post.pk }}</a></h3>
+			<hr/>
 
-<div class="form-group" style="border">
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.media }}
-    
-          <!--ROW 1-->
-          <div class="row">
-            <div class="col-md-4" id="title">
-              <label style="float: left;" for="title">Title</label>
-              {{ form.title }}
-            </div>
-            <div class="col-md-2" id = "tags">
-              <label style = "float: left;" for="tags">Topics (' , ' seperated)</label>
-              <input type="text" name="tags" data-role="tagsinput" class="form-control" id="tags" name="tags" value="{% for tag in post.tags.all %}{{ tag }},{% endfor %}">
-            </div>
-            <div class="col-md-2" id = "author">
-              <label style = "float: left;" for="author">Author</label>
-              {{ form.author }}
-            </div>
-            <div class="col-md-1" id = "year">
-              <label style = "float: left;" for="year">Year</label>
-              {{ form.year }}
-            </div>
-            <div class="col-md-1" id="pages">
-              <label style = "float: left;" for="title">Pages</label>
-              {{ form.pages }}
-            </div>
-            <div class="col-md-2" id = "isbn">
-              <label style = "float: left;" for="author">ISBN-13</label>
-              {{ form.isbn }}
-            </div>
+			<div class="form-group" style="border">
+				<form method="post" enctype="multipart/form-data">
+					{% csrf_token %}
+					{{ form.media }}
 
-          </div>
+					<!--ROW 1-->
+					<div class="row">
+						<div class="col-md-4" id="title">
+							<label style="float: left;" for="title">Title</label>
+							{{ form.title }}
+						</div>
+						<div class="col-md-2" id="tags">
+							<label style="float: left;" for="tags">Topics (' , ' seperated)</label>
+							<input type="text" name="tags" data-role="tagsinput"
+							       class="form-control" id="tags" name="tags"
+							       value="{% for tag in post.tags.all %}{{ tag }},{% endfor %}">
+						</div>
+						<div class="col-md-2" id="author">
+							<label style="float: left;" for="author">Author</label>
+							{{ form.author }}
+						</div>
+						<div class="col-md-1" id="year">
+							<label style="float: left;" for="year">Year</label>
+							{{ form.year }}
+						</div>
+						<div class="col-md-1" id="pages">
+							<label style="float: left;" for="title">Pages</label>
+							{{ form.pages }}
+						</div>
+						<div class="col-md-2" id="isbn">
+							<label style="float: left;" for="author">ISBN-13</label>
+							{{ form.isbn }}
+						</div>
 
-          <!--ROW 2-->
-          <div class = "row">
-            <div class="col-md-3" id="cover">
-              <label style = "float: left;" for="cover">Cover</label>
-              {{ form.cover }}
-            </div>
-          <div class="col-md-4" id = "headquote">
-            <label style = "float: left;" for="headquote">Header Quote</label>
-            {{ form.headquote }}
-          </div>
-          <div class="col-md-4" id = "abstract">
-            <label style = "float: left;" for="abstract">Abstract</label>
-            {{ form.abstract }}
-          </div>
-          <div class="col-md-1" id = "rating">
-            <label style = "float: left;" for="rating">Rating</label>
-            {{ form.rating }}
-          </div>
-        </div>
+					</div>
 
-        <div class = "row">
-          <div class="col-md-2" id = "takeaways">
-            <label style = "float: left;" for="takeaways">Takeaways (New line)</label>
-            {{ form.takeaways }}
-          </div>
-          <div class="col-md-4" id = "summary">
-            <label style = "float: left;" for="summary">Summary</label>
-            {{ form.summary }}
-          </div>
+					<!--ROW 2-->
+					<div class="row">
+						<div class="col-md-3" id="cover">
+							<label style="float: left;" for="cover">Cover</label>
+							{{ form.cover }}
+						</div>
+						<div class="col-md-4" id="headquote">
+							<label style="float: left;" for="headquote">Header Quote</label>
+							{{ form.headquote }}
+						</div>
+						<div class="col-md-4" id="abstract">
+							<label style="float: left;" for="abstract">Abstract</label>
+							{{ form.abstract }}
+						</div>
+						<div class="col-md-1" id="rating">
+							<label style="float: left;" for="rating">Rating</label>
+							{{ form.rating }}
+						</div>
+					</div>
 
-          <div class="col-md-6" id = "quotes">
-            <label style = "float: left;" for="quotes">Quotes (New line)</label>
-            {{ form.quotes }}
-          </div>
+					<div class="row">
+						<div class="col-md-2" id="takeaways">
+							<label style="float: left;" for="takeaways">Takeaways (New line)</label>
+							{{ form.takeaways }}
+						</div>
+						<div class="col-md-4" id="summary">
+							<label style="float: left;" for="summary">Summary</label>
+							{{ form.summary }}
+						</div>
 
-        </div>
+						<div class="col-md-6" id="quotes">
+							<label style="float: left;" for="quotes">Quotes (New line)</label>
+							{{ form.quotes }}
+						</div>
 
-        <div class="row">
-          <div id = "top" class="col" id="content">
-            <label style = "float: left;" for="content">Content</label>
-            {{ form.content }}
-          </div>
-          <div id = "bottom" class="col" id="resources">
-            <label style = "float: left;" for="resources">Resources</label>
-            {{ form.resources }}
-          </div>
-        </div>
+					</div>
 
-      <br/>
+					<div class="row">
+						<div id="top" class="col" id="content">
+							<label style="float: left;" for="content">Content</label>
+							{{ form.content }}
+						</div>
+						<div id="bottom" class="col" id="resources">
+							<label style="float: left;" for="resources">Resources</label>
+							{{ form.resources }}
+						</div>
+					</div>
 
-          <div class="form-check form-switch" id="public">
-            <label class="form-check-label" for="public"><i class="bi bi-cloud-arrow-up-fill"></i><b> PUBLISH LIVE</b>
-            </label>
-            {{ form.public }}
-        </div>
-          <button type="submit" style="float: right;" class="btn btn-primary btn-lg">SAVE</button>
+					<br/>
 
-    </form>
+					<div class="form-check form-switch" id="public">
+						<label class="form-check-label" for="public"><i
+								class="bi bi-cloud-arrow-up-fill"></i><b> PUBLISH LIVE</b>
+						</label>
+						{{ form.public }}
+					</div>
+					<button type="submit" style="float: right;" class="btn btn-primary btn-lg">
+						SAVE
+					</button>
 
-</div>
-</div>
-</div>
+				</form>
 
-{% else %}
+			</div>
+			</div>
+			</div>
 
-Access denied
+		{% else %}
 
-{% endif %}
+			Access denied
 
-{% endif %}
+		{% endif %}
+
+	{% endif %}
 
 {% endblock body %}

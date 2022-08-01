@@ -1,8 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}
-     <title> {{ post.title }} | WM</title>
-{% endblock title %}
+{% block title %}{{ post.title }} | WM{% endblock title %}
 
 {% block body %}
 {% load static %}
@@ -39,19 +37,19 @@
                 <figure>
                     <img style="height: 300px; display: block; margin-left: auto; margin-right: auto;" src="{{ post.cover.url }}">
                     <figcaption>Source: <a href="{{ post.coverURL }}" target="_blank" rel="noopener noreferrer">{{ post.coverSrc }}</a></figcaption>
-                </figure> 
+                </figure>
                  <div class="intro">
                      <h1 class="text-center">{{ post.title }}</h1><br/>
                      <h6 style="color:gray"><i><b>Abstract:</b> {{ post.abstract }}</i></h6>
                      <p class="text-center">
-                        <span class="by">by 
+                        <span class="by">by
 
                             {% if post.author.profile.avatar %}
                             <img style = "position: relative; top:-12px; width: 40px; height: 40px; border-radius: 50%;" src = "{{ post.author.profile.avatar.url }}">
                             {% else %}
                             <img style = "position: relative; top:-12px; width: 40px; height: 40px; border-radius: 50%;" src = "{% static 'Users/def_avatar.png' %}">
                             {% endif %}
-                             
+
 
                         </span> <a href="{% url 'profile' username=post.author %}">{{ post.author.first_name }} {{ post.author.last_name }}</a>
                         <span class="date">
@@ -74,7 +72,7 @@
                  <!--PLUGINS-->
                  <h3>Comments</h3>
                  <hr style="border-top: 2px solid rgb(0, 0, 0)"/>
-                 
+
                  <div class="row">
                 <!--COMMENT FORM-->
                 <div class="col-md-10 col-sm-9" style="padding:5px">
@@ -119,7 +117,7 @@
                         </div>
                     </div>
                 <!--END BUTTONS-->
-            
+
             </div>
             <ul>
                 {% for comment in post.articlecomments.all %}
@@ -168,7 +166,7 @@
     var pubs_left = {{ pubs_left }};
 
     if (pubs_left <= 0){
-        
+
         setTimeout($('body').addClass('blockbody'), 100)
         setInterval(function(){$('body').addClass('blockbody'),$("body").css("overflow", "hidden")}, 1000);
     }
