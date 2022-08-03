@@ -104,7 +104,7 @@ def activate_user(request, uidb64, token):
 	})
 
 
-@ratelimit(key='ip', rate='4/7d', block=True)
+@ratelimit(key='ip', rate='5/7d', block=True)
 @sensitive_variables('password')
 def registerView(request):
 	if request.method == "POST":
@@ -195,8 +195,7 @@ def registerView(request):
 		})
 
 
-@ratelimit(key='ip', rate='5/h', block=True)
-@ratelimit(key='post:username', rate='3/h', block=True)
+@ratelimit(key='ip', rate='5/10m', block=True)
 @sensitive_variables('password')
 def loginView(request):
 	# Prevent user from logging in if they are already logged in
@@ -345,7 +344,7 @@ def editProfileView(request, username):
 				messages.info(
 					request, "To increase your account security you are advised to "
 					         "set up multi-factor (MFA) authentication below."
-					)
+				)
 
 	return render(request, 'Users/editprofile.html', {
 		'user': requestedUser, 'u_form': u_form, 'p_form': p_form

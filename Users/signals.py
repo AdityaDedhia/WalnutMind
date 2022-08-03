@@ -2,6 +2,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from .models import Profile, Subscriber, Mail
+from .tasks import send_subscriber_task
 
 
 @receiver(post_save, sender=Profile)
