@@ -21,5 +21,5 @@ def send_subscriber_mail(sender, instance, created, **kwargs):
 
 		for subscriber in Subscriber.objects.all():
 			send_subscriber_task.delay(
-				instance.subject, instance.message, 'support@walnutmind.org', [subscriber.email],
-				fail_silently=False, )  # Celery task
+				instance.subject, instance.message, 'support@walnutmind.org', [subscriber.email]
+			)  # Celery task
