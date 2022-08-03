@@ -5,13 +5,16 @@ from .base import *
 
 ADMINS = [('Aditya Dedhia', 'aditya23dedhia@gmail.com'), ]
 
-ALLOWED_HOSTS = ['www.halflife-edu-dev.herokuapp.com',
+ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'www.halflife-edu-dev.herokuapp.com',
                  'halflife-edu-dev.herokuapp.com']
+
 
 APPEND_SLASH = False
 PREPEND_WWW = False
 
 if 'test' in sys.argv:
+	DEBUG = True
+	SECURE_SSL_REDIRECT = False
 	DATABASES = {
 		'default': {
 			'ENGINE':   'django.db.backends.postgresql', 'NAME': os.environ['TESTDBName'],
@@ -37,8 +40,6 @@ else:
 			}
 		}
 	}
-
-	BROKER_URL = os.environ['CLOUDAMQP_URL']
 
 MIDDLEWARE = MIDDLEWARE + [
 	'debug_toolbar.middleware.DebugToolbarMiddleware',  # DEBUG TOOLBAR

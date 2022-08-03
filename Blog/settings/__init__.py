@@ -14,7 +14,5 @@ if os.environ['ENV_TYPE'] == 'prod':
 elif os.environ['ENV_TYPE'] == 'dev':
 	from . dev import *
 
-elif os.environ['ENV_TYPE'] == 'test':
-	from . test import *
 else:
-	raise Exception('Invalid ENV_TYPE, please set a valid ENV_TYPE in .env.')
+	raise Exception('Invalid ENV_TYPE, please set <dev> or <prod> in .env.')
