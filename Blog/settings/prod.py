@@ -12,6 +12,7 @@ sentry_sdk.init(
 )
 
 ALLOWED_HOSTS = ['www.walnutmind.org', 'walnutmind.org']
+BROKER_URL = os.environ['CLOUDAMQP_URL']
 
 DATABASES = {
     'default': {

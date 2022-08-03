@@ -39,6 +39,7 @@ else:
 			}
 		}
 	}
+	BROKER_URL = os.environ['CLOUDAMQP_URL']
 
 MIDDLEWARE = MIDDLEWARE + [
 	'debug_toolbar.middleware.DebugToolbarMiddleware',  # DEBUG TOOLBAR
