@@ -8,8 +8,8 @@ ADMINS = [('Aditya Dedhia', 'aditya23dedhia@gmail.com'), ]
 ALLOWED_HOSTS = ['www.halflife-edu-dev.herokuapp.com',
                  'halflife-edu-dev.herokuapp.com']
 
-APPEND_SLASH = True
-PREPEND_WWW = True
+APPEND_SLASH = False
+PREPEND_WWW = False
 
 if 'test' in sys.argv:
 	DATABASES = {
