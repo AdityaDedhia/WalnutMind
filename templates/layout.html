@@ -2,24 +2,47 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1,
-  shrink-to-fit=no, maximum-scale=1, user-scalable=no"/>
-	<meta name="description" content="Walnut Mind is an academic content management system
-  and publishing platform."/>
-	<meta name="keywords" content="Academia, Articles, Books, Commentaries,
-  Blogs, Definitions, Resources"/>
+	<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1,
+  shrink-to-fit=no, maximum-scale=1, user-scalable=no"
+	/>
+	<meta
+			name="description"
+			content="Walnut Mind is an academic content management system
+  and publishing platform."
+	/>
+	<meta
+			name="keywords"
+			content="Academia, Articles, Books, Commentaries,
+  Blogs, Definitions, Resources"
+	/>
 
 	{% load static %}
 
 	<!--LINKS-->
-	<link rel="icon" href="{% static 'Articles/logo.png' %}" type="image/x-icon"/>
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700"/>
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora"/>
+	<link
+			rel="icon"
+			href="{% static 'Articles/logo.png' %}"
+			type="image/x-icon"
+	/>
+	<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css?family=Lato:300,400,700"
+	/>
+	<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css?family=Lora"
+	/>
 	<link rel="stylesheet" href="{% static 'Articles/Article-List.css' %}"/>
-	<link rel="stylesheet"
-	      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css"/>
-	<link rel="stylesheet"
-	      href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css"/>
+	<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css"
+	/>
+	<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css"
+	/>
 	<link rel="stylesheet" href="{% static 'layout.css' %}"/>
 
 	<!--SCRIPTS-->
@@ -42,26 +65,41 @@
 	<script
 			src="https://code.jquery.com/jquery-3.6.0.min.js"
 			integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-			crossorigin="anonymous">
-	</script>
+			crossorigin="anonymous"
+	></script>
 
-	<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
-	        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
-	        crossorigin="anonymous"></script>
-	<link rel="stylesheet"
-	      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
-	      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
-	      crossorigin="anonymous"/>
-	<script src="https://unpkg.com/htmx.org@1.7.0"
-	        integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo"
-	        crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"
-	        integrity="sha512-Eezs+g9Lq4TCCq0wae01s9PuNWzHYoCMkE97e2qdkYthpI0pzC3UGB03lgEHn2XM85hDOUF6qgqqszs+iXU4UA=="
-	        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script
+			defer
+			src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"
+	></script>
+	<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+			crossorigin="anonymous"
+	></script>
+	<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+			integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+			crossorigin="anonymous"
+	/>
+	<script
+			src="https://unpkg.com/htmx.org@1.7.0"
+			integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo"
+			crossorigin="anonymous"
+	></script>
+	<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"
+			integrity="sha512-Eezs+g9Lq4TCCq0wae01s9PuNWzHYoCMkE97e2qdkYthpI0pzC3UGB03lgEHn2XM85hDOUF6qgqqszs+iXU4UA=="
+			crossorigin="anonymous"
+			referrerpolicy="no-referrer"
+	></script>
 
 	<!--ANALYTICS-->
-	<script async src="https://www.googletagmanager.com/gtag/js?id={{ settings.G_TAG }}"></script>
+	<script
+			async
+			src="https://www.googletagmanager.com/gtag/js?id={{ settings.G_TAG }}"
+	></script>
 
 	<script>
         window.dataLayer = window.dataLayer || [];
@@ -70,22 +108,22 @@
             dataLayer.push(arguments);
         }
 
-        gtag('js', new Date());
+        gtag("js", new Date());
 
-        gtag('config', 'G-4XQDC6FX9D');
+        gtag("config", "G-4XQDC6FX9D");
 	</script>
 
-	<meta name='dmca-site-verification'
-	      content='R016REdjdC94cnVMWlhQbWFxVEQzb2lVbGFzckxBemRkZ3N4L2hMaldBZz01'/>
+	<meta
+			name="dmca-site-verification"
+			content="R016REdjdC94cnVMWlhQbWFxVEQzb2lVbGFzckxBemRkZ3N4L2hMaldBZz01"
+	/>
 	<title>{% block title %}{% endblock title %}</title>
-
 </head>
 
 <body>
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Nuosu+SIL&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Nuosu+SIL&display=swap');
-
+    @import url("https://fonts.googleapis.com/css2?family=Nuosu+SIL&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Nuosu+SIL&display=swap");
 </style>
 
 <!--NAVBAR-->
@@ -93,81 +131,122 @@
 	<div class="row noselect">
 		<div class="col-12">
 			<nav
-					class="navbar navbar-expand-lg blur blur-rounded position-fixed top-0 border-bottom py-2 shadow my-2
-            start-0 end-0 mx-5">
-
+					class="navbar navbar-expand-lg blur blur-rounded position-fixed top-0 border-bottom py-2 shadow my-2 start-0 end-0 mx-5"
+			>
 				<div class="container">
 					<!-- NAVBAR BRAND-->
-					<a class="navbar-brand" href="{% url 'index' %}" style="color: #321c05;">
-						<img src="{% static 'Articles/logo.png' %}" width="45" height="45"
-						     class="d-inline-block zoom">
+					<a
+							class="navbar-brand"
+							href="{% url 'index' %}"
+							style="color: #321c05"
+					>
+						<img
+								src="{% static 'Articles/logo.png' %}"
+								width="45"
+								height="45"
+								class="d-inline-block zoom"
+						/>
 					</a>
-					<div class="d-none d-xl-inline d-sm-inline d-md-inline d-lg-inline"
-					     style="margin-left:-15px; margin-right:auto; padding-right:10vw">
-						<b style="font-family: 'Josefin Sans', sans-serif;">WALNUT&nbsp;</b>MIND<br/>
-						<span style="font-size:12px; text-decoration: underline;"><i>Where ideas click.</i></span>
-
+					<div
+							class="d-none d-xl-inline d-sm-inline d-md-inline d-lg-inline"
+							style="
+                  margin-left: -15px;
+                  margin-right: auto;
+                  padding-right: 10vw;
+                "
+					>
+						<b style="font-family: 'Josefin Sans', sans-serif"
+						>WALNUT&nbsp;</b
+						>MIND<br/>
+						<span style="font-size: 12px; text-decoration: underline"
+						><i>Where ideas click.</i></span
+						>
 					</div>
 
 					<!-- END NAVBAR BRAND-->
-					<ul class="navbar-nav-hover" style="display: flex; list-style:none; margin-top:15px;
-              margin:auto; padding-left:0px; text-align: center;">
-
+					<ul
+							class="navbar-nav-hover"
+							style="
+                  display: flex;
+                  list-style: none;
+                  margin-top: 15px;
+                  margin: auto;
+                  padding-left: 0px;
+                  text-align: center;
+                "
+					>
 						<li class="nav-item mx-2">
-							<a class="zoom nav-link"
-							   style="color: #000000; display: inline-block; margin-left:-20px"
-							   href="{% url 'articleindex' %}"><span
-									class="d-none d-xl-inline nav-principals"
-									style=""><b>ARTICLES</b></span>
+							<a
+									class="zoom nav-link"
+									style="
+                      color: #000000;
+                      display: inline-block;
+                      margin-left: -20px;
+                    "
+									href="{% url 'articleindex' %}"
+							><span class="d-none d-xl-inline nav-principals" style=""
+							><b>ARTICLES</b></span
+							>
 								<i class="zoom bi bi-newspaper"></i>
 							</a>
 						</li>
 
 						<li class="nav-item mx-2">
-							<a class="zoom nav-link" style="color: #000000; display: inline-block;"
-							   href="{% url 'bookindex' %}"><span
-									class="d-none d-xl-inline nav-principals"><b>BOOKS</b></span>
+							<a
+									class="zoom nav-link"
+									style="color: #000000; display: inline-block"
+									href="{% url 'bookindex' %}"
+							><span class="d-none d-xl-inline nav-principals"
+							><b>BOOKS</b></span
+							>
 								<i class="zoom bi bi-book-half"></i>
 							</a>
 						</li>
 
 						<li class="nav-item mx-2">
-							<a class="zoom nav-link nav-text"
-							   style="color: #000000; display: inline-block;"
-							   href="{% url 'blogindex' %}"><span
-									class="d-none d-xl-inline nav-principals"><b>BLOGS</b></span>
+							<a
+									class="zoom nav-link nav-text"
+									style="color: #000000; display: inline-block"
+									href="{% url 'blogindex' %}"
+							><span class="d-none d-xl-inline nav-principals"
+							><b>BLOGS</b></span
+							>
 								<i class="bi bi-paragraph"></i>
 								<sub><i class="zoom bi bi-globe2"></i></sub>
 							</a>
 						</li>
 
 						<li class="nav-item mx-2">
-							<a class="zoom nav-link" style="color: #000000; display: inline-block;"
-							   href="{% url 'wikiindex' %}"><span
-									class="d-none d-xl-inline nav-principals"><b>WIKI</b></span>
+							<a
+									class="zoom nav-link"
+									style="color: #000000; display: inline-block"
+									href="{% url 'wikiindex' %}"
+							><span class="d-none d-xl-inline nav-principals"
+							><b>WIKI</b></span
+							>
 								<i class="bi bi-body-text"></i>
 								<sub><i class="zoom bi bi-globe2"></i></sub>
 							</a>
 						</li>
-
 					</ul>
 
-					<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-					        data-bs-target="#navbarSupportedContent"
-					        aria-controls="navbarSupportedContent" aria-expanded="false"
-					        aria-label="Toggle navigation">
+					<button
+							class="navbar-toggler"
+							type="button"
+							data-bs-toggle="collapse"
+							data-bs-target="#navbarSupportedContent"
+							aria-controls="navbarSupportedContent"
+							aria-expanded="false"
+							aria-label="Toggle navigation"
+					>
 						<span class="navbar-toggler-icon"></span>
 					</button>
 
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
-
-						<ul class="navbar-nav" style="margin-left:auto;">
-
+						<ul class="navbar-nav" style="margin-left: auto">
 							{% if request.user.is_authenticated %}
 
-								<div style="margin-top:11px; text-align:center">
-
-
+								<div style="margin-top: 11px; text-align: center">
 									<!--{% if request.user.profile.is_author == True %}
                     <a style="box-shadow: 0 0 20px #eee;" class="zoom btn btn-info rounded-pill" href="
 										{% url 'newpost' %}"><i class="bi bi-pen-fill"></i></a>
@@ -177,73 +256,105 @@
                     {% endif %}
                     DECOMISSIONED-->
 
-									<a style="font-size:0;"
-									   href="{% url 'profile' username=request.user.username %}">
+									<a
+											style="font-size: 0"
+											href="{% url 'profile' username=request.user.username %}"
+									>
 										{% if request.user.profile.avatar %}
-											<img class="zoom nav-avatar"
-											     style="transform:translateY(-4px);"
-											     src="{{ request.user.profile.avatar.url }}"/>
+											<img
+													class="zoom nav-avatar"
+													style="transform: translateY(-4px)"
+													src="{{ request.user.profile.avatar.url }}"
+											/>
 										{% else %}
-											<img class="zoom nav-avatar"
-											     style="transform:translateY(-4px);"
-											     src="{% static 'Users/def_avatar.png' %}"/>
+											<img
+													class="zoom nav-avatar"
+													style="transform: translateY(-4px)"
+													src="{% static 'Users/def_avatar.png' %}"
+											/>
 										{% endif %}
 									</a>
 
 									{% if request.user.is_staff %}
-										<a style="box-shadow: 0 0 20px #eee;"
-										   class="btn btn-success rounded-pill"
-										   href=/{{ settings.ADMIN_URL }}>
-										<i class="bi bi-shield-lock-fill"></i>
-										</a>
+										<a
+												style="box-shadow: 0 0 20px #eee"
+												class="btn btn-success rounded-pill"
+												href="/{{ settings.ADMIN_URL }}"
+										>
+											<i class="bi bi-shield-lock-fill"></i
+											></a>
 									{% endif %}
 
-									<a style="box-shadow: 0 0 20px #eee;"
-									   class="btn btn-danger rounded-pill"
-									   href="{% url 'logoutt' %}"><i
-											class="bi bi-x-circle-fill"></i></a>
-
+									<a
+											style="box-shadow: 0 0 20px #eee"
+											class="btn btn-danger rounded-pill"
+											href="{% url 'logoutt' %}"
+									><i class="bi bi-x-circle-fill"></i
+									></a>
 								</div>
 							{% else %}
 
-								<a style="margin-left:8px"
-								   class="btn-sky-blue  nav-link  rounded-pill zoom"
-								   href="{% url 'registerr' %}"><span
-										style="color:white; font-weight:bold">REGISTER</span></a>
-								<a style="margin-left:8px"
-								   class="nav-link btn-mystic-black rounded-pill zoom"
-								   href="{% url 'loginn' %}"><span
-										style="color:white; font-weight:bold">LOGIN</span></a>
+								<a
+										style="margin-left: 8px"
+										class="btn-sky-blue nav-link rounded-pill zoom"
+										href="{% url 'registerr' %}"
+								><span style="color: white; font-weight: bold"
+								>REGISTER</span
+								></a
+								>
+								<a
+										style="margin-left: 8px"
+										class="nav-link btn-mystic-black rounded-pill zoom"
+										href="{% url 'loginn' %}"
+								><span style="color: white; font-weight: bold"
+								>LOGIN</span
+								></a
+								>
 							{% endif %}
 							<!--SEARCH BAR-->
 							<div class="dropdown nav-search">
-								<a class="nav-link btn-mystic-purple rounded-pill zoom"
-								   role="button" style="color:white; font-weight:bold;" href="#"
-								   id="navSearch" data-bs-toggle="dropdown" aria-expanded="false">SEARCH</a>
-								<div class="dropdown-menu dropdown-menu-end"
-								     style="background-color: transparent; border:none"
-								     aria-labelledby="navSearch">
-									<form class="input-group" method="post"
-									      action="{% url 'search' %}" style="width:250px;">
+								<a
+										class="nav-link btn-mystic-purple rounded-pill zoom"
+										role="button"
+										style="color: white; font-weight: bold"
+										href="#"
+										id="navSearch"
+										data-bs-toggle="dropdown"
+										aria-expanded="false"
+								>SEARCH</a
+								>
+								<div
+										class="dropdown-menu dropdown-menu-end"
+										style="background-color: transparent; border: none"
+										aria-labelledby="navSearch"
+								>
+									<form
+											class="input-group"
+											method="post"
+											action="{% url 'search' %}"
+											style="width: 250px"
+									>
 										{% csrf_token %}
-										<input class="form-control border-secondary"
-										       style="z-index:9; border-radius:16px;" type="search"
-										       placeholder="Powered by WM Wiki" aria-label="Search"
-										       name="searchedterm">
-										<button class="btn btn-primary m-0"
-										        style="z-index:10; left:-25px; border-radius:16px;"
-										        type="submit">Find
+										<input
+												class="form-control border-secondary"
+												style="z-index: 9; border-radius: 16px"
+												type="search"
+												placeholder="Powered by WM Wiki"
+												aria-label="Search"
+												name="searchedterm"
+										/>
+										<button
+												class="btn btn-primary m-0"
+												style="z-index: 10; left: -25px; border-radius: 16px"
+												type="submit"
+										>
+											Find
 										</button>
 									</form>
 								</div>
 							</div>
 							<!--END SEARCH BAR-->
-
-							</li>
-
 						</ul>
-
-
 					</div>
 				</div>
 			</nav>
@@ -253,22 +364,22 @@
 
 	<br/><br/><br/><br/>
 
-
-	{% if messages %}
-		{% for message in messages %}
-			<div style="width:60%; margin: auto; padding: 10px">
-				<div class="alert alert-{{ message.tags }} alert-dismissible fade show"
-				     role="alert">
-					<strong>{{ message.message }}</strong>
-					<button type="button" class="btn-close" data-bs-dismiss="alert"
-					        aria-label="Close"></button>
-				</div>
+	{% if messages %} {% for message in messages %}
+		<div style="width: 60%; margin: auto; padding: 10px">
+			<div
+					class="alert alert-{{ message.tags }} alert-dismissible fade show"
+					role="alert"
+			>
+				<strong>{{ message.message }}</strong>
+				<button
+						type="button"
+						class="btn-close"
+						data-bs-dismiss="alert"
+						aria-label="Close"
+				></button>
 			</div>
-		{% endfor %}
-	{% endif %}
-
-	{% block body %}{% endblock body %}
-
+		</div>
+	{% endfor %} {% endif %} {% block body %}{% endblock body %}
 </div>
 
 <style>
@@ -284,35 +395,56 @@
 
 <section class="footer">
 	<!-- Footer -->
-	<footer class=" bg-dark text-white text-center text-md-start noselect">
+	<footer class="bg-dark text-white text-center text-md-start noselect">
 		<!-- Grid container -->
 		<div class="container p-4">
 			<!--Grid row-->
 			<div class="row">
 				<!--Grid column-->
-				<div class="col-lg-4 col-md-5 mb-0 mb-md-0" style="font-size:14px;">
+				<div class="col-lg-4 col-md-5 mb-0 mb-md-0" style="font-size: 14px">
 					<h6 class="text-uppercase">OUR MISSION</h6>
-					<p><i>
-						"To instill a sense of appreciation for academic literature by finding
-						intriguing and meaningful interdisciplinary connections between works
-						through the provision of high-quality and equally accessible publications."
-					</i></p>
+					<p>
+						<i>
+							"To instill a sense of appreciation for academic literature by
+							finding intriguing and meaningful interdisciplinary
+							connections between works through the provision of
+							high-quality and equally accessible publications."
+						</i>
+					</p>
 				</div>
 
 				<!--Grid column-->
 				<div class="col-lg-2 col-md-4 mb-4 mb-md-0">
 					<h6 class="text-uppercase">Product</h6>
 
-					<ul class="list-unstyled" style="font-size:15px;">
-						<li>○ <a href="{% url 'about' %}" class="text-white footer-link">About</a>
-						</li>
-						<li>○ <a href="{% url 'faq' %}" class="text-white footer-link">Faq</a>
+					<ul class="list-unstyled" style="font-size: 15px">
+						<li>
+							○
+							<a href="{% url 'about' %}" class="text-white footer-link"
+							>About</a
+							>
 						</li>
 						<li>
-						<li>○ <a href="{% url 'roadmap' %}"
-						         class="text-white footer-link">Roadmap</a></li>
-						<li>○ <a class="text-white footer-link"
-						         href="{% url 'opportunities' %}">Opportunities</a></li>
+							○
+							<a href="{% url 'faq' %}" class="text-white footer-link"
+							>Faq</a
+							>
+						</li>
+						<li></li>
+						<li>
+							○
+							<a href="{% url 'roadmap' %}" class="text-white footer-link"
+							>Roadmap</a
+							>
+						</li>
+						<li>
+							○
+							<a
+									class="text-white footer-link"
+									href="{% url 'opportunities' %}"
+							>Opportunities</a
+							>
+						</li>
 					</ul>
 				</div>
 				<!--Grid column-->
@@ -320,14 +452,27 @@
 				<div class="col-lg-2 col-md-4 mb-4 mb-md-0">
 					<h6 class="text-uppercase">WM Pubs</h6>
 
-					<ul class="list-unstyled" style="font-size:15px;">
-
-						<li>○ <a href="{% url 'articleindex' %}" class="text-white
-							footer-link">Browse Articles</a></li>
-						<li>○ <a href="{% url 'bookindex' %}" class="text-white
-							footer-link">Browse Commentaries</a></li>
-						<li>○ <a href="{% url 'blogindex' %}" class="text-white
-							footer-link">Browse Blogs</a></li>
+					<ul class="list-unstyled" style="font-size: 15px">
+						<li>
+							○
+							<a
+									href="{% url 'articleindex' %}"
+									class="text-white footer-link"
+							>Browse Articles</a
+							>
+						</li>
+						<li>
+							○
+							<a href="{% url 'bookindex' %}" class="text-white footer-link"
+							>Browse Commentaries</a
+							>
+						</li>
+						<li>
+							○
+							<a href="{% url 'blogindex' %}" class="text-white footer-link"
+							>Browse Blogs</a
+							>
+						</li>
 					</ul>
 				</div>
 				<!--Grid column-->
@@ -335,23 +480,28 @@
 				<div class="col-lg-2 col-md-4 mb-4 mb-md-0">
 					<h6 class="text-uppercase">WM Wiki</h6>
 
-					<ul class="list-unstyled" style="font-size:14px;">
+					<ul class="list-unstyled" style="font-size: 14px">
 						<!--<li>
                   <a href="{% url 'faq' %}" class="text-white">🪄 FAQ</a>
                 </li>-->
-						<li>○
-							{% if request.user.is_authenticated %}
-								<a href="{% url 'wikiindex' %}" class="text-white footer-link">My WM
-									Dashboard</a>
-							{% else %}
-								<a href="{% url 'loginn' %}" class="text-white footer-link">My WM
-									Dashboard</a>
-							{% endif %}
+						<li>
+							○ {% if request.user.is_authenticated %}
+							<a href="{% url 'wikiindex' %}" class="text-white footer-link"
+							>My WM Dashboard</a
+							>
+						{% else %}
+							<a href="{% url 'loginn' %}" class="text-white footer-link"
+							>My WM Dashboard</a
+							>
+						{% endif %}
 						</li>
 						<li>
-							○ <a href="{% url 'collectionsview' %}" class="text-white
-							footer-link">Explore
-							Resources</a>
+							○
+							<a
+									href="{% url 'collectionsview' %}"
+									class="text-white footer-link"
+							>Explore Resources</a
+							>
 						</li>
 					</ul>
 				</div>
@@ -361,96 +511,107 @@
 				<div class="col-lg-2 col-md-4 mb-4 mb-md-0">
 					<h6 class="text-uppercase">My Account</h6>
 
-					<ul class="list-unstyled" style="font-size:15px;">
-
-
-						<li>○
-
-							{% if request.user.is_authenticated %}
-								<a class="text-white footer-link"
-								   href="{% url 'profile' username=request.user.username %}">View
-									Profile</a>
-							{% else %}
-								<a class="text-white footer-link"
-								   href="{% url 'loginn' %}">View Profile</a>
-							{% endif %}
+					<ul class="list-unstyled" style="font-size: 15px">
+						<li>
+							○ {% if request.user.is_authenticated %}
+							<a
+									class="text-white footer-link"
+									href="{% url 'profile' username=request.user.username %}"
+							>View Profile</a
+							>
+						{% else %}
+							<a class="text-white footer-link" href="{% url 'loginn' %}"
+							>View Profile</a
+							>
+						{% endif %}
 						</li>
 
-
-						<li>○
-							{% if request.user.is_authenticated %}
-								<a class="text-white footer-link"
-								   href="{% url 'editprofile' username=request.user.username %}">Update
-									Settings</a>
-							{% else %}
-								<a class="text-white footer-link"
-								   href="{% url 'loginn' %}">Update Settings</a>
-							{% endif %}
+						<li>
+							○ {% if request.user.is_authenticated %}
+							<a
+									class="text-white footer-link"
+									href="{% url 'editprofile' username=request.user.username %}"
+							>Update Settings</a
+							>
+						{% else %}
+							<a class="text-white footer-link" href="{% url 'loginn' %}"
+							>Update Settings</a
+							>
+						{% endif %}
 						</li>
 
-						<li>○
-
-							{% if request.user.is_authenticated %}
-								<a class="text-white footer-link"
-								   href="{% url 'profile' username=request.user.username %}#publicationsmanager">Manage
-									Pubs</a>
-							{% else %}
-								<a class="text-white footer-link"
-								   href="{% url 'loginn' %}">Manage Pubs</a>
-							{% endif %}
+						<li>
+							○ {% if request.user.is_authenticated %}
+							<a
+									class="text-white footer-link"
+									href="{% url 'profile' username=request.user.username %}#publicationsmanager"
+							>Manage Pubs</a
+							>
+						{% else %}
+							<a class="text-white footer-link" href="{% url 'loginn' %}"
+							>Manage Pubs</a
+							>
+						{% endif %}
 						</li>
-
 					</ul>
 				</div>
 				<!--Grid column-->
 			</div>
 			<!--Grid row-->
-
 		</div>
 
 		<!--NOTICE CONTAINER -->
-		<div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2); font-size:13px;">
-			{% now "Y" as current_year %}
-			Copyright © {{ current_year }} Aditya Dedhia. All rights reserved.
-			<a href="//www.dmca.com/Protection/Status.aspx?ID=12c20b5c-7494-498d-9d92-be0686f68573"
-			   title="DMCA.com Protection Status" class="dmca-badge">
-				<img width="50px"
-				     src="https://images.dmca.com/Badges/dmca-solid-bw-simple.png?ID=12c20b5c-7494-498d-9d92-be0686f68573"
-				     alt="DMCA.com Protection Status"/></a>
+		<div
+				class="text-center p-3"
+				style="background-color: rgba(0, 0, 0, 0.2); font-size: 13px"
+		>
+			{% now "Y" as current_year %} Copyright © {{ current_year }} Aditya
+			Dedhia. All rights reserved.
+			<a
+					href="//www.dmca.com/Protection/Status.aspx?ID=12c20b5c-7494-498d-9d92-be0686f68573"
+					title="DMCA.com Protection Status"
+					class="dmca-badge"
+			>
+				<img
+						width="50px"
+						src="https://images.dmca.com/Badges/dmca-solid-bw-simple.png?ID=12c20b5c-7494-498d-9d92-be0686f68573"
+						alt="DMCA.com Protection Status"
+				/></a>
 			<script src="https://images.dmca.com/Badges/DMCABadgeHelper.min.js"></script>
 			&nbsp;&nbsp;&nbsp;
-			<a class="text-white footer-link" href="{% url 'contact' %}">Privacy Policy</a>
+			<a class="text-white footer-link" href="{% url 'contact' %}"
+			>Privacy Policy</a
+			>
 			&nbsp;&nbsp;|&nbsp;&nbsp;
-			<a class="text-white footer-link" href="{% url 'terms' %}">Terms of Use</a>
+			<a class="text-white footer-link" href="{% url 'terms' %}"
+			>Terms of Use</a
+			>
 			&nbsp;&nbsp;|&nbsp;&nbsp;
-			<a class="text-white footer-link" href="{% url 'contact' %}">Contact</a>
+			<a class="text-white footer-link" href="{% url 'contact' %}"
+			>Contact</a
+			>
 			&nbsp;&nbsp;|&nbsp;&nbsp;
 			<a class="text-white footer-link" href="/sitemap.xml">Sitemap</a>
-
-
 		</div>
 		<!--END NOTICE CONTAINER-->
 	</footer>
 </section>
 
-
 <script>
-
     htmx.onLoad(function (content) {
         var sortables = content.querySelectorAll(".sortable");
         for (var i = 0; i < sortables.length; i++) {
             var sortable = sortables[i];
             new Sortable(sortable, {
                 animation: 150,
-                ghostClass: 'blue-background-class'
+                ghostClass: "blue-background-class",
             });
         }
-    })
+    });
 
-    document.body.addEventListener('htmx:configRequest', (event) => {
-        event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
-    })
+    document.body.addEventListener("htmx:configRequest", (event) => {
+        event.detail.headers["X-CSRFToken"] = "{{ csrf_token }}";
+    });
 </script>
-
 </body>
 </html>
