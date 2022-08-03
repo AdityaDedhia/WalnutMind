@@ -8,7 +8,6 @@ ADMINS = [('Aditya Dedhia', 'aditya23dedhia@gmail.com'), ]
 ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'www.halflife-edu-dev.herokuapp.com',
                  'halflife-edu-dev.herokuapp.com']
 
-
 APPEND_SLASH = False
 PREPEND_WWW = False
 
