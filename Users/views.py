@@ -120,9 +120,10 @@ def registerView(request):
 			blacklistform.save()
 			return redirect('index')
 		if status == "anonymous":
-			messages.success(
+			messages.error(
 				request, "An error occurred whilst attempting to verify your origin."
-				         "Please whitelist any IP masking services such as VPNs and try again.")
+				         "Please whitelist any IP masking services such as VPNs and try again."
+			)
 			return redirect('registerr')
 
 		form = RegisterUserForm(request.POST)
@@ -135,10 +136,12 @@ def registerView(request):
 				# IF ACCOUNT IS UNVERIFIED; DELETE ACCOUNT AND PROCEED WITH REGISTRATION ELSE ABORT
 				existingUser = User.objects.get(email=email)
 				if existingUser.is_active:
-					messages.success(request, "Unauthorised registration detected for email "
-					                          "address: %s. You are now being actively monitored "
-					                          "for suspicious activity. If you are the rightful "
-					                          "account owner, contact support immediately." % email)
+					messages.error(
+						request, "Unauthorised registration detected for email "
+						         "address: %s. You are now being actively monitored "
+						         "for suspicious activity. If you are the rightful "
+						         "account owner, contact support immediately." % email
+					)
 
 					blacklistform = Blacklist(
 						ip=ip,
@@ -150,20 +153,22 @@ def registerView(request):
 					return redirect('index')
 				else:
 					if Profile.objects.filter(user=existingUser).exists():
-						messages.success(request,
-						                 'You have an unregistered account with the email: %s. '
-						                 'Please log in or reset your password below and follow '
-						                 'further instructions to complete your registration.' % email)
+						messages.warning(
+							request, 'You have an unregistered account with the email: %s. '
+							         'Please log in or reset your password below and follow '
+							         'further instructions to complete your registration.' % email
+						)
 						return redirect('loginn')
 					else:
 						existingUser.delete()  # DELETE ORPHAN ACCOUNT AND PROCEED
 
 			# VERIFY EMAIL AUTHENTICITY
 			if not verify_email(email):
-				messages.success(request,
-				                 'An error occurred whilst attempting to verify your email '
-				                 'address. Please ensure you have entered a valid and '
-				                 'non-disposable personal email address and try again.')
+				messages.warning(
+					request, 'An error occurred whilst attempting to verify your email '
+					         'address. Please ensure you have entered a valid and '
+					         'non-disposable personal email address and try again.'
+				)
 				return redirect('registerr')
 
 			form.save()
@@ -172,12 +177,15 @@ def registerView(request):
 			user.is_active = False
 			user.save()
 			send_activation_email(user, request)
-			messages.success(request,
-			                 "Your registration is almost complete. Check your email for a verification link.")
+			messages.info(
+				request,
+				"Your registration is almost complete. Check your email for a verification link."
+			)
 			return redirect('index')
 		else:
-			messages.success(request,
-			                 "The form details you entered were invalid. Please verify them again.")
+			messages.warning(
+				request, "The form details you entered were invalid. Please verify them again."
+			)
 			return redirect('registerr')
 
 	else:
@@ -193,7 +201,7 @@ def registerView(request):
 def loginView(request):
 	# Prevent user from logging in if they are already logged in
 	if request.user is not None and request.user.is_authenticated:
-		messages.success(request, "You are already logged in.")
+		messages.info(request, "You are already logged in.")
 		return redirect('index')
 
 	if request.method == "POST":
@@ -208,7 +216,7 @@ def loginView(request):
 		captcha_response_json = json.loads(captcha_response.text)
 
 		if not captcha_response_json['success']:
-			messages.success(request, "Login request aborted. Human verification has failed.")
+			messages.warning(request, "Login request aborted. Human verification has failed.")
 			return redirect('loginn')
 		# SUCCESSFUL VERIFICATION WOULD THEN PROCEED WITH ACCOUNT LOGIN
 		username = request.POST['username']
@@ -225,16 +233,18 @@ def loginView(request):
 
 				if not profilelocation == loginlocation:
 					userprofile.is_email_verified = False
-					messages.success(request, 'Suspicious login attempt with IP address: %s '
-					                          'blocked. If you are the rightful account owner, '
-					                          'check your email for a reverification link.' % ip)
+					messages.warning(
+						request, 'Suspicious login attempt with IP address: %s '
+						         'blocked. If you are the rightful account owner, '
+						         'check your email for a reverification link.' % ip
+					)
 					send_activation_email(user, request)
 					return redirect('index')
 
 			# FORCE PROFILE VERIFICATION IF NOT ALREADY VERIFIED
 			if not userprofile.is_email_verified:
 				send_activation_email(user, request)
-				messages.success(request, "Your email is not yet verified. Check your inbox.")
+				messages.warning(request, "Your email is not yet verified. Check your inbox.")
 				return redirect('index')
 
 			# IF PASSES ALL CHECKS RECORD CURRENT LOGIN LOCATION AND IF MFA IS SETUP- SEND TO
@@ -242,12 +252,14 @@ def loginView(request):
 			if not ip == '127.0.0.1':
 				userprofile.ip = ip
 				userprofile.save(update_fields=["ip"])
-			messages.success(request, "For additional security, please re-enter your credentials.")
+			messages.info(request, "For additional security, please re-enter your credentials.")
 			return redirect('two_factor:login')
 		# IF NO MFA ENABLED, LOGIN IMMEDIATELY
 		else:
-			messages.success(request, "The username and/or password you have entered is "
-			                          "incorrect, please try again.")
+			messages.warning(
+				request, "The username and/or password you have entered is "
+				         "incorrect, please try again."
+			)
 			return redirect('loginn')
 	else:
 		return render(request, 'Users/login.html')
@@ -287,7 +299,7 @@ def profileView(request, username):
 			'highlights': highlights, 'log': log, 'is_public': is_public
 		})
 	else:
-		messages.success(request, "It appears that this user does not exist.")
+		messages.info(request, "It appears that this user does not exist.")
 		return redirect('index')
 
 
@@ -297,10 +309,10 @@ def followProfileView(request, username):
 	user = Profile.objects.get(user=request.user)
 	if Profile.objects.filter(following=requestedUser).exists():
 		user.following.remove(requestedUser)
-		messages.success(request, f"You are no longer following {username}.")
+		messages.info(request, f"You are no longer following {username}.")
 		return HttpResponseRedirect(reverse('profile', args=[str(username)]))
 	user.following.add(requestedUser)
-	messages.success(request, f"You are now following {username}.")
+	messages.info(request, f"You are now following {username}.")
 	return HttpResponseRedirect(reverse('profile', args=[str(username)]))
 
 
@@ -318,8 +330,10 @@ def editProfileView(request, username):
 			messages.success(request, "Your account has been successfully updated.")
 			return redirect('profile', username=request.user.username)
 		else:
-			messages.success(request, "Integrity validation failed. You have attempted to "
-			                          "manipulate non-editable fields.")
+			messages.error(
+				request, "Integrity validation failed. You have attempted to "
+				         "manipulate non-editable fields."
+			)
 
 	else:
 		if User.objects.filter(username=username).exists():
@@ -328,8 +342,10 @@ def editProfileView(request, username):
 			p_form = UpdateProfileForm(instance=request.user.profile)
 
 			if not request.user.is_verified():
-				messages.success(request, "To increase your account security you are advised to "
-				                          "set up multi-factor (MFA) authentication below.")
+				messages.info(
+					request, "To increase your account security you are advised to "
+					         "set up multi-factor (MFA) authentication below."
+					)
 
 	return render(request, 'Users/editprofile.html', {
 		'user': requestedUser, 'u_form': u_form, 'p_form': p_form

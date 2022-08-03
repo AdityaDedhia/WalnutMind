@@ -4,7 +4,6 @@ import readtime
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
@@ -27,7 +26,10 @@ def index_view(request):
 	tags = Tag.objects.all()  # Return all tags
 
 	show_subscribe = True
+
 	ip = get_ip(request)
+	if Subscriber.objects.filter(ip=ip).exists():
+		show_subscribe = False
 
 	if request.user.is_authenticated:  # Send custom feed to logged in users:
 		user = request.user
@@ -37,14 +39,10 @@ def index_view(request):
 
 		if Subscriber.objects.filter(user=user).exists():
 			show_subscribe = False
-
 	else:
 		saved_articles = None
 		saved_commentaries = None
 		saved_diaries = None
-
-		if Subscriber.objects.filter(ip=ip).exists():
-			show_subscribe = False
 
 	return render(request, 'Articles/index.html', {
 		'recent': recent, 'tags': tags, 'saved_articles': saved_articles,
@@ -59,28 +57,32 @@ def subscribe_view(request):
 		email = request.POST.get('email-subscribe')
 		ip = get_ip(request)
 
-		if not request.user.is_authenticated:
+		if Subscriber.objects.filter(email=email).exists():
+			messages.error(request, 'You are already subscribed to our newsletter.')
+			return HttpResponseRedirect(reverse('index'))  # Avoid db duplication
+
+		if request.user.is_authenticated:
+			user = request.user
+			subscriber = Subscriber(user=user, email=email, ip=ip)
+			subscriber.save()
+
+		else:
 			if not verify_email(email):
-				messages.success(request,
-				                 'An error occurred whilst attempting to verify your email '
-				                 'address. Please ensure you have entered a valid and '
-				                 'non-disposable personal email address and try again.')
+				messages.error(
+					request, 'An error occurred whilst attempting to verify your email '
+					         'address. Please ensure you have entered a valid and '
+					         'non-disposable personal email address and try again.'
+				)
 				return HttpResponseRedirect(reverse('index'))
 
-		if User.objects.filter(email=email).exists():
-			user = User.objects.get(email=email)
-		else:
-			user = None
+			subscriber = Subscriber(user=None, email=email, ip=ip)
+			subscriber.save()
 
-		subscriber = Subscriber(
-			email=email,
-			ip=ip,
-			user=user,
+		messages.success(
+			request, 'You have been successfully subscribed to our newsletter. You '
+			         'will receive weekly updates on new publications and features '
+			         'from authors you follow.'
 		)
-		subscriber.save()
-		messages.success(request, 'You have been successfully subscribed to our newsletter. You '
-		                          'will receive weekly updates on new publications and features '
-		                          'from authors you follow.')
 		return HttpResponseRedirect(reverse('index'))
 
 
@@ -193,7 +195,7 @@ def article_save(request, pk):
 	post = get_object_or_404(Post, id=pk)
 	if request.user in post.saves.all():
 		post.saves.remove(request.user)
-		messages.success(request, "Article removed from your list.")
+		messages.debug(request, "Article removed from your list.")
 		return HttpResponseRedirect(reverse('articleview', args=[str(post.slug)]))
 
 	post.saves.add(request.user)
@@ -206,7 +208,7 @@ def article_save(request, pk):
 		datelog=datetime.now()
 	)
 	logitem.save()
-	messages.success(request, "Article saved to your list.")
+	messages.debug(request, "Article saved to your list.")
 	return HttpResponseRedirect(reverse('articleview', args=[str(post.slug)]))
 
 
@@ -215,7 +217,7 @@ def articleupvote(request, pk):
 	post = get_object_or_404(Post, id=pk)
 	if request.user in post.likes.all():
 		post.likes.remove(request.user)
-		messages.success(request, "Article unliked.")
+		messages.debug(request, "Article unliked.")
 		return HttpResponseRedirect(reverse('articleview', args=[str(post.slug)]))
 	post.likes.add(request.user)
 	link = f"https://www.walnutmind.org/articles/{post.slug}"
@@ -227,7 +229,7 @@ def articleupvote(request, pk):
 		datelog=datetime.now()
 	)
 	logitem.save()
-	messages.success(request, "Article liked, thank you for your feedback.")
+	messages.debug(request, "Article liked, thank you for your feedback.")
 	return HttpResponseRedirect(reverse('articleview', args=[str(post.slug)]))
 
 
@@ -271,8 +273,10 @@ def newCommentView(request, pk):
 		post = Post.objects.get(pk=pk)
 
 		if profanity_filter(content) == True:
-			messages.success(request, "Your comment could not be posted, please refrain from the "
-			                          "use of explicit language.")
+			messages.warning(
+				request, "Your comment could not be posted, please refrain from the "
+				         "use of explicit language."
+			)
 			Infraction.objects.create(
 				user=request.user,
 				reason=f"Used explicit language in article ID {pk} with the comment: {content}",
@@ -345,8 +349,8 @@ def deleteCommentView(request, pk, id):
 	if request.user == comment.author and comment.post == post:  # IF AND ONLY IF user is the
 		# author of the comment, and the post is the same as the comment's post, then delete.
 		comment.delete()
-		messages.success(request, "Comment succesfully deleted.")
+		messages.debug(request, "Comment succesfully deleted.")
 		return HttpResponseRedirect(reverse('articleview', args=[str(post.slug)]))
 	else:
-		messages.success(request, "An unknown error occurred attempting to delete your comment.")
+		messages.warning(request, "An unknown error occurred attempting to delete your comment.")
 		return HttpResponseRedirect(reverse('articleindex'))

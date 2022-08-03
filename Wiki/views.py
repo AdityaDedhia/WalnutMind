@@ -28,7 +28,7 @@ from Diaries.views import Post as BlogPost
 from .forms import ResourceForm, NewTermForm, NewListForm, CollectionForm, DocLogForm
 from .models import Term, List, Resource, Collection, CollectionOrder
 from .utils import storage_usage, resource_collection_order, resource_collection_reorder, \
-    get_resource_heatmap
+	get_resource_heatmap
 
 SERVICE = "wiki"
 
@@ -142,7 +142,7 @@ def existingTermView(request, pk):
 	list.save()
 
 	terms = Term.objects.filter(list=list)
-	messages.success(request, f"Added {term} to {list}.")
+	messages.debug(request, f"Added {term} to {list}.")
 	return render(request, 'Wiki/term-list.html', {
 		'terms': terms, 'list': list
 	})
@@ -182,7 +182,7 @@ def addTermView(request, pk):
 		# 3) RETRIEVE UPDATED TERMS LIST
 
 		terms = Term.objects.filter(list=list)
-		messages.success(request, f"Added {newterm} to {list}.")
+		messages.debug(request, f"Added {newterm} to {list}.")
 
 		return render(request, 'Wiki/term-list.html', {
 			'terms': terms, 'list': list
@@ -314,7 +314,6 @@ def resourceSort(request):
 
 	results = Resource.objects.filter(creator=request.user, collectionorder=None)[:10]
 
-	messages.success(request, "Collection synced.")
 	return render(request, 'Wiki/partials/collection-resource-list.html', {
 		'collections': collections, 'unsorted': results,
 	})
@@ -334,7 +333,7 @@ def removeResourceView(request, collectionpk, resourcepk):
 
 	resource_collection_reorder(collection)
 
-	messages.success(request, f"Removed resource from collection.")
+	messages.debug(request, f"Removed resource from collection.")
 	return render(request, 'Wiki/partials/collection-resource-list.html', {
 		'collections': collections,
 	})
@@ -358,7 +357,7 @@ def existingResourceView(request, collectionpk, resourcepk):
 		resource.save()
 		collection.resourcesorder.add(resource)
 
-	messages.success(request, "Resource added to collection.")
+	messages.debug(request, "Resource added to collection.")
 	return render(request, 'Wiki/partials/collection-resource-list.html', {
 		'collections': collections,
 	})
@@ -500,8 +499,9 @@ def addResourceView(request):
 				form.instance.source = metadata['Authors'][0]
 
 			else:
-				messages.success(request,
-				                 "An unidentified resource was added, please try again later.")
+				messages.error(
+					request, "An unidentified resource was added, please try again later."
+				)
 				return HttpResponseBadRequest(status=204)
 
 			# Fix public access
@@ -509,12 +509,16 @@ def addResourceView(request):
 				if form.instance.category != 'WEB' and form.instance.category != 'VIDEO' and form.instance.category != 'BOOK':
 					title = str(form.instance.title).lower()
 					if Resource.objects.filter(title__iexact=title).exists():
-						messages.success(request,
-						                 "Unable to publish live, we have found a similar public resource that already exists.")
+						messages.warning(
+							request,
+							"Unable to publish live, we have found a similar public resource that "
+							"already exists."
+						)
 						return HttpResponseBadRequest(status=204)
 				else:
-					messages.success(request,
-					                 "You must be the original author of the resource to publish live.")
+					messages.info(
+						request, "You must be the original author of the resource to publish live."
+					)
 					return HttpResponseBadRequest(status=204)
 
 			form.save()
@@ -524,8 +528,11 @@ def addResourceView(request):
 			# VALIDATE TOTAL FILE STORAGE
 			bytes = storage_usage(request.user)
 			if bytes > settings.BASIC_STORAGE:
-				messages.success(request, (
-					"You have exceeded your maximum file storage capacity of 200MB. Please delete some files before adding more."))
+				messages.warning(
+					request,
+					("You have exceeded your maximum file storage capacity of 200MB. Please "
+					 "delete some files before adding more.")
+				)
 
 			heatmap = get_resource_heatmap(request.user)
 
@@ -536,7 +543,7 @@ def addResourceView(request):
 				'resources': resources, 'bytes': bytes, 'form': form, 'heatmap': heatmap,
 			})
 		else:
-			messages.success = (request, "An error occured while trying to save your document.")
+			messages.error = (request, "An error occured while trying to save your document.")
 			return HttpResponseBadRequest(status=204)
 
 
@@ -970,14 +977,16 @@ def newListView(request):
 		if form.is_valid():
 			form.instance.creator = request.user  # Because author field from forms.py was excluded
 			form.save()
-			messages.success(request, ("Terms list was successfully created."))
+			messages.success(request, "Terms list was successfully created.")
 			latest_id = List.objects.latest(
 				'pk').slug  # Essentially gets latest entry object based on last pk added, and then gets the pk of that entry object.
 			return redirect(f"/wiki/lists/{latest_id}")
 		else:
-			messages.success(request,
-			                 (
-				                 "Integrity validation failed. You have attempted to manipulate non-editable fields."))
+			messages.error(
+				request,
+				"Integrity validation failed. You have attempted to manipulate non-editable "
+				"fields."
+			)
 
 	form = NewListForm(request.POST, instance=request.user)
 	return render(request, 'Wiki/newlist.html', {

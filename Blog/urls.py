@@ -12,10 +12,8 @@ import Blog.sitemaps as site_categories
 # admin.site.__class__ = AdminSiteOTPRequired  # Admin site requires MFA enabled in profile
 
 sitemaps = {
-	'static': site_categories.StaticSitemap,
-	'articles': site_categories.ArticleSitemap,
-	'commentaries': site_categories.CommentarySitemap,
-	'blogs': site_categories.DiarySitemap,
+	'static':       site_categories.StaticSitemap, 'articles': site_categories.ArticleSitemap,
+	'commentaries': site_categories.CommentarySitemap, 'blogs': site_categories.DiarySitemap,
 }
 
 urlpatterns = [

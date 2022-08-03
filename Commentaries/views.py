@@ -1,21 +1,23 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404
-from django.views.generic import ListView, UpdateView
-from Blog.utils import profanity_filter
-from .models import Post, Comment
-from django.http import HttpResponseRedirect, JsonResponse, Http404
-from django.contrib import messages
-from django.conf import settings
-from .forms import PostForm
-from Users.models import Log, Infraction
-from isbnlib import is_isbn13
-from django.urls import reverse
-import readtime
 from datetime import datetime, date
-from taggit.models import Tag
-from .serializers import CommentarySerializer
-from rest_framework.generics import ListAPIView
+
+import readtime
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect, JsonResponse, Http404
+from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
+from django.views.generic import ListView, UpdateView
 from hitcount.views import HitCountDetailView
+from isbnlib import is_isbn13
+from rest_framework.generics import ListAPIView
+from taggit.models import Tag
+
+from Blog.utils import profanity_filter
+from Users.models import Log, Infraction
+from .forms import PostForm
+from .models import Post, Comment
+from .serializers import CommentarySerializer
 
 
 class booksView(ListView):
@@ -104,7 +106,7 @@ def commentarysave(request, pk):
     post = get_object_or_404(Post, id=pk)
     if request.user in post.saves.all():
         post.saves.remove(request.user)
-        messages.success(request, ("Commentary removed from your list."))
+        messages.debug(request, ("Commentary removed from your list."))
         return HttpResponseRedirect(reverse('bookview', args=[str(post.slug)]))
 
     post.saves.add(request.user)
@@ -117,7 +119,7 @@ def commentarysave(request, pk):
         datelog=datetime.now()
     )
     logitem.save()
-    messages.success(request, ("Commentary saved to your list."))
+    messages.debug(request, ("Commentary saved to your list."))
     return HttpResponseRedirect(reverse('bookview', args=[str(post.slug)]))
 
 @login_required(login_url='/users/login')
@@ -125,7 +127,7 @@ def commentaryupvote(request, pk):
     post = get_object_or_404(Post, id=pk)
     if request.user in post.likes.all():
         post.likes.remove(request.user)
-        messages.success(request, ("Commentary unliked."))
+        messages.debug(request, ("Commentary unliked."))
         return HttpResponseRedirect(reverse('bookview', args=[str(post.slug)]))
     post.likes.add(request.user)
     link = f"https://www.walnutmind.org/books/{post.slug}"
@@ -137,7 +139,7 @@ def commentaryupvote(request, pk):
         datelog=datetime.now()
     )
     logitem.save()
-    messages.success(request, ("Commentary liked, thank you for your feedback."))
+    messages.debug(request, ("Commentary liked, thank you for your feedback."))
     return HttpResponseRedirect(reverse('bookview', args=[str(post.slug)]))
 
 # ---------------------------------------------------------------------------------
@@ -148,13 +150,16 @@ def newCommentView(request, pk):
         post = Post.objects.get(pk=pk)
 
         if profanity_filter(content) == True:
-                messages.success(request, ("Your comment could not be posted, please refrain from the use of explicit language."))
-                Infraction.objects.create(
-                    user=request.user,
-                    reason=f"Used explicit language in commentary ID {pk} with the comment: {content}",
-                    datelog=datetime.now()
-                )
-                return HttpResponseRedirect(reverse('bookview', args=[str(post.slug)]))
+            messages.warning(
+                request, ("Your comment could not be posted, please refrain from "
+                          "the use of explicit language.")
+            )
+            Infraction.objects.create(
+                user=request.user,
+                reason=f"Used explicit language in commentary ID {pk} with the comment: {content}",
+                datelog=datetime.now()
+            )
+            return HttpResponseRedirect(reverse('bookview', args=[str(post.slug)]))
 
         comment = Comment.objects.create(
             post=post,
@@ -188,7 +193,7 @@ def deleteCommentView(request, pk, id):
         messages.success(request, ("Comment succesfully deleted."))
         return HttpResponseRedirect(reverse('bookview', args =[str(post.slug)]))
     else:
-        messages.success(request, ("An unknown error occured attempting to delete your comment."))
+        messages.error(request, ("An unknown error occured attempting to delete your comment."))
         return HttpResponseRedirect(reverse('bookindex'))
 
 @login_required(login_url='/users/login')

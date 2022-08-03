@@ -1,13 +1,12 @@
-from . base import *
-
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
+from .base import *
+
 # Use sentry for production error handling
 sentry_sdk.init(
-    dsn=os.environ['sentrydsn'],
-    integrations=[DjangoIntegration()],
-    send_default_pii=True,  # Associate users with errors
+    dsn=os.environ['sentrydsn'], integrations=[DjangoIntegration()], send_default_pii=True,
+    # Associate users with errors
     traces_sample_rate=1.0,
 
 )
@@ -16,11 +15,8 @@ ALLOWED_HOSTS = ['www.walnutmind.org', 'walnutmind.org']
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ['DBName'],
-        'HOST': os.environ['DBHost'],
-        'PORT': 5432,
-        'USER': os.environ['DBUser'],
+        'ENGINE':   'django.db.backends.postgresql', 'NAME': os.environ['DBName'],
+        'HOST':     os.environ['DBHost'], 'PORT': 5432, 'USER': os.environ['DBUser'],
         'PASSWORD': os.environ['DBPass'],
     }
 }

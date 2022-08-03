@@ -1,18 +1,20 @@
+from datetime import datetime, date
+
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.views.generic import UpdateView
-from .models import Post, Comment
-from .forms import PostForm
 from django.urls import reverse
-from django.contrib import messages
+from django.views.generic import UpdateView
+from hitcount.views import HitCountDetailView
+from rest_framework.generics import ListAPIView
+from taggit.models import Tag
+
 from Blog.utils import profanity_filter
 from Users.models import Profile, Log, Infraction
-from taggit.models import Tag
-from datetime import datetime, date
 from Users.serializers import ProfileSerializer
-from rest_framework.generics import ListAPIView
-from hitcount.views import HitCountDetailView
+from .forms import PostForm
+from .models import Post, Comment
 
 
 def diariesView(request):
@@ -21,9 +23,11 @@ def diariesView(request):
 
     tags = Tag.objects.all()  # Return all tags
 
-    return render(request, 'Diaries/index.html', {
-        'profiles': profiles, 'tags': tags, 'recents': recents
-        })
+    return render(
+        request, 'Diaries/index.html', {
+            'profiles': profiles, 'tags': tags, 'recents': recents
+        }
+    )
 
 class diaryView(HitCountDetailView):
     model = Post
@@ -106,7 +110,7 @@ def diarysave(request, username, pk):
     post = get_object_or_404(Post, id=pk)
     if request.user in post.saves.all():
         post.saves.remove(request.user)
-        messages.success(request, ("Blog post removed from your list."))
+        messages.debug(request, ("Blog post removed from your list."))
         return HttpResponseRedirect(reverse('blogview', args=[username, str(post.slug)]))
 
     post.saves.add(request.user)
@@ -119,7 +123,7 @@ def diarysave(request, username, pk):
         datelog = datetime.now()
     )
     logitem.save()
-    messages.success(request, ("Blog post saved to your list."))
+    messages.debug(request, ("Blog post saved to your list."))
     return HttpResponseRedirect(reverse('blogview', args=[username, str(post.slug)]))
 
 @login_required(login_url='/users/login')
@@ -127,7 +131,7 @@ def diaryupvote(request, username, pk):
     post = get_object_or_404(Post, id=pk)
     if request.user in post.likes.all():
         post.likes.remove(request.user)
-        messages.success(request, ("Blog post unliked."))
+        messages.debug(request, ("Blog post unliked."))
         return HttpResponseRedirect(reverse('blogview', args=[username, str(post.slug)]))
     post.likes.add(request.user)
     link = f"https://www.walnutmind.org/blogs/{username}/{post.slug}"
@@ -139,7 +143,7 @@ def diaryupvote(request, username, pk):
         datelog=datetime.now()
     )
     logitem.save()
-    messages.success(request, ("Blog post liked, thank you for your feedback."))
+    messages.debug(request, ("Blog post liked, thank you for your feedback."))
     return HttpResponseRedirect(reverse('blogview', args=[username, str(post.slug)]))
 
 #---------------------------------------------------------------------------------
@@ -150,13 +154,17 @@ def newCommentView(request, username, pk):
         post = Post.objects.get(pk=pk)
 
         if profanity_filter(content) == True:
-                messages.success(request, ("Your comment could not be posted, please refrain from the use of explicit language."))
-                Infraction.objects.create(
-                    user=request.user,
-                    reason=f"Used explicit language in blog post ID {pk} with the comment: {content}",
-                    datelog=datetime.now()
-                )
-                return HttpResponseRedirect(reverse('blogview', args=[username, str(post.slug)]))
+            messages.error(
+                request, ("Your comment could not be posted, please refrain from "
+                          "the "
+                          "use of explicit language.")
+            )
+            Infraction.objects.create(
+                user=request.user,
+                reason=f"Used explicit language in blog post ID {pk} with the comment: {content}",
+                datelog=datetime.now()
+            )
+            return HttpResponseRedirect(reverse('blogview', args=[username, str(post.slug)]))
 
         comment = Comment.objects.create(
             post=post,
@@ -188,10 +196,10 @@ def deleteCommentView(request, username, pk, id):
 
     if request.user == comment.author and comment.post == post: #IF AND ONLY IF user is the author of the comment, and the post is the same as the comment's post, then delete the comment.
         comment.delete()
-        messages.success(request, ("Comment succesfully deleted."))
+        messages.debug(request, ("Comment succesfully deleted."))
         return HttpResponseRedirect(reverse('blogview', args=[username, str(post.slug)]))
     else:
-        messages.success(request, ("An unknown error occured attempting to delete your comment."))
+        messages.error(request, ("An unknown error occured attempting to delete your comment."))
         return HttpResponseRedirect(reverse('blogindex'))
 
 

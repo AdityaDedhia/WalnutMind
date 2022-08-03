@@ -1,25 +1,22 @@
-from .base import *
-
 # Use admin mails instead of sentry for staging error handling.
 import sys
 
-ADMINS = [
-	('Aditya Dedhia', 'aditya23dedhia@gmail.com'),
-]
+from .base import *
 
-ALLOWED_HOSTS = ['127.0.0.1', 'www.halflife-edu-dev.herokuapp.com',
+ADMINS = [('Aditya Dedhia', 'aditya23dedhia@gmail.com'), ]
+
+ALLOWED_HOSTS = ['www.halflife-edu-dev.herokuapp.com',
                  'halflife-edu-dev.herokuapp.com']
+
+APPEND_SLASH = True
+PREPEND_WWW = True
 
 if 'test' in sys.argv:
 	DATABASES = {
 		'default': {
-			'ENGINE': 'django.db.backends.postgresql',
-			'NAME': os.environ['TESTDBName'],
-			'HOST': os.environ['TESTDBHost'],
-			'PORT': 5432,
-			'USER': os.environ['TESTDBUser'],
-			'PASSWORD': os.environ['TESTDBPass'],
-			'TEST': {
+			'ENGINE':   'django.db.backends.postgresql', 'NAME': os.environ['TESTDBName'],
+			'HOST':     os.environ['TESTDBHost'], 'PORT': 5432, 'USER': os.environ['TESTDBUser'],
+			'PASSWORD': os.environ['TESTDBPass'], 'TEST': {
 				'NAME': os.environ['TESTDBName']
 			}
 		}

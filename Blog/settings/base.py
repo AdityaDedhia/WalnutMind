@@ -1,7 +1,16 @@
 import os
-import dotenv
 from pathlib import Path
+
+import dotenv
+from django.contrib.messages import constants as message_constants
 from django_archive import archivers
+
+# MESSAGES FRAMEWORK
+MESSAGE_TAGS = {
+	message_constants.INFO:    'info', message_constants.DEBUG: 'light',
+	message_constants.SUCCESS: 'success', message_constants.WARNING: 'warning',
+	message_constants.ERROR:   'danger',
+}  # BOOTSTRAP MAPPED ALERTS TO DJANGO MESSAGES
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -13,6 +22,7 @@ SITE_ID = 1
 WSGI_APPLICATION = 'Blog.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+BROKER_URL = os.environ['CLOUDAMQP_URL']
 HOSTCOUNTRY_CODE = "LU"
 DEBUG = False
 SECURE_SSL_REDIRECT = True
@@ -28,6 +38,7 @@ PUBS_ACCESS = 2  # ANONYMOUS ACCESS LIMIT BEFORE SIGNIN
 BASIC_STORAGE = 104857600 * 2  # MAXIMUM BASIC STORAGE (in bytes)
 STANDARD_STORAGE = 104857600 * 50  # MAXIMUM STANDARD STORAGE (in bytes)
 PREMIUM_STORAGE = 104857600 * 500  # MAXIMUM PREMIUM STORAGE (in bytes)
+
 
 PUBS_WIDTH = 1200
 PUBS_HEIGHT = 900
@@ -70,6 +81,9 @@ AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = True
 AXES_COOLOFF_TIME = 120  # 2 minutes
 AXES_RESET_ON_SUCCESS = True
 AXES_ENABLE_ACCESS_FAILURE_LOG = True
+
+
+
 
 INSTALLED_APPS = [
 	'dal',  # BEFORE django.contrib.admin
@@ -180,12 +194,16 @@ AUTHENTICATION_BACKENDS = [
 	'axes.backends.AxesBackend',
 	'django.contrib.auth.backends.ModelBackend',
 ]
+PASSWORD_RESET_TIMEOUT = 120  # 2 minutes
 
-LANGUAGE_CODE = 'en-us'
+
+LANGUAGE_CODE = 'en-gb'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
+
+USE_THOUSAND_SEPARATOR = True
 
 TAGGIT_CASE_INSENSITIVE = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

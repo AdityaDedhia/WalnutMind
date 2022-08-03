@@ -1,11 +1,11 @@
+from django.core.cache import cache
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
-from . models import Resource
+
 from Articles.models import Post as articlePost
 from Commentaries.models import Post as commentaryPost
 from Diaries.models import Post as diaryPost
-
-from django.core.cache import cache
+from .models import Resource
 from .views import RESOURCES_KEY
 
 
@@ -58,7 +58,6 @@ def create_diary_resource(sender, instance, created, **kwargs):
 		Resource.objects.create(
 			title=instance.title,
 			creator=instance.author,
-			description=instance.abstract,
 			source=str(instance.author.first_name + " " + instance.author.last_name),
 			pubpk=instance.pk,
 			category='BLOG'

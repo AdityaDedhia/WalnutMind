@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Profile, Highlight, Blacklist, Log, Infraction, Subscriber
+from .models import Profile, Highlight, Blacklist, Log, Infraction, Subscriber, Mail
 
 admin.site.register(Highlight)
 
@@ -14,6 +14,12 @@ class FileAdmin(admin.ModelAdmin):
 class FileAdmin(admin.ModelAdmin):
 	search_fields = ['email', 'user__username']
 	list_display = ['email', 'user', 'ip', 'dateCreated']
+
+
+@admin.register(Mail)
+class FileAdmin(admin.ModelAdmin):
+	search_fields = ['subject']
+	list_display = ['subject', 'message', 'dateCreated']
 
 
 @admin.register(Blacklist)

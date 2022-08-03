@@ -37,13 +37,19 @@ class Profile(models.Model):
 
 
 class Subscriber(models.Model):
-	email = models.EmailField()
+	email = models.EmailField(unique=True)
 	user = models.ForeignKey(User, null=True, blank=True, on_delete=models.DO_NOTHING)
 	ip = models.GenericIPAddressField(null=True, blank=True, max_length=32)
 	dateCreated = models.DateTimeField(auto_now_add=True)
 
 	def __str__(self):
 		return str(self.email)
+
+
+class Mail(models.Model):
+	subject = models.CharField(max_length=100)
+	message = models.TextField(max_length=10000)
+	dateCreated = models.DateTimeField(auto_now_add=True)
 
 
 class Blacklist(models.Model):
