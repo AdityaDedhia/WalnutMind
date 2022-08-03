@@ -21,6 +21,8 @@ if 'test' in sys.argv:
 			}
 		}
 	}
+	BROKER_URL = 'amqp://guest:guest@localhost:5672/'  # Not required for tests
+
 else:
 	DATABASES = {
 		'default': {
@@ -36,6 +38,8 @@ else:
 		}
 	}
 
+	BROKER_URL = os.environ['CLOUDAMQP_URL']
+
 MIDDLEWARE = MIDDLEWARE + [
 	'debug_toolbar.middleware.DebugToolbarMiddleware',  # DEBUG TOOLBAR
 ]
@@ -49,7 +53,6 @@ AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_TEST_BUCKET_NAME']
 INTERNAL_IPS = [  # Debugging IPs
 	'127.0.0.1', '146.0.191.120',
 ]
-BROKER_URL = os.environ['CLOUDAMQP_URL']
 
 TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
 TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
