@@ -22,7 +22,6 @@ SITE_ID = 1
 WSGI_APPLICATION = 'Blog.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-BROKER_URL = os.environ['CLOUDAMQP_URL']
 HOSTCOUNTRY_CODE = "LU"
 DEBUG = False
 SECURE_SSL_REDIRECT = True

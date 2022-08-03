@@ -13,8 +13,6 @@ jobs:
       - uses: actions/checkout@v2
       - name: Coveralls Check
         uses: AndreMiras/coveralls-python-action@v20201129
-      - name: Flake8 Consistency
-        uses: julianwachholz/flake8-action@v2.0.2
 
   check-quality:
     runs-on: ubuntu-latest
