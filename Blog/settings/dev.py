@@ -10,10 +10,17 @@ ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'www.halflife-edu-dev.herokuapp.com',
 
 APPEND_SLASH = False
 PREPEND_WWW = False
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "http"
+DEBUG = True
+SECURE_SSL_REDIRECT = False
+CORS_REPLACE_HTTPS_REFERER = False
+HOST_SCHEME = "http://"
+SECURE_HSTS_SECONDS = None
+SECURE_PROXY_SSL_HEADER = None
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
 
 if 'test' in sys.argv:
-	DEBUG = True
-	SECURE_SSL_REDIRECT = False
 	DATABASES = {
 		'default': {
 			'ENGINE':   'django.db.backends.postgresql', 'NAME': os.environ['TESTDBName'],

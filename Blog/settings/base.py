@@ -5,6 +5,9 @@ import dotenv
 from django.contrib.messages import constants as message_constants
 from django_archive import archivers
 
+
+
+
 # MESSAGES FRAMEWORK
 MESSAGE_TAGS = {
 	message_constants.INFO:    'info', message_constants.DEBUG: 'light',
@@ -82,11 +85,10 @@ AXES_RESET_ON_SUCCESS = True
 AXES_ENABLE_ACCESS_FAILURE_LOG = True
 
 
-
-
 INSTALLED_APPS = [
 	'dal',  # BEFORE django.contrib.admin
 	'dal_select2',  # BEFORE django.contrib.admin
+	'semantic_admin',
 	'django.contrib.admin',
 	'django.contrib.auth',
 	'axes',  # AFTER django.contrib.admin

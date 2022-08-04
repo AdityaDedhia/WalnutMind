@@ -1,3 +1,5 @@
+// Don't use Django jQuery, because we need Semantic UI customizations.
+
 /*global gettext, interpolate, ngettext*/
 'use strict';
 {
@@ -49,16 +51,28 @@
         } else {
             reset(options);
         }
-        actionCheckboxes.forEach(function(el) {
-            el.checked = checked;
-            el.closest('tr').classList.toggle(options.selectedClass, checked);
-        });
+        // BEGIN CUSTOMIZATION //
+        // actionCheckboxes.forEach(function(el) {
+        //     el.checked = checked;
+        //     el.closest('tr').classList.toggle(options.selectedClass, checked);
+        // });
+        const update = checked ? "check" : "uncheck";
+        actionCheckboxes.forEach(function(actionCheckbox) {
+          $(actionCheckbox).checkbox(update);
+        })
+        // END CUSTOMIZATION //
     }
 
     function updateCounter(actionCheckboxes, options) {
+        // BEGIN CUSTOMIZATION // 
+        // const sel = Array.from(actionCheckboxes).filter(function(el) {
+        //     return el.checked;
+        // }).length;
         const sel = Array.from(actionCheckboxes).filter(function(el) {
-            return el.checked;
+            return $(el).checkbox('is checked');
         }).length;
+        // END CUSTOMIZATION // 
+
         const counter = document.querySelector(options.counterContainer);
         // data-actions-icnt is defined in the generated HTML
         // and contains the total amount of objects in the queryset
@@ -69,8 +83,20 @@
                 cnt: actions_icnt
             }, true);
         const allToggle = document.getElementById(options.allToggleId);
-        allToggle.checked = sel === actionCheckboxes.length;
-        if (allToggle.checked) {
+
+        // BEGIN CUSTOMIZATION // 
+        // allToggle.checked = sel === actionCheckboxes.length;
+        const allChecked = sel === actionCheckboxes.length;
+        const noneChecked = sel === 0;
+
+        if (allChecked) {
+            $(allToggle).checkbox("check");
+        } else if (noneChecked) {
+            $(allToggle).checkbox("uncheck");
+        } 
+        // END CUSTOMIZATION //
+
+        if (allChecked) {
             showQuestion(options);
         } else {
             clearAcross(options);
@@ -85,6 +111,9 @@
         acrossQuestions: "div.actions span.question",
         acrossClears: "div.actions span.clear",
         allToggleId: "action-toggle",
+        // BEGIN CUSTOMIZATION //
+        allToggleInputId: "action-toggle-input",
+        // END CUSTOMIZATION //
         selectedClass: "selected"
     };
 
@@ -102,10 +131,17 @@
             shiftPressed = event.shiftKey;
         });
 
-        document.getElementById(options.allToggleId).addEventListener('click', function(event) {
-            checker(actionCheckboxes, options, this.checked);
-            updateCounter(actionCheckboxes, options);
+        // BEGIN CUSTOMIZATION //
+        // document.getElementById(options.allToggleId).addEventListener('click', function(event) {
+        //     checker(actionCheckboxes, options, this.checked);
+        //     updateCounter(actionCheckboxes, options);
+        // });
+        document.getElementById(options.allToggleInputId).addEventListener('change', 
+            (event) => {
+                checker(actionCheckboxes, options, event.target.checked);
+                updateCounter(actionCheckboxes, options);
         });
+        // END CUSTOMIZATION //
 
         document.querySelectorAll(options.acrossQuestions + " a").forEach(function(el) {
             el.addEventListener('click', function(event) {
@@ -121,7 +157,12 @@
         document.querySelectorAll(options.acrossClears + " a").forEach(function(el) {
             el.addEventListener('click', function(event) {
                 event.preventDefault();
-                document.getElementById(options.allToggleId).checked = false;
+
+                // BEGIN CUSTOMIZATION //
+                // document.getElementById(options.allToggleId).checked = false;
+                $(document.getElementById(options.allToggleId)).checkbox('uncheck')
+                // END CUSTOMIZATION //
+ 
                 clearAcross(options);
                 checker(actionCheckboxes, options, false);
                 updateCounter(actionCheckboxes, options);
@@ -193,7 +234,12 @@
     }
 
     ready(function() {
-        const actionsEls = document.querySelectorAll('tr input.action-select');
+ 
+        // BEGIN CUSTOMIZATION //
+        // const actionsEls = document.querySelectorAll('tr input.action-select');
+        const actionsEls = document.querySelectorAll('.ui.checkbox.action-select');
+        // END CUSTOMIZATION //
+
         if (actionsEls.length > 0) {
             Actions(actionsEls);
         }

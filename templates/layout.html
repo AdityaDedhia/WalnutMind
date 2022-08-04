@@ -565,8 +565,8 @@
 				class="text-center p-3"
 				style="background-color: rgba(0, 0, 0, 0.2); font-size: 13px"
 		>
-			{% now "Y" as current_year %} Copyright © {{ current_year }} Aditya
-			Dedhia. All rights reserved.
+			{% now "Y" as current_year %} <b>Copyright © {{ current_year }}</b> Aditya
+			Dedhia. All rights reserved.&nbsp;&nbsp;&nbsp;
 			<a
 					href="//www.dmca.com/Protection/Status.aspx?ID=12c20b5c-7494-498d-9d92-be0686f68573"
 					title="DMCA.com Protection Status"
@@ -579,7 +579,7 @@
 				/></a>
 			<script src="https://images.dmca.com/Badges/DMCABadgeHelper.min.js"></script>
 			&nbsp;&nbsp;&nbsp;
-			<a class="text-white footer-link" href="{% url 'contact' %}"
+			<a class="text-white footer-link" href="{% url 'privacy' %}"
 			>Privacy Policy</a
 			>
 			&nbsp;&nbsp;|&nbsp;&nbsp;
