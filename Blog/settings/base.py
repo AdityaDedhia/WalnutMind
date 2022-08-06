@@ -88,7 +88,6 @@ AXES_ENABLE_ACCESS_FAILURE_LOG = True
 INSTALLED_APPS = [
 	'dal',  # BEFORE django.contrib.admin
 	'dal_select2',  # BEFORE django.contrib.admin
-	'semantic_admin',
 	'django.contrib.admin',
 	'django.contrib.auth',
 	'axes',  # AFTER django.contrib.admin

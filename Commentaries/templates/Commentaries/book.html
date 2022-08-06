@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% load hitcount_tags %}
 
+
 {% block title %}{{ post.title }} Commentary | WM{% endblock title %}
 
 {% block body %}
@@ -78,7 +79,19 @@
 <div class="card text-white bg-info" style = "onmousedown="return false"; onselectstart="return false"">
     <div class="card-header"><strong>The Gist - A Chronological Quote Synopsis:</strong></div>
     <div class="card-body">
-      <p class="card-text">{{ post.quotes|linebreaks }}</p>
+
+	    {% if not request.user.is_authenticated %}
+
+		    	      <p class="card-text" style="color:lightslategray">
+				          {{ post.quotes|linebreaks|truncatewords:80 }}</p>
+		    <p class="card-text">This section has been redacted, <a href="{% url 'loginn'
+				    %}">login</a> to view all.</p>
+		    	    {% else %}
+		    	      <p class="card-text">{{ post.quotes|linebreaks }}</p>
+
+	    {% endif %}
+
+
     </div>
 </div>
 <br>

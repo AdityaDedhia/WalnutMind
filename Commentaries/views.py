@@ -61,6 +61,7 @@ class bookView(HitCountDetailView):
                 pubs_left = settings.PUBS_ACCESS
             pubs_left = self.request.session['pubs_remaining']
             context['pubs_left'] = pubs_left
+
         context['readEST'] = readEST
         return context
 
