@@ -1,6 +1,8 @@
-from django import forms
-from .models import Term, List, Resource, Collection
 from dal import autocomplete
+from django import forms
+
+from .models import Term, List, Resource, Collection
+
 
 class NewTermForm(forms.ModelForm):
     class Meta:
@@ -8,11 +10,11 @@ class NewTermForm(forms.ModelForm):
         fields = ('term', 'definition', 'cover', 'coverSrc', 'coverURL')
 
         widgets = {
-            'term': forms.TextInput(attrs={'class': 'form-control'}),
+            'term':       forms.TextInput(attrs={'class': 'form-control'}),
             'definition': forms.Textarea(attrs={'class': 'form-control'}),
-            'cover': forms.FileInput(attrs={'class': 'form-control'}),
-            'coverSrc': forms.TextInput(attrs={'class': 'form-control'}),
-            'coverURL': forms.URLInput(attrs={'class': 'form-control'}),
+            'cover':      forms.FileInput(attrs={'class': 'form-control'}),
+            'coverSrc':   forms.TextInput(attrs={'class': 'form-control'}),
+            'coverURL':   forms.URLInput(attrs={'class': 'form-control'}),
         }
 
 class NewListForm(forms.ModelForm):

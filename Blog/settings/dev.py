@@ -20,33 +20,18 @@ SECURE_PROXY_SSL_HEADER = None
 SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = False
 
-if 'test' in sys.argv:
-	DATABASES = {
-		'default': {
-			'ENGINE':   'django.db.backends.postgresql', 'NAME': os.environ['TESTDBName'],
-			'HOST':     os.environ['TESTDBHost'], 'PORT': 5432, 'USER': os.environ['TESTDBUser'],
-			'PASSWORD': os.environ['TESTDBPass'], 'TEST': {
-				'NAME': os.environ['TESTDBName']
-			}
-		}
-	}
-	BROKER_URL = 'amqp://guest:guest@localhost:5672/'  # Not required for tests
 
-else:
-	DATABASES = {
-		'default': {
-			'ENGINE': 'django.db.backends.postgresql',
-			'NAME': os.environ['DEVDBName'],
-			'HOST': os.environ['DEVDBHost'],
-			'PORT': 5432,
-			'USER': os.environ['DEVDBUser'],
-			'PASSWORD': os.environ['DEVDBPass'],
-			'TEST': {
-				'NAME': os.environ['TESTDBName']
-			}
-		}
+DATABASES = {
+	'default': {
+		'ENGINE': 'django.db.backends.postgresql',
+		'NAME': os.environ['DEVDBName'],
+		'HOST': os.environ['DEVDBHost'],
+		'PORT': 5432,
+		'USER': os.environ['DEVDBUser'],
+		'PASSWORD': os.environ['DEVDBPass'],
 	}
-	BROKER_URL = os.environ['CLOUDAMQP_URL']
+}
+BROKER_URL = os.environ['CLOUDAMQP_URL']
 
 MIDDLEWARE = MIDDLEWARE + [
 	'debug_toolbar.middleware.DebugToolbarMiddleware',  # DEBUG TOOLBAR
