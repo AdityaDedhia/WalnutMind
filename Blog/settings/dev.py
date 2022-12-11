@@ -24,11 +24,11 @@ CSRF_COOKIE_SECURE = False
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.postgresql',
-		'NAME': os.environ['DEVDBName'],
-		'HOST': os.environ['DEVDBHost'],
+		'NAME': os.environ['DEVDBNAME'],
+		'HOST': os.environ['DEVDBHOST'],
 		'PORT': 5432,
-		'USER': os.environ['DEVDBUser'],
-		'PASSWORD': os.environ['DEVDBPass'],
+		'USER': os.environ['DEVDBUSER'],
+		'PASSWORD': os.environ['DEVDBPASS'],
 	}
 }
 BROKER_URL = os.environ['CLOUDAMQP_URL']
