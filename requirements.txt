@@ -83,7 +83,7 @@ packaging==21.3
 pandas==1.4.3
 pathspec==0.9.0
 phonenumbers==8.12.51
-Pillow==9.1.1
+Pillow==9.3.0
 plotly==5.9.0
 pluggy==1.0.0
 prompt-toolkit==3.0.30
