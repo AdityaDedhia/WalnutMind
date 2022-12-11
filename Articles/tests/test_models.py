@@ -8,7 +8,7 @@ from Articles.models import Post
 
 class TestArticlesPost(TestCase):
 	def setUp(self):
-		tester01 = User.objects.create_user(username='tester01', password='10retset')
+		testerDB = User.objects.create_user(username='testerDB', password='10retset')
 
 		self.test_root = os.path.abspath(os.path.dirname(__file__))
 		self._old_MEDIA_ROOT = settings.MEDIA_ROOT
@@ -28,7 +28,7 @@ class TestArticlesPost(TestCase):
 			cover=image,
 			coverSrc="Unsplash",
 			coverURL="www.unsplash.com",
-			author=tester01,
+			author=testerDB,
 			content="A long text about Walnuts.",
 			resources="A list of resources about Walnuts."
 		)

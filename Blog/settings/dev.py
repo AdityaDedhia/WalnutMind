@@ -29,6 +29,9 @@ DATABASES = {
 		'PORT': 5432,
 		'USER': os.environ['DEVDBUSER'],
 		'PASSWORD': os.environ['DEVDBPASS'],
+		'TEST': {
+			'NAME': os.environ['DEVDBNAME'],
+		}
 	}
 }
 BROKER_URL = os.environ['CLOUDAMQP_URL']

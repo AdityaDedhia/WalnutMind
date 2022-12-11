@@ -26,7 +26,7 @@ jobs:
         codiga_api_token: ${{ secrets.CODIGA_API_TOKEN }}
         force_ref: 'none'
         min_quality_grade: 'EXCELLENT'
-        min_quality_score: '90'
+        min_quality_score: '95'
         max_defects_rate: '0.002'
         max_complex_functions_rate: '0.05'
         max_long_functions_rate: '0.1'
